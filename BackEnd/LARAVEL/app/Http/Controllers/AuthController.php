@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Ville;
 use Illuminate\Support\Facades\Hash;
 use Error;
 use Illuminate\Http\Request;
@@ -60,6 +61,56 @@ class AuthController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function register(Request $request)
+    {
+        try {
+            
+            $request->validate([
+                'nom' => 'required',
+                'prenom' => 'required',
+                'email' => 'required',
+                'password' => 'required|confirmed',
+                'telephone' => 'required',
+                'adresse' => 'required',
+                'ville' => 'required',
+                'CIN' => 'required',
+                'age' => 'required',
+                'sexe' => 'required',
+            ]);
+            $villes = Ville::all();
+            $ville = $villes->where('nom', $request->input('ville'))->first();
+            $user = User::create([
+                "nom" => $request->input('nom'),
+                "prenom" => $request->input('prenom'),
+                "email" => $request->input('email'),
+                "password" => Hash::make($request->input('password')),
+                "telephone" => $request->input('telephone'),
+                "adresse" => $request->input('adresse'),
+                "code_postal" => $ville->code_postal,
+                "ville" => $request->input('ville'),
+                "CIN" => $request->input('CIN'),
+                "age" => $request->input('age'),
+                "sexe" => $request->input('sexe'),
+            ]);
+            event(new Registered($user));
+            if (!$user) {
+                return response()->json([
+                    'message' => 'something went wrong !'
+                ], 500);
+            } else {
+                $token = $user->createToken('authToken')->plainTextToken;
+                return response()->json([
+                    'user' => $user,
+                    'token' => $token
+                ]);
+            }
+        } catch (Error $error) {
+            return response()->json([
+                'message' => $error->getMessage()
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         //
