@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VilleController;
+use App\Models\Ville;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +16,5 @@ Route::post("/register", [AuthController::class, "register"])->name("register");
 
 Route::post('/forgot-password', [AuthController::class, 'ForgetPassword']);
 Route::post('/reset-password', [AuthController::class, 'ResetPassword'])->name('password.reset');
+
+Route::get("/ville",[VilleController::class,"index"])->name("ville.index");

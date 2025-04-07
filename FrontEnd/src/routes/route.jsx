@@ -6,11 +6,14 @@ import Login from "../pages/Login";
 import GoogleLanding from "../components/GoogleLanding";
 import ResetPassword from "../pages/ResetPassword";
 import ForgetPassword from "../pages/ForgetPassword";
+import SignUpClient from "../pages/SignUpClient";
 
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
 const RESET_PASSWORD = "/reset-password";
+const CLIENT_SIGNUP = "/client-signup";
+const COURTIE_SIGNUP = "/courtier-signup";
 const GOOGLELANDING = "/google-langing";
 const HOME = "/";
 const Router = createBrowserRouter([
@@ -42,6 +45,14 @@ const Router = createBrowserRouter([
         path: RESET_PASSWORD,
         element: <ResetPassword />,
       },
+      {
+        path: CLIENT_SIGNUP,
+        element: <SignUpClient />,
+      },
+      {
+        path: COURTIE_SIGNUP,
+        // element: <SignUpClient />,
+      }
     ],
   },
 ]);
