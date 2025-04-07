@@ -1,0 +1,33 @@
+import logo from '../assets/Location.png';
+export default function SplashScreen() {
+  const title = "LocaTech"; // "Loca" en rouge, "Tech" en vert
+
+  return (
+    <div className="splash-screen">
+      <div className="logo-container">
+        <div className="title-wrapper">
+          {/* Ajout de l'image à côté du titre */}
+          <img 
+            src={logo}
+            alt="Logo" 
+            className="logo-image"
+          />
+          <h1 className="animated-title">
+            {title.split("").map((char, index) => (
+              <span
+                key={index}
+                className="letter"
+                style={{ 
+                  animationDelay: `${index * 0.1}s`,
+                  color: index < 4 ? '#ff4757' : '#2ecc71'
+                }}
+              >
+                {char}
+              </span>
+            ))}
+          </h1>
+        </div>
+      </div>
+    </div>
+  );
+}
