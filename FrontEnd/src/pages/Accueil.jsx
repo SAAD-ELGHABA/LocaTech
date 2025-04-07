@@ -47,6 +47,7 @@ import Casablanca from "../assets/casablanca.png";
 import Agadir from "../assets/agadir.png";
 
 import "../index.css";
+import { Link } from "react-router-dom";
 
 // Composant Navbar
 function Navbar() {
@@ -87,10 +88,10 @@ function Navbar() {
           <FaPlusCircle className="nav-icon" />
           <span>Déposer une annonce</span>
         </a>
-        <a href="#espace" className="nav-link border-red">
+        <Link to="/login" className="nav-link border-red">
           <FaUserCircle className="nav-icon" />
           <span>Mon Espace</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );
