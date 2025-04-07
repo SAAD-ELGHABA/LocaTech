@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import SplashScreen from "./pages/SplashScreen";
 import MainScreen from "./pages/Accueil";
-
+import { RouterProvider } from "react-router-dom";
+import Route from "./routes/route";
+import Index from "./layouts/UserLayout/Index.user";
+import { Toaster } from 'sonner';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -9,33 +12,23 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 5000); // 5 seconds
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="app">
-      {showSplash ? <SplashScreen /> : <MainScreen />}
+      {showSplash ? (
+        <SplashScreen />
+      ) : (
+        <RouterProvider router={Route}>
+          <Index />
+        </RouterProvider>
+      )}
+      <Toaster/>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'

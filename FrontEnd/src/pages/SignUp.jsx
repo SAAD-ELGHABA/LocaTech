@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'; // Si vous utilisez React Router
 import { FaGoogle } from 'react-icons/fa';
 import { BsPersonFill } from 'react-icons/bs';
 import { BiBriefcase } from 'react-icons/bi';
-import logo from './assets/Location.png'; // Assurez-vous que le chemin est correct
+import logo from '../assets/Location.png'; // Assurez-vous que le chemin est correct
 
 function SignUp() {
     return (
