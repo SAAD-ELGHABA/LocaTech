@@ -1,11 +1,14 @@
-import React from 'react';
-import { FaGoogle,AiOutlineEye } from 'react-icons/ai'; // Import the eye icon
+import React from "react";
+import { AiOutlineEye } from "react-icons/ai";
+import asideimg from "../assets/login-signup-img.png";
+import { Link } from "react-router-dom";
+import GoogleLanding from "../components/GoogleLanding";
 
 const LoginPage = () => {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex items-center">
       {/* Left Section - Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div className="w-full md:w-1/2 flex items-center justify-center  bg-white">
         <div className="max-w-md w-full space-y-6">
           {/* Logo */}
           <div className="text-center">
@@ -18,7 +21,9 @@ const LoginPage = () => {
           {/* Form */}
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Adresse email</label>
+              <label className="block text-sm font-medium mb-1">
+                Adresse email
+              </label>
               <input
                 type="email"
                 placeholder="Veuillez entrer votre adresse email"
@@ -27,7 +32,9 @@ const LoginPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Mot de passe</label>
+              <label className="block text-sm font-medium mb-1">
+                Mot de passe
+              </label>
               <div className="relative">
                 <input
                   type="password"
@@ -35,7 +42,8 @@ const LoginPage = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
                 />
                 <span className="absolute inset-y-0 right-3 flex items-center cursor-pointer">
-                  <AiOutlineEye size={20} /> {/* Using the react-icons eye icon */}
+                  <AiOutlineEye size={20} />{" "}
+                  {/* Using the react-icons eye icon */}
                 </span>
               </div>
             </div>
@@ -56,10 +64,10 @@ const LoginPage = () => {
           </div>
 
           <div className="text-center text-sm text-gray-600">
-            Vous n’avez pas encore de compte ?{' '}
-            <a href="#" className="font-semibold hover:underline">
+            Vous n’avez pas encore de compte ?{" "}
+            <Link to={"/register"} className="font-semibold hover:underline">
               Créer un compte
-            </a>
+            </Link>
           </div>
 
           {/* Separator */}
@@ -70,25 +78,24 @@ const LoginPage = () => {
           </div>
 
           {/* Google Button */}
-          <button className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
-          <FaGoogle className="text-blue-500 mr-2" size={20} /> {/* Google Icon */}
-            Se connecter avec Google
-          </button>
+          <div className="w-full flex items-center justify-center">
+            <GoogleLanding />
+          </div>
 
           {/* Footer */}
           <p className="text-xs text-center text-gray-500 mt-6">
-            © LocaTech - Les{' '}
+            © LocaTech - Les{" "}
             <a href="#" className="underline">
               Conditions générales
-            </a>{' '}
-            et{' '}
+            </a>{" "}
+            et{" "}
             <a href="#" className="underline">
               mentions légales
-            </a>{' '}
-            et la{' '}
+            </a>{" "}
+            et la{" "}
             <a href="#" className="underline">
               Politique de confidentialité
-            </a>{' '}
+            </a>{" "}
             de Digital
           </p>
         </div>
@@ -98,9 +105,11 @@ const LoginPage = () => {
       <div
         className="hidden md:block w-1/2 bg-cover bg-center"
         style={{
-          backgroundImage: 'url(accueil 1.png)', // Replace with actual path
+          backgroundImage: "url(accueil 1.png)", // Replace with actual path
         }}
-      ></div>
+      >
+        <img src={asideimg} alt="aside image" />
+      </div>
     </div>
   );
 };
