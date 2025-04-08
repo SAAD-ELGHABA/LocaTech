@@ -4,12 +4,22 @@ import Footer from '../../components/Footer';
 import { Outlet } from "react-router-dom";
 
 function index() {
+  const hideNavBarInPages = [
+    "/login",
+    "/register",
+    "/forget_password",
+    "/reset-password",
+  ];
   return <div>
-    <Navbar />
-    {/* <main> */}
-        <Outlet />  {/* This is where the nested route will render */}
-    {/* </main> */}
-    <Footer />
+    {/* <Navbar /> */}
+    <div>
+          {!hideNavBarInPages.includes(location.pathname) && <Navbar /> }
+          {/* <ParticlesBackground /> */}
+          <Outlet />
+          {!hideNavBarInPages.includes(location.pathname) && <Footer />}
+      </div>
+    
+    
   </div>;
 }
 

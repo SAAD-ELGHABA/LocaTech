@@ -57,10 +57,10 @@ const Navbar = () => {
           <span>Déposer une annonce</span>
         </a>
 
-        <a href="#espace" className="nav-link border-red">
+        <Link to="/login" className="nav-link border-red">
           <FaUserCircle className="nav-icon" />
           <span>Mon Espace</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );
