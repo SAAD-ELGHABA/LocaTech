@@ -2,12 +2,13 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SignUpClient = () => {
   const [villes, setVilles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
   useEffect(() => {
     const getVilles = async () => {
       try {
@@ -41,11 +42,13 @@ const SignUpClient = () => {
 
     if (data.age <= 0) {
       toast.error("L'âge doit être supérieur à 0 !");
+      setLoading(false);
       return;
     }
 
     if (!validateEmail(data.email)) {
       toast.error("Veuillez entrer une adresse email valide !");
+      setLoading(false);
       return;
     }
 
@@ -53,11 +56,13 @@ const SignUpClient = () => {
       toast.error(
         "Veuillez entrer un numéro de téléphone valide (10 chiffres) !"
       );
+      setLoading(false);
       return;
     }
 
     if (data.password.length < 6) {
       toast.error("Le mot de passe doit contenir au moins 6 caractères !");
+      setLoading(false);
       return;
     }
     if (
@@ -83,6 +88,8 @@ const SignUpClient = () => {
       if (response.status >= 200) {
         toast.success(response.data.message);
         console.log(response);
+        localStorage.setItem('token',response.data.token)
+        nav('/resend_verification_email')
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -159,7 +166,7 @@ const SignUpClient = () => {
                 <option value="">Select ville</option>
                 {villes.length >= 0 &&
                   villes.map((ville) => (
-                    <option key={ville.id} value={ville.id}>
+                    <option key={ville.id} value={ville.nom}>
                       {ville.nom}
                     </option>
                   ))}
@@ -245,7 +252,9 @@ const SignUpClient = () => {
             <button
               type="submit"
               className={` text-sm w-1/3 py-3 px-4 bg-red-500 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200 flex items-center justify-center ${
-                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600 cursor-pointer"
+                loading
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-red-600 cursor-pointer"
               }`}
             >
               {loading ? (
