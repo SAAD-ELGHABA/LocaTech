@@ -31,7 +31,6 @@ import {
 import { Quote } from "lucide-react";
 import { MdRecommend } from "react-icons/md";
 import logo from "../assets/Location.png";
-import { Link } from 'react-router-dom';
 import pricingImage from "../assets/pricing-image.png"; // Import image for pricing section
 import sellImage from "../assets/sell-image.png"; // Import image for sell section
 import infoCard1 from "../assets/infoCard1.png";
@@ -48,6 +47,7 @@ import Casablanca from "../assets/casablanca.png";
 import Agadir from "../assets/agadir.png";
 
 import "../index.css";
+import { Link } from "react-router-dom";
 
 // Composant Navbar
 // function Navbar() {
