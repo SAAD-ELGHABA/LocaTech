@@ -463,7 +463,7 @@
 }
 
 .logo-red {
-  color: #ff4757;
+  color: #ff7475;
 }
 
 .logo-green {
@@ -507,13 +507,13 @@
 
 
 .highlight {
-  background-color: #4caf50;
-  color: white !important;
+  /* background-color: #4caf50; */
+  color: black !important;
 }
 
-.highlight:hover {
+/* .highlight:hover {
   background-color: #3e8e41;
-}
+} */
 
 .border-red {
   border: 2px solid var(--red);
@@ -1086,6 +1086,8 @@ body {
   font-size: 0.8rem;
   border-radius: 9999px;
   margin-bottom: 10px;
+  background-color: grey;
+  color: white;
 }
 
 .tag-primary {
@@ -1213,7 +1215,7 @@ body {
 
 .testimonial-title {
   font-size: 2rem;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .testimonial-content {
@@ -1349,7 +1351,7 @@ body {
 .underline {
   width: 60px;
   height: 3px;
-  background-color: #78787a; /* violet sghir */
+  background-color: #78787a; 
   margin-bottom: 30px;
 }
 .cards-grid {
@@ -1542,7 +1544,7 @@ body {
 }
 
 .footer-bottom .footer-logo {
-  height: 24px; /* Adjust as needed */
+  height: 70px; /* Adjust as needed */
   width: auto;
 }
 
@@ -1559,6 +1561,7 @@ body {
 .social-icons a:hover {
   color: #0073e6; /* Change la couleur au survol */
 }
+
 
 
 /* Responsive Footer */
@@ -1619,12 +1622,261 @@ body {
 }
 
 
+.testimonial-card {
+  background: #fff; /* White background */
+  padding: 20px; /* Padding for spacing */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 800px; /* Max width to prevent it from stretching too wide */
+  margin: 20px auto; /* Center it and add spacing on top and bottom */
+  text-align: center; /* Center the text */
+  transition: transform 0.3s ease; /* Smooth hover effect */
+}
+
+/* .testimonial-card:hover {
+  transform: translateY(-5px); 
+} */
+
+.testimonial-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333; /* Dark text for the heading */
+  margin: 10px 0;
+}
+
+.testimonial-card p {
+  font-size: 16px;
+  color: #666; /* Lighter text for the paragraph */
+  line-height: 1.5;
+}
+
+.testimonial-source {
+  font-size: 14px;
+  font-weight: bold;
+  color: green; /* Blue color for the source */
+  margin-top: 10px;
+}
+
+.quote-icon {
+  color: black; /* Match the quote icon color to the source */
+  margin-bottom: 15px; /* Add space between the icon and text */
+}
 
 
+/* Logo container in footer */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.footer-logo {
+  width: 80px;  /* Or any size you prefer */
+  margin-right: 10px;
+}
+
+footer .logo-container span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* color: #2ecc71;   */
+}
 
 
+/* CSS for the logo text colors */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.footer-logo {
+  width: 50px; /* Or any size you prefer */
+  margin-right: 10px;
+}
+
+.logo-red {
+  color: #e91c1c; /* Set the color for "Loca" */
+}
+
+.logo-green {
+  color: rgb(27, 188, 27); /* Set the color for "Tech" */
+}
 
 
+/* Hero Section */
+.hero-section {
+  background: url('https://upload.wikimedia.org/wikipedia/commons/d/dc/Casablanca_skyline.jpg') center/cover no-repeat;
+  height: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-align: center;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.overlay h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.overlay p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.cta-button {
+  background-color: #e63946;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+
+.search-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1.5rem;
+  border: 1px solid rgba(232, 232, 232, 0.2); /* border k7el khfif */
+  border-radius: 1rem;
+  margin-top: 2rem;
+  background-color: white; /* yla bghiti bido */
+}
+
+.search-section select,
+.search-section input {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  min-width: 180px;
+}
+
+.search-section input::placeholder {
+  color: #aaa;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+}
+
+.search-btn,
+.ai-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.search-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.search-btn:hover {
+  background-color: green;
+}
+
+.ai-btn {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.ai-btn:hover {
+  background-color: whitesmoke;
+}
+
+/* Search Section */
+.search-section {
+  position: relative;
+  top: -40px;
+  margin: 0 auto;
+  background-color: white;
+  /* border: 2px solid #000; */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  padding: 2rem;
+  z-index: 10;
+  text-align: center;
+}
+
+.search-container {
+  display: flex;
+  gap: 1.5rem; /* espace bin les inputs */
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.search-container input {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  min-width: 180px;
+}
+
+.search-button {
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.search-note {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.search-section select,
+.search-section input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-width: 120px;
+}
+
+.search-btn {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ai-btn {
+  background-color: #f8f9fa;
+  color: #6f42c1;
+  border: 1px solid #6f42c1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
 
 

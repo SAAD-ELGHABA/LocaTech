@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SignUp from '../assets/login-signup-img.png';
 import {
   FaUser,
   FaEnvelope,
@@ -49,7 +50,7 @@ const SignUpClient = () => {
       {/* Image Side */}
       <div className="hidden md:block md:w-1/2 h-full">
         <img
-          src="/assets/riad.jpg"
+          src={SignUp}
           alt="background"
           className="w-full h-full object-cover"
         />

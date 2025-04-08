@@ -24,11 +24,39 @@ export default function App() {
         <RouterProvider router={Route}>
           <Index />
         </RouterProvider>
+        
+        // <RouterProvider router={Route} />
+
       )}
       <Toaster/>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
