@@ -39,6 +39,7 @@ class AuthController extends Controller
                     ])->cookie('remember_token', $token, 60 * 24 * 7);
                 }
                 return response()->json([
+                    'message'=>'log in success !',
                     'user' => $user,
                     'token' => $token
                 ]);
@@ -64,11 +65,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            
             $request->validate([
                 'nom' => 'required',
                 'prenom' => 'required',
-                'email' => 'required',
+                'email' => 'required|email|unique:users',
                 'password' => 'required|confirmed',
                 'telephone' => 'required',
                 'adresse' => 'required',
@@ -100,6 +100,7 @@ class AuthController extends Controller
             } else {
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json([
+                    'message' => 'Please check your email for verification.',
                     'user' => $user,
                     'token' => $token
                 ]);
