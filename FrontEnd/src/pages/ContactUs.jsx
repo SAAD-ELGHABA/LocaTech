@@ -1,23 +1,22 @@
-import React from "react";
+import React from "react"; 
 import { FiArrowRight } from 'react-icons/fi';
 import contactImg from '../assets/contactUs.png';
 
 const ContactUs = () => {
   return (
-    <div className="pt bg-white">
+    <div className="bg-white">
       {/* Hero Section */}
       <div
-        className="h-150 bg-cover bg-center flex flex-col items-center justify-center text-white text-center px-4"
+        className="h-150 bg-cover bg-center flex flex-col items-center justify-center text-white text-center px-4 mt-12" // Espace entre navbar et image
         style={{
             backgroundImage: `url(${contactImg})`, // 🔄 Remplace par ton image
         }}
       >
-      
       </div>
 
       {/* Contact Form */}
       <div className="flex justify-center -mt-20 px-4 z-20 relative">
-  <div className="bg-white shadow-lg rounded w-full max-w-4xl p-8">
+        <div className="bg-white shadow-lg rounded w-full max-w-4xl p-8">
           <p className="mb-8 text-center text-gray-700">
             Afin de répondre au mieux à vos questions, nous vous invitons à compléter le formulaire ci-dessous.
           </p>
@@ -99,33 +98,33 @@ const ContactUs = () => {
             </p>
 
             <button
-  type="submit"
-  className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded transition mx-auto block"
->
-  Envoyer
-</button>
+              type="submit"
+              className="bg-[#F44336] hover:bg-red-700 text-white py-2 px-6 rounded transition mx-auto block"
+            >
+              Envoyer
+            </button>
           </form>
         </div>
       </div>
 
       {/* Footer newsletter */}
-<div className="py-10 bg-white-100">
-  <p className="mb-2 text-lg font-medium text-center">Suivre l’actualité de LocaTech</p>
-  <div className="flex justify-center items-center gap-2 max-w-md mx-auto">
-    <div className="relative w-full">
-      <input
-        type="email"
-        placeholder="Saisissez votre adresse e-mail"
-        className="w-full border border-gray-300 rounded-full px-5 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-      />
-      <FiArrowRight className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl cursor-pointer hover:text-red-500 transition" />
+      <div className="py-10 bg-white-100">
+        <p className="mb-2 text-lg font-medium text-center">Suivre l’actualité de LocaTech</p>
+        <div className="flex justify-center items-center gap-2 max-w-md mx-auto">
+          <div className="relative w-full">
+            <input
+              type="email"
+              placeholder="Saisissez votre adresse e-mail"
+              className="w-full border border-gray-300 rounded-full px-5 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+            <FiArrowRight className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl cursor-pointer hover:text-red-500 transition" />
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-gray-500 text-center">
+          Abonnez-vous à nos alertes personnalisées 📨
+        </p>
+      </div>
     </div>
-  </div>
-  <p className="mt-4 text-sm text-gray-500 text-center">
-    Abonnez-vous à nos alertes personnalisées 📨
-  </p>
-</div>
-</div>
   );
 };
 

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useState,useEffect } from "react";
+// import { useState } from "react";
 import {
   FaHome,
   FaCity,
@@ -27,10 +28,15 @@ import {
   FaCcPaypal,
   FaCcVisa,
 } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // White arrows
 import { Sparkles } from 'lucide-react';
 import { Quote } from "lucide-react";
 import { MdRecommend } from "react-icons/md";
+import Navbar from "../components/Navbar";
 import logo from "../assets/Location.png";
+import image1 from '../assets/image1.png'; // Adjust this path
+import image2 from '../assets/image2.png'; // Adjust this path
+import image3 from '../assets/image3.png'; // Adjust this path
 import pricingImage from "../assets/pricing-image.png"; 
 import sellImage from "../assets/sell-image.png"; 
 import infoCard1 from "../assets/infoCard1.png";
@@ -54,54 +60,119 @@ import { Link } from "react-router-dom";
 const HeroSection = () => {
   return (
     <div className="relative h-[70vh] bg-emerald-30 text-green-800 flex flex-col justify-center items-center">
-      
       {/* Texte */}
       <div className="text-center">
         <h1 className="text-red-500 text-xl md:text-3xl font-bold mb-4 leading-snug">
           Trouvez votre maison/<br /> appartement idéal en toute simplicité !
         </h1>
         <button className="bg-[#F44336] hover:bg-red-700 text-white font-semibold px-5 py-2 mt-4 rounded-full text-sm cursor-pointer transition-all duration-300">
-           Consulter
+          Consulter
         </button>
       </div>
 
       {/* Search Bar */}
-      <div className="absolute -bottom-10 w-full px-4 flex justify-center items-center">
+      <div className="absolute bottom-0 w-full px-4 flex justify-center items-center pb-10">
         <div className="bg-white p-6 rounded-xl border border-gray-400 shadow-lg flex flex-wrap items-center justify-between gap-4 w-[90%] max-w-5xl">
-          
           <select className="border border-gray-300 p-2 rounded-md">
             <option>Achat</option>
           </select>
-          
           <select className="border border-gray-300 p-2 rounded-md">
             <option>Ville</option>
           </select>
-          
           <select className="border border-gray-300 p-2 rounded-md">
             <option>Type</option>
           </select>
-          
           <input type="text" placeholder="Budget                   MAD" className="border border-gray-300 p-2 rounded-md" />
-          
           <div className="flex gap-2">
-            <button className="bg-[#F44336] hover:bg-red-700 text-white px-4 py-2 rounded-md">
+            <button className="bg-[#F44336] hover:bg-red-700 text-white px-4 py-2 rounded-md cursor-pointer">
               Rechercher
             </button>
-
             {/* Bouton AI avec border dégradé */}
             <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
-              <button className="flex items-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md">
+              <button className="flex items-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md cursor-pointer">
                 <Sparkles className="w-4 h-4 text-purple-500" />
                 Prévoir des recommandations
               </button>
             </div>
           </div>
-          
         </div>
       </div>
     </div>
   );
 };
+
+
+
+const ImageCarousel = () => {
+  const images = [
+    image1,  // Imported image
+    image2,  // Imported image
+    image3,  // Imported image
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Automatically change the image every 3 seconds
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000); // 3000ms = 3 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Functions to move to the next/previous image
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <div className="relative">
+      <div className="w-full">
+        <img
+          src={images[currentIndex]}
+          alt={`carousel-slide-${currentIndex}`}
+          className="w-full object-cover"
+        />
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={goToPrevious}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-60 p-3 rounded-full shadow-xl hover:bg-opacity-90 transition duration-300 ease-in-out"
+      >
+        &#60;
+      </button>
+      <button
+        onClick={goToNext}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-60 p-3 rounded-full shadow-xl hover:bg-opacity-90 transition duration-300 ease-in-out"
+      >
+        &#62;
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {images.map((_, index) => (
+          <span
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-3 h-3 rounded-full bg-white opacity-60 cursor-pointer transition-opacity ${
+              currentIndex === index ? "opacity-100" : ""
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 function ActualitesImmobilieres() {
   const villes = [
@@ -229,6 +300,22 @@ function ActualitesImmobilieres() {
 }
 
 export default function Accueil() {
+  const [showNavbarSearch, setShowNavbarSearch] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Target the section or section-image elements
+      const section = document.querySelector(".section");
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        // Show the navbar search button when the user scrolls past the section
+        setShowNavbarSearch(rect.top < 0); // This triggers when the section is out of view
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in-element");
     elements.forEach((el, index) => {
@@ -240,13 +327,15 @@ export default function Accueil() {
   }, []);
 
   return (
+    
     <div className="accueil-page">
+      <Navbar showSearchButton={showNavbarSearch} />
       
       <div className="accueil-container">
-        
+      
       <HeroSection />
 
-    
+      <ImageCarousel />
 
         
       <div className="section">
@@ -347,6 +436,48 @@ export default function Accueil() {
         </div>
 
         {/* <ActualitesImmobilieres /> */}
+
+
+
+       {/* 💬 TÉMOIGNAGES */}
+<section className="mb-24 px-4 md:px-6">
+  <h2 className="text-3xl font-semibold text-center text-gray-800 mb-10">💬 Ce que disent nos utilisateurs</h2>
+  <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    {/* Testimonial 1 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"Grâce à LocaTech, j’ai trouvé un appartement à Rabat en moins d’une semaine. Simple, rapide et efficace."</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Samira B.</p>
+    </div>
+    {/* Testimonial 2 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"La plateforme est moderne et intuitive, j’ai pu comparer plusieurs biens très facilement."</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Anas M.</p>
+    </div>
+    {/* Testimonial 3 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"J'ai pu trouver l'appartement idéal grâce à une recherche simple et des filtres efficaces."</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Khalid T.</p>
+    </div>
+    {/* Testimonial 4 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"Le processus de vente est super fluide, et le support client est toujours disponible pour nous aider."</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Amina L.</p>
+    </div>
+    {/* Testimonial 5 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"Une excellente plateforme pour acheter, vendre et louer des propriétés avec une interface simple."</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Mehdi R.</p>
+    </div>
+    {/* Testimonial 6 */}
+    <div className="bg-white border rounded-xl p-6 shadow">
+      <p className="italic">"LocaTech a facilité ma recherche d'appartement, je recommande vivement!"</p>
+      <p className="text-right font-semibold mt-4 text-red-500">— Sofia H.</p>
+    </div>
+  </div>
+</section>
+
+
+
 
       </div>
     </div>

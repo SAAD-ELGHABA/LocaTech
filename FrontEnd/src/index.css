@@ -10,7 +10,9 @@
   align-items: center;
   background: linear-gradient(135deg, red, green);
 } */
-
+html {
+  scroll-behavior: smooth;
+}
 /* Reset pour enlever le scroll */
 /* html, body {
   margin: 0;
