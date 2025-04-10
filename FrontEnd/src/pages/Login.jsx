@@ -6,6 +6,7 @@ import GoogleLanding from "../components/GoogleLanding";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faSpinner } from "@fortawesome/free-solid-svg-icons";
+import logo from '../assets/Location.png';
 import axios from "axios";
 const LoginPage = () => {
   const [showpwtd, setShowPwt] = useState(false);
@@ -44,9 +45,14 @@ const LoginPage = () => {
         <div className="max-w-md w-full space-y-2">
           {/* Logo */}
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-red-500">
-              <span className="text-green-500">Loca</span>Tech
-            </h1>
+          <div className="flex items-center justify-center gap-2 mb-2">
+  <img src={logo} alt="logo" className="w-10 h-20" />
+  <h1 className="text-3xl font-bold">
+    <span className="text-green-500">Loca</span>
+    <span className="text-red-500">Tech</span>
+  </h1>
+</div>
+
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>
           </div>
 

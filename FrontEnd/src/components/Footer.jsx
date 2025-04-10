@@ -9,6 +9,7 @@ import {
   FaCcPaypal,
   FaCcVisa,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "../index.css";
 import logo from "../assets/Location.png"; // Assure-toi que le chemin vers le logo est correct
 
@@ -27,12 +28,12 @@ const Footer = () => {
         </div>
 
         <div className="footer-column">
-          <h3>L'entreprise</h3>
-          <ul>
-            <li><a href="#">Nous contacter</a></li>
-            <li><a href="#">Besoin d'aide ?</a></li>
-            <li><a href="#">Votre avis nous intéresse</a></li>
-          </ul>
+         <h3>L'entreprise</h3>
+        <ul>
+           <li><Link to="/contactUs">Nous contacter</Link></li>
+           <li><a href="#">Besoin d'aide ?</a></li>
+           <li><a href="#">Votre avis nous intéresse</a></li>
+        </ul>
         </div>
 
         <div className="footer-column follow-us">
@@ -52,10 +53,12 @@ const Footer = () => {
       <div className="footer-bottom">
         <div className="logo-container">
           <img src={logo} alt="LocaTech Logo" className="footer-logo" />
+          <Link to='/'>
           <span>
             <span className="logo-red">Loca</span>
             <span className="logo-green">Tech</span>
           </span>
+          </Link>
         </div>
         <p>&copy; LocaTech - 2025</p>
       </div>

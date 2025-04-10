@@ -5,6 +5,7 @@ import Blog from "../pages/Blog";
 import ContactUs from "../pages/ContactUs";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
+import Block from "../pages/Block";
 import GoogleLanding from "../components/GoogleLanding";
 import ResetPassword from "../pages/ResetPassword";
 import ForgetPassword from "../pages/ForgetPassword";
@@ -38,6 +39,11 @@ const Router = createBrowserRouter([
         path: "/contactUs",
         element: <ContactUs />,
       },
+      {
+        path: "/block",
+        element: <Block />,
+      },
+
       {
         path: REGISTER,
         element: <SignUp />,
