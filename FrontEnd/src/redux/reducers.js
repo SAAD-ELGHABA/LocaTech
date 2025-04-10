@@ -27,3 +27,49 @@ export const userReducer = (state = user, action) => {
             return state;
     }
 };
+
+const CourtierSignUp = {
+    step1:{
+        'nom':null,
+        'prenom':null,
+        'email':null,
+        'password':null,
+    },
+    step2:{
+        'agence':null,
+        'ICE':null,
+        'RC':null
+    },
+}
+export const CourtierSignUpReducer = (state=CourtierSignUp,action)=>{
+    switch (action.type){
+        case "STEP1":
+            return {
+                ...state,
+                step1:action.payload
+            }
+        case "STEP2":
+            return {
+                ...state,
+                step2:action.payload
+            }
+            default:
+                return state;
+    }
+}
+
+
+const biens = [
+
+]
+export const BienReducer = (state=biens,action)=>{
+    switch (action.type){
+        case "ALLBIENS":
+            return {
+                ...state,
+                payload:action.payload
+            }
+        default :
+        return state;
+    }
+}

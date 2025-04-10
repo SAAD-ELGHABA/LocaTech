@@ -1,26 +1,33 @@
 import React from "react";
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import { Outlet } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import { Outlet, useLocation } from "react-router-dom";
 
-function index() {
+function Index() {
+  const location = useLocation();
   const hideNavBarInPages = [
     "/login",
     "/register",
-    "/forget_password",
+    "/forgot-password",
     "/reset-password",
+    "/courtier-signup",
+    "/verify-email/:id/:hash",
+    "/client-signup",
   ];
-  return <div>
-    {/* <Navbar /> */}
+
+  const shouldHide = hideNavBarInPages.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
+  return (
     <div>
-          {!hideNavBarInPages.includes(location.pathname) && <Navbar /> }
-          {/* <ParticlesBackground /> */}
-          <Outlet />
-          {!hideNavBarInPages.includes(location.pathname) && <Footer />}
-      </div>
-    
-    
-  </div>;
+      {!shouldHide && <Navbar />}
+
+      <Outlet />
+
+      {!shouldHide && <Footer />}
+    </div>
+  );
 }
 
-export default index;
+export default Index;

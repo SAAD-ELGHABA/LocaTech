@@ -1,61 +1,54 @@
-import React from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaGlobe, FaIdCard, FaBuilding, FaRegCalendarAlt, FaBriefcase, FaMapMarkerAlt, FaFileAlt, FaSearch } from 'react-icons/fa';
-import SignUp from '../assets/login-signup-img.png';
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import SignUpProcess from "../components/SignUpProcess";
+import Step1 from "./signup_courtier/Step1";
+import Step2 from "./signup_courtier/Step2";
 
 const SignUpCourtier = () => {
-  return (
-    <div className="flex min-h-screen">
-      {/* Formulaire à gauche */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 bg-white">
-        <img src="/logo.png" alt="LocaTech" className="h-12 mb-4" />
-        <h2 className="text-2xl font-bold mb-6">Bienvenue</h2>
-        <form className="w-full max-w-sm space-y-3">
-          {[
-            { label: 'Nom_Complet', icon: <FaUser /> },
-            { label: 'SEO', icon: <FaSearch /> },
-            { label: 'Email', icon: <FaEnvelope /> },
-            { label: 'Nom_Agence_Rattachement', icon: <FaBuilding /> },
-            { label: 'CIN', icon: <FaIdCard /> },
-            { label: 'Tel', icon: <FaPhone /> },
-            { label: 'Site_Web', icon: <FaGlobe /> },
-            { label: 'Années_expérience', icon: <FaRegCalendarAlt /> },
-            { label: 'Type_activité', icon: <FaBriefcase /> },
-            { label: 'Zone_activité', icon: <FaMapMarkerAlt /> },
-            { label: 'Licence_professionnelle', icon: <FaFileAlt /> },
-            { label: 'Brève_présentation', icon: <FaFileAlt /> },
-            { label: 'Password', icon: <FaLock />, type: 'password' },
-          ].map((field, index) => (
-            <div key={index} className="relative">
-              <input
-                type={field.type || 'text'}
-                placeholder={field.label}
-                className="w-full border border-gray-300 rounded px-10 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
-              />
-              <div className="absolute left-3 top-2.5 text-gray-500">{field.icon}</div>
-            </div>
-          ))}
-          <button className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition">
-            se connecter
-          </button>
-        </form>
-        <p className="text-center text-sm mt-2">
-              J'ai déjà{" "}
-              <Link to="/login" className="font-semibold text-red-600 hover:underline">
-                Un Compte
-              </Link>
-        </p>
-      </div>
 
-      {/* Image à droite */}
-      <div className="hidden md:block md:w-1/2">
-        <img
-          src={SignUp}
-          alt="Riad"
-          className="w-full h-full object-cover"
-        />
+  const [step, setStep] = useState(1);
+
+  return (
+    <div className="flex h-full flex-col items-center py-10">
+      <div className="w-2/3 mx-auto rounded shadow bg-white p-8 relative">
+        <div className="text-center">
+          <Link to={"/"} className="text-3xl font-bold text-red-500">
+            <span className="text-green-500">Loca</span>Tech
+          </Link>
+          <p className="mt-2 text-lg font-semibold">Bienvenue Courtier</p>
+        </div>
+        {step === 1 ? (
+          <Step1 setStep={setStep} />
+        ) : step === 2 ? (
+          <Step2 setStep={setStep} />
+        ) : (
+          <Step1 />
+        )}
+
+        <SignUpProcess currentStep={step} />
       </div>
     </div>
   );
 };
+
+const Input = ({ label, name, type = "text", required = false }) => (
+  <div className="flex items-start w-1/2 flex-col">
+    <label className="text-gray-700 mb-1">
+      {label}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+    <input
+      type={type}
+      name={name}
+      required={required}
+      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
+      placeholder={label}
+    />
+  </div>
+);
 
 export default SignUpCourtier;

@@ -3,17 +3,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 function GoogleLanding() {
+  const nav = useNavigate();
   const handleLoginSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
-    const { email, email_verified } = decoded;
-    const formData = {
-      email: email,
-      email_verified: email_verified,
-    };
     try {
-      const response = await axios.post("/api/login", formData, {
+      const response = await axios.post("/api/googleAuth", decoded, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -21,6 +18,10 @@ function GoogleLanding() {
       if (response.status >= 200) {
         toast.success(response.data.message);
         console.log(response);
+        localStorage.setItem("token", response.data.token);
+        setTimeout(() => {
+          nav("/");
+        }, 2000);
       } else {
         toast.error("Login Failed");
       }

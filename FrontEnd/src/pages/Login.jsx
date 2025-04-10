@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import asideimg from "../assets/login-signup-img.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleLanding from "../components/GoogleLanding";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/actions";
 const LoginPage = () => {
   const [showpwtd, setShowPwt] = useState(false);
   const [isloading, setIsLoading] = useState(false);
+  const nav = useNavigate();
+  const dispatch = useDispatch()
   const handleLogin = async (e) => {
     setIsLoading(true);
     e.preventDefault();
@@ -29,9 +33,14 @@ const LoginPage = () => {
       if (response.status >= 200) {
         toast.success(response.data.message);
         console.log(response);
+        dispatch(login(response.data.token,response.data.user))
+        setTimeout(() => {
+          nav("/");
+        },2000);
       }
     } catch (error) {
       toast.error(error.response.data.message);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -39,10 +48,8 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex ">
-      {/* Left Section - Form */}
-      <div className="w-full md:w-1/2  flex mt-32 justify-center  ">
-        <div className="max-w-md w-full space-y-2">
-          {/* Logo */}
+      <div className="w-full md:w-1/3  flex mt-32 justify-center  ">
+        <div className="max-w-md w-4/6 space-y-2">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-red-500">
               <span className="text-green-500">Loca</span>Tech
@@ -50,7 +57,6 @@ const LoginPage = () => {
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>
           </div>
 
-          {/* Form */}
           <form className="space-y-4" onSubmit={handleLogin}>
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -104,7 +110,6 @@ const LoginPage = () => {
             </button>
           </form>
 
-          {/* Links */}
           <div className="text-center text-sm text-gray-600">
             <Link to={"/forgot-password"} className="hover:underline">
               Mot de passe oublié !
@@ -118,19 +123,16 @@ const LoginPage = () => {
             </Link>
           </div>
 
-          {/* Separator */}
           <div className="flex items-center my-4">
             <div className="flex-grow h-px bg-gray-300"></div>
             <span className="px-2 text-sm text-gray-500">ou</span>
             <div className="flex-grow h-px bg-gray-300"></div>
           </div>
 
-          {/* Google Button */}
           <div className="w-full flex items-center justify-center">
             <GoogleLanding />
           </div>
 
-          {/* Footer */}
           <p className="text-xs text-center text-gray-500 mt-6">
             © LocaTech - Les Conditions générales et mentions légales et la
             Politique de confidentialité  de Digital
@@ -138,14 +140,13 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Section - Image */}
       <div
-        className="hidden md:block w-1/2 bg-cover bg-center"
+        className="hidden md:block w-2/3 bg-cover bg-center"
         style={{
-          backgroundImage: "url(accueil 1.png)", // Replace with actual path
+          backgroundImage: "url(accueil 1.png)",
         }}
       >
-        <img src={asideimg} alt="aside image" />
+        <img src={asideimg} alt="aside image" className="w-full" />
       </div>
     </div>
   );

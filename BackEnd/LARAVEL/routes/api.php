@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\VilleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Ville;
@@ -11,11 +12,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware(['auth:sanctum', 'verified']);
 
 
 Route::post("/login", [AuthController::class, "login"])->name("login");
 Route::post("/register", [AuthController::class, "register"])->name("register");
+
+Route::post('/courtier', [CourtierController::class, 'store'])->name('courtier.store');
+
+Route::post('/googleAuth', [AuthController::class, 'googleAuth'])->name('googleAuth');
 
 Route::post('/forgot-password', [AuthController::class, 'ForgetPassword']);
 Route::post('/reset-password', [AuthController::class, 'ResetPassword'])->name('password.reset');

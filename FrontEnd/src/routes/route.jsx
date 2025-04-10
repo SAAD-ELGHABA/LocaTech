@@ -11,13 +11,16 @@ import ForgetPassword from "../pages/ForgetPassword";
 import SignUpClient from "../pages/SignUpClient";
 import RESEND_EMAIL_VERIFICATION from "../pages/RESEND_EMAIL_VERIFICATION";
 import VerifyEmail from "../pages/VerifyEmail";
+import SignUpCourtier from "../pages/SignUpCourtier";
+import Courtier from "../pages/signup_courtier/courtier";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
 const RESET_PASSWORD = "/reset-password";
 const CLIENT_SIGNUP = "/client-signup";
 const COURTIE_SIGNUP = "/courtier-signup";
-const VERIFY_EMAIL = '/verify-email/:id/:hash'
+const COURTIE = "/courtier";
+const VERIFY_EMAIL = "/verify-email/:id/:hash";
 const RESEND_EMAIL_VERIFICATION_PATH = "/resend_verification_email";
 const GOOGLELANDING = "/google-langing";
 const HOME = "/";
@@ -64,16 +67,20 @@ const Router = createBrowserRouter([
       },
       {
         path: COURTIE_SIGNUP,
-        // element: <SignUpClient />,
+        element: <SignUpCourtier />,
       },
       {
         path: RESEND_EMAIL_VERIFICATION_PATH,
         element: <RESEND_EMAIL_VERIFICATION />,
       },
       {
-        path:VERIFY_EMAIL,
-        element:<VerifyEmail/>
-      }
+        path: VERIFY_EMAIL,
+        element: <VerifyEmail />,
+      },
+      {
+        path: COURTIE,
+        element: <Courtier />,
+      },
     ],
   },
 ]);

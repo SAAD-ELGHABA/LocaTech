@@ -32,16 +32,18 @@ const SignUpClient = () => {
     const data = Object.fromEntries(formData.entries());
 
     const validateEmail = (email) => {
+      setLoading(false)
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     const validatePhoneNumber = (phone) => {
       const phoneRegex = /^\d{10}$/;
+      setLoading(false)
       return phoneRegex.test(phone);
     };
 
-    if (data.age <= 0) {
-      toast.error("L'âge doit être supérieur à 0 !");
+    if (!validateEmail(data.email)) {
+      toast.error("Veuillez entrer une adresse email valide !");
       setLoading(false);
       return;
     }
@@ -60,21 +62,11 @@ const SignUpClient = () => {
       return;
     }
 
-    if (data.password.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères !");
-      setLoading(false);
-      return;
-    }
     if (
       !data.nom ||
       !data.prenom ||
-      !data.password ||
-      !data.age ||
-      !data.email ||
-      !data.ville ||
-      !data.adresse ||
       !data.telephone ||
-      !data.CIN
+      !data.email
     ) {
       toast.error("Veuillez remplir tous les champs !");
       return;
@@ -129,78 +121,12 @@ const SignUpClient = () => {
           </div>
           <div className="flex gap-6">
             <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Age</label>
-              <input
-                type="number"
-                name="age"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-                placeholder="Enter age"
-              />
-            </div>
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">CIN</label>
-              <input
-                type="text"
-                name="CIN"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-                placeholder="Enter CIN"
-              />
-            </div>
-          </div>
-          <div className="flex gap-6">
-            <div className="flex items-center w-1/2">
               <label className="w-24 text-gray-700">Email</label>
               <input
                 type="email"
                 name="email"
                 className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
                 placeholder="Enter email"
-              />
-            </div>
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Ville</label>
-              <select
-                name="ville"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-              >
-                <option value="">Select ville</option>
-                {villes.length >= 0 &&
-                  villes.map((ville) => (
-                    <option key={ville.id} value={ville.nom}>
-                      {ville.nom}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          </div>
-          <div className="flex gap-6">
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-                placeholder="Enter password"
-              />
-            </div>
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Confirm Password</label>
-              <input
-                type="password"
-                name="password_confirmation"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-                placeholder="Confirm password"
-              />
-            </div>
-          </div>
-          <div className="flex gap-6">
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Adresse</label>
-              <input
-                type="text"
-                name="adresse"
-                className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
-                placeholder="Enter adresse"
               />
             </div>
             <div className="flex items-center w-1/2">
@@ -211,32 +137,6 @@ const SignUpClient = () => {
                 className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
                 placeholder="Enter telephone"
               />
-            </div>
-          </div>
-          <div className="flex gap-6">
-            <div className="flex items-center w-1/2">
-              <label className="w-24 text-gray-700">Sexe</label>
-              <div className="flex gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="sexe"
-                    value="male"
-                    className="mr-2"
-                    defaultChecked
-                  />
-                  Homme
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="sexe"
-                    value="female"
-                    className="mr-2"
-                  />
-                  Femme
-                </label>
-              </div>
             </div>
           </div>
           <div className="text-right pt-4 flex justify-between items-center">
