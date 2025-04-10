@@ -47,15 +47,35 @@ const articles = [
     content:
       'Un premier achat immobilier est une étape importante. Ce guide vous explique les démarches à suivre, les aides disponibles et les pièges à éviter pour réussir votre projet.',
   },
+  // Added 3 new articles
+  {
+    title: '🏡 Comment choisir le bon quartier pour acheter votre maison',
+    date: 'Mars 2025',
+    content:
+      'Choisir le bon quartier est essentiel pour votre futur bien immobilier. Découvrez les critères à prendre en compte, comme la proximité des transports, des écoles et des commerces.',
+  },
+  {
+    title: '🔍 L’importance de la visite virtuelle dans la recherche immobilière',
+    date: 'Février 2025',
+    content:
+      'La visite virtuelle est désormais un atout majeur pour les acheteurs et les locataires. Apprenez comment elle transforme la manière de découvrir un bien immobilier à distance.',
+  },
+  {
+    title: '🏙️ Les quartiers en pleine évolution à Casablanca',
+    date: 'Janvier 2025',
+    content:
+      'Casablanca connaît un développement rapide de ses quartiers. Découvrez les zones à suivre de près pour un investissement immobilier prometteur.',
+  },
 ];
+
 
 const Blog = () => {
   return (
-    <div className="min-h-screen bg-white pt-24 px-4 sm:px-12 mb-24">
+    <div className="min-h-screen bg-white pt-36 px-4 sm:px-12 mb-30">
 
       {/* ⬆️ HEADER */}
-      <h1 className="text-4xl font-bold text-center text-red-600 mb-6">
-        🏡  Blog Immobilier de <span className="text-black-600">Loca</span><span className="text-green-600">Tech</span>
+      <h1 className="text-4xl font-bold text-center text-red-500 mb-10">
+        🏡  Blog Immobilier de <span className="text-black-600">LocaTech</span>
       </h1>
       <p className="text-center text-lg text-black-500 mb-12 max-w-3xl mx-auto">
         Bienvenue sur notre espace de partage ! Chez <strong>LocaTech</strong>, nous croyons en une information accessible et utile pour tous les acteurs de l'immobilier. Retrouvez ici nos articles sur le marché, nos conseils d'experts et notre vision de l'avenir du logement au Maroc.
@@ -86,45 +106,8 @@ const Blog = () => {
         ))}
       </div>
 
-      {/* 📈 STATS */}
-      <section className="bg-gray-100 py-16 rounded-2xl mb-24">
-        <h2 className="text-3xl text-center font-semibold text-gray-800 mb-10">📊 Quelques chiffres clés</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center px-8">
-          <div>
-            <FaUserCheck size={40} className="text-green-600 mx-auto mb-3" />
-            <h3 className="text-xl font-bold">+25,000 utilisateurs</h3>
-            <p className="text-gray-600">Nous accompagnons acheteurs et locataires au Maroc</p>
-          </div>
-          <div>
-            <FaChartBar size={40} className="text-blue-600 mx-auto mb-3" />
-            <h3 className="text-xl font-bold">+10,000 annonces actives</h3>
-            <p className="text-gray-600">Des biens immobiliers vérifiés chaque jour</p>
-          </div>
-          <div>
-            <FaRegNewspaper size={40} className="text-red-600 mx-auto mb-3" />
-            <h3 className="text-xl font-bold">+100 articles</h3>
-            <p className="text-gray-600">Des conseils et études du marché marocain</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 💬 TÉMOIGNAGES */}
-      <section className="mb-24">
-        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-10">💬 Ce que disent nos utilisateurs</h2>
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="bg-white border rounded-xl p-6 shadow">
-            <p className="italic">"Grâce à LocaTech, j’ai trouvé un appartement à Rabat en moins d’une semaine. Simple, rapide et efficace."</p>
-            <p className="text-right font-semibold mt-4 text-green-700">— Samira B.</p>
-          </div>
-          <div className="bg-white border rounded-xl p-6 shadow">
-            <p className="italic">"La plateforme est moderne et intuitive, j’ai pu comparer plusieurs biens très facilement."</p>
-            <p className="text-right font-semibold mt-4 text-green-700">— Anas M.</p>
-          </div>
-        </div>
-      </section>
-
       {/* 📬 NEWSLETTER */}
-      <section className="bg-gradient-to-r from-green-500 to-blue-500 text-white py-16 rounded-2xl text-center px-6">
+      <section className="bg-gradient-to-r from-[#a4161a] via-[#ba181b] via-[#F44336] to-[#f5f3f4] text-white py-16 rounded-2xl text-center px-6">
         <h2 className="text-3xl font-bold mb-4">📰 Restez informé !</h2>
         <p className="text-lg mb-6 max-w-xl mx-auto">Inscrivez-vous à notre newsletter pour recevoir les dernières tendances immobilières, des conseils pratiques et des annonces exclusives.</p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-xl mx-auto">
@@ -133,7 +116,7 @@ const Blog = () => {
             placeholder="Votre adresse e-mail"
             className="px-4 py-2 rounded-lg text-black w-full sm:w-2/3"
           />
-          <button className="bg-white text-green-600 font-bold px-6 py-2 rounded-lg hover:bg-gray-100 transition">
+          <button className="bg-white text-red-500 font-bold px-6 py-2 rounded-lg hover:bg-gray-100 transition">
             S’inscrire
           </button>
         </div>
