@@ -10,8 +10,7 @@ const Navbar = () => {
         <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
         <Link to='/'>
         <h1 className="text-xl font-bold">
-          <span className="text-red-500">Loca</span>
-          <span className="text-green-500">Tech</span>
+          <span className="text-red-500">LocaTech</span>
         </h1>
         </Link>
       </div>
@@ -23,7 +22,7 @@ const Navbar = () => {
         <Link to="/blog" className="text-black py-2">Blog</Link>
         <Link to="/contactUs" className="text-black py-2">Contactez-nous</Link>
 
-        <Link to="/block" className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-sm flex items-center gap-2">
+        <Link to="/block" className="bg-[#F44336] text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-sm flex items-center gap-2">
           <FaPlusCircle />
           <span>Déposer une annonce</span>
         </Link>
