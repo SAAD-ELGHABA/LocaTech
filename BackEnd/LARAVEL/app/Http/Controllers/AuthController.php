@@ -39,13 +39,13 @@ class AuthController extends Controller
                     ])->cookie('remember_token', $token, 60 * 24 * 7);
                 }
                 return response()->json([
-                    'message'=>'log in success !',
+                    'message' => 'connexion succée !',
                     'user' => $user,
                     'token' => $token
                 ]);
             } else {
                 return response()->json([
-                    'message' => 'invalid credentials !'
+                    'message' => "informations d'identification invalides !"
                 ], 401);
             }
         } catch (Error $error) {
@@ -54,6 +54,56 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function googleAuth(Request $request)
+    {
+        try {
+            $googleData = $request->all();
+
+            // Check if the user already exists
+            $user = User::where('email', $googleData['email'])->first();
+
+            if ($user) {
+                // User exists, log them in
+                $token = $user->createToken('authToken')->plainTextToken;
+                return response()->json([
+                    'message' => 'connexion succée !',
+                    'user' => $user,
+                    'token' => $token
+                ]);
+            } else {
+                $user = User::create([
+                    'nom' => $googleData['family_name'],
+                    'prenom' => $googleData['given_name'],
+                    'age' => $googleData['age'] ?? 18, // Assuming age is optional
+                    'role' => 'user', // Default role
+                    'sexe' => $googleData['gender'] ?? 'male', // Assuming gender is optional
+                    'telephone' => $googleData['phone'] ?? '0000000000', // Assuming phone is optional
+                    'adresse' => $googleData['address'] ?? 'LocaTech', // Assuming address is optional
+                    'code_postal' => $googleData['postal_code'] ?? 'LocaTech code_postal', // Assuming postal code is optional
+                    'ville' => $googleData['city'] ?? 'LocaTech', // Assuming city is optional
+                    'CIN' => $googleData['CIN'] ?? $googleData['sub'], // Assuming CIN is optional
+                    'email' => $googleData['email'],
+                    'email_verified' => true,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make(Str::random(16)), // Generate a random password
+                ]);
+
+                $token = $user->createToken('authToken')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'connexion succée !',
+                    'user' => $user,
+                    'token' => $token
+                ]);
+            }
+        } catch (Error $error) {
+            return response()->json([
+                'message' => $error->getMessage()
+            ], 500);
+        }
+    }
+
     public function index()
     {
         //
@@ -69,28 +119,24 @@ class AuthController extends Controller
                 'nom' => 'required',
                 'prenom' => 'required',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed',
                 'telephone' => 'required',
-                'adresse' => 'required',
-                'ville' => 'required',
-                'CIN' => 'required',
-                'age' => 'required',
-                'sexe' => 'required',
+            ], [
+                'email.unique' => 'L\'email est déjà utilisé.',
             ]);
-            $villes = Ville::all();
-            $ville = $villes->where('nom', $request->input('ville'))->first();
             $user = User::create([
                 "nom" => $request->input('nom'),
                 "prenom" => $request->input('prenom'),
                 "email" => $request->input('email'),
-                "password" => Hash::make($request->input('password')),
+                'ville' => $googleData['city'] ?? 'LocaTech', // Assuming city is optional
+                "password" => Hash::make(Str::random(16)),
                 "telephone" => $request->input('telephone'),
                 "adresse" => $request->input('adresse'),
-                "code_postal" => $ville->code_postal,
-                "ville" => $request->input('ville'),
-                "CIN" => $request->input('CIN'),
-                "age" => $request->input('age'),
-                "sexe" => $request->input('sexe'),
+                'age' => $googleData['age'] ?? 18, // Assuming age is optional
+                'CIN' => $googleData['CIN'] ?? 'cin', // Assuming CIN is optional
+                'role' => 'user', // Default role
+                'sexe' => $googleData['gender'] ?? 'male', // Assuming gender is optional
+                'adresse' => $googleData['address'] ?? 'LocaTech', // Assuming address is optional
+                'code_postal' => $googleData['postal_code'] ?? 'LocaTech code_postal',
             ]);
             event(new Registered($user));
             if (!$user) {

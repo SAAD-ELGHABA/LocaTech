@@ -4,12 +4,33 @@ import MainScreen from "./pages/Accueil";
 import { RouterProvider } from "react-router-dom";
 import Route from "./routes/route";
 import Index from "./layouts/UserLayout/Index.user";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { login } from "./redux/actions";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
-
+  const token = useSelector((state) => state.userReducer.token);
+  const dispatch = useDispatch();
   useEffect(() => {
+    try {
+      const fetchUserData = async () => {
+        axios.defaults.withCredentials = true;
+        axios.defaults.withXSRFToken = true;
+        const response = await axios.get("/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status >= 200) {
+          dispatch(login(token,response.data))
+        }
+      };
+      fetchUserData();
+    } catch (error) {
+      console.log(error);
+    }
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 5000);
@@ -24,39 +45,13 @@ export default function App() {
         <RouterProvider router={Route}>
           <Index />
         </RouterProvider>
-        
-        // <RouterProvider router={Route} />
 
+        // <RouterProvider router={Route} />
       )}
-      <Toaster/>
+      <Toaster />
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'

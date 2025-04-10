@@ -9,7 +9,7 @@ import GoogleLanding from "../components/GoogleLanding"; // Assurez-vous que le 
 function SignUp() {
   return (
     <div className="bg-gray-900 min-h-screen w-full flex justify-center">
-      <div className="bg-white w-1/2">
+      <div className="bg-white w-1/3">
         <div className="w-full md:w-2/3 flex mt-32 justify-center flex-col mx-auto">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-red-500">
@@ -33,7 +33,7 @@ function SignUp() {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Link to="/client-signup" className="block">
               <div className="bg-gray-50 hover:bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-between">
                 <div className="flex items-center">
@@ -91,12 +91,12 @@ function SignUp() {
         </div>
       </div>
       <div
-        className="hidden md:block w-1/2 bg-cover bg-center"
+        className="hidden md:block w-2/3 bg-cover bg-center"
         style={{
           backgroundImage: "url(accueil 1.png)", // Replace with actual path
         }}
       >
-        <img src={asideimg} alt="aside image" />
+        <img src={asideimg} alt="aside image" className="w-full"/>
       </div>
     </div>
   );

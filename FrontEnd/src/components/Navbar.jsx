@@ -15,7 +15,7 @@ import logo from "../assets/Location.png"; // vérifie que le chemin vers le log
 
 const Navbar = () => {
   return (
-    <nav className="navbar">
+    <nav className="navbar text-sm">
       <div className="navbar-brand">
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo-image" />

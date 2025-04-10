@@ -73,8 +73,8 @@ function ForgetPassword() {
   return (
     <div>
       <div className="flex">
-        <div className="w-full md:w-1/2 flex mt-32 justify-center ">
-          <div className="max-w-md w-full space-y-2 mt-20">
+        <div className="w-full md:w-1/3 flex mt-32 justify-center ">
+          <div className="max-w-md w-4/6 space-y-2 mt-20">
             {/* Logo */}
             <div className="text-center">
               <h1 className="text-3xl font-bold text-red-500">
@@ -126,12 +126,12 @@ function ForgetPassword() {
           </div>
         </div>
         <div
-          className="hidden md:block w-1/2 bg-cover bg-center"
+          className="hidden md:block w-2/3 bg-cover bg-center"
           style={{
             backgroundImage: "url(accueil 1.png)", // Replace with actual path
           }}
         >
-          <img src={asideimg} alt="aside image" />
+          <img src={asideimg} alt="aside image" className="w-full"/>
         </div>
       </div>
     </div>

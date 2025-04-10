@@ -12,7 +12,9 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
-
+    // 'providers' => [
+    //     App\Providers\EventServiceProvider::class,
+    // ],
     'name' => env('APP_NAME', 'Laravel'),
     'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost:5173'),
 
@@ -79,7 +81,8 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'fr'),
+
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

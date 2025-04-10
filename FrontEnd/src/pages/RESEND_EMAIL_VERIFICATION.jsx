@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
+import emailVerify from '../assets/e-mail-verify.gif'
 function RESEND_EMAIL_VERIFICATION() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,20 +33,21 @@ function RESEND_EMAIL_VERIFICATION() {
     }
   };
   return (
-    <div className="flex justify-center items-center h-screen text-center">
+    <div className="flex justify-center items-center h-screen text-center bg-white">
       {loading ? (
         <FontAwesomeIcon icon={faSpinner} className="animate-spin w-8" />
       ) : (
-        <div>
-          <h1 className="text-xl">
-            we've sent you an email go and verify it to complete your
-            registration !
+        <div> 
+          <img src={emailVerify} alt="verify-email" className="w-20 mx-auto"/>
+          <h1 className="">
+            nous vous avons envoyé un e-mail, vérifiez-le pour terminer votre
+            inscription !
           </h1>
           <p>
-            or{"  "}
+            ou{"  "}
             <span>
               <button onClick={handleResendEmail}>
-                <p className="text-red-500 cursor-pointer">resend email</p>
+                <p className="text-red-500 cursor-pointer">renvoie email</p>
               </button>
             </span>
           </p>
