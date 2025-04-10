@@ -508,7 +508,7 @@
 
 .highlight {
   /* background-color: #4caf50; */
-  color: black !important;
+  color: #F44336 !important;
 }
 
 /* .highlight:hover {
@@ -1001,7 +1001,7 @@ body {
 }
 
 .section:nth-child(even) {
-  background-color: #f1f3f5;
+  background-color: white;
 }
 
 .section-image img {
@@ -1067,6 +1067,7 @@ body {
 
 /* Divider style (khat sghir grey) */
 .section-divider {
+  background-color: white; /* This line sets the background to white */
   border: none;
   border-top: 1px solid #ccc;
   margin: 3rem 0;
@@ -1086,17 +1087,17 @@ body {
   font-size: 0.8rem;
   border-radius: 9999px;
   margin-bottom: 10px;
-  background-color: grey;
+  background-color: #b1a7a6;
   color: white;
 }
 
 .tag-primary {
-  background-color: grey;
+  background-color: #b1a7a6;
   color: white;
 }
 
 .tag-free {
-  background-color: grey;
+  background-color: #b1a7a6;
   color: white;
 }
 
@@ -1202,7 +1203,7 @@ body {
 .testimonial-source {
   display: inline-block;
   margin-top: 16px;
-  color: #198754;
+  color: #F44336;
   font-weight: bold;
 }
 
@@ -1464,7 +1465,7 @@ body {
 
 /* Styles pour le Footer */
 .main-footer {
-  background-color: rgb(139, 138, 138);
+  background-color: #b1a7a6;
   color: #fff;
   padding: 40px 60px;
 }
@@ -1611,15 +1612,15 @@ body {
   flex: 2;
 }
 
-.section-pricing .section-content h2 {
+/* .section-pricing .section-content h2 {
   font-size: 1.8rem;
   margin-bottom: 10px;
-}
+} */
 
-.section-pricing .section-content p {
+/* .section-pricing .section-content p {
   font-size: 1rem;
   margin-bottom: 20px;
-}
+} */
 
 
 .testimonial-card {
@@ -1653,7 +1654,7 @@ body {
 .testimonial-source {
   font-size: 14px;
   font-weight: bold;
-  color: green; /* Blue color for the source */
+  color: #F44336; /* Blue color for the source */
   margin-top: 10px;
 }
 

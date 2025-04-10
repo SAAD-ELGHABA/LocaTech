@@ -19,7 +19,7 @@ export default function SplashScreen() {
                 className="letter"
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
-                  color: index < 4 ? '#ff4757' : '#2ecc71'
+                  color: index < 4 ? '#F44336' : '#F44336'
                 }}
               >
                 {char}

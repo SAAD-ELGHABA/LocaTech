@@ -55,8 +55,7 @@ const Footer = () => {
           <img src={logo} alt="LocaTech Logo" className="footer-logo" />
           <Link to='/'>
           <span>
-            <span className="logo-red">Loca</span>
-            <span className="logo-green">Tech</span>
+            <span className="text-red-500">LocaTech</span>
           </span>
           </Link>
         </div>
