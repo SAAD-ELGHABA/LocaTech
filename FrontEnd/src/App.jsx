@@ -13,8 +13,9 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const token = useSelector((state) => state.userReducer.token);
   const LoadinfGlobal = useSelector((state) => state.loadingReducer);
-
+  const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
+
   const ActuelCourtier = async (id) => {
     try {
       const response = await axios.post("/api/ActuelCourtier", {
@@ -63,7 +64,7 @@ export default function App() {
             type: "SET_LOADING",
             payload: false,
           });
-          toast.dismiss()
+          toast.dismiss();
         }, 2000);
       }
     };
@@ -104,6 +105,9 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, [LoadinfGlobal, dispatch, token]);
+  useEffect(() => {
+    ActuelCourtier(user.user ? user.user.id : null);
+  }, [LoadinfGlobal,user]);
 
   return (
     <div className="app">

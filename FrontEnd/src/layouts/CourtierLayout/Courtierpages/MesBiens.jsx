@@ -46,7 +46,9 @@ function MesBiens() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+  console.log(MesBiens);
+  console.log(ActuelCourtierReducer);
+  
   const handleDeleteBien = (id) => {
     toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
       action: {
