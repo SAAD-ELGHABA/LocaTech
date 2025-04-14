@@ -7,13 +7,14 @@ const BlockedPage = () => {
     <div className="min-h-screen flex flex-col justify-center items-center bg-white">
       {/* Logo + Titre */}
       <div className="flex flex-col items-center space-y-2 mb-10">
+        <Link to='/'>
         <div className="flex items-center space-x-2">
           <img src={logo} alt="LocaTech Logo" className="w-12 h-20" />
           <h1 className="text-4xl font-bold">
-            <span className="text-green-500">Loca</span>
-            <span className="text-red-500">Tech</span>
+            <span className="text-red-500">LocaTech</span>
           </h1>
         </div>
+        </Link>
       </div>
 
       {/* Message */}

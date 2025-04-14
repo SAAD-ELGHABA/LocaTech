@@ -1,72 +1,85 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/Location.png";
 
-const Navbar = ({ showSearchButton }) => {
+const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {  // L'endroit où le bouton apparaîtra
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 500);
     };
-
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const isHomepage = location.pathname === "/";
 
   return (
-    <>
-      {/* Navbar */}
-      <nav className="bg-white shadow-md py-5 px-6 flex justify-between items-center fixed w-full top-0 left-0 z-50">
-        <div className="flex items-center space-x-2">
-          <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
+    <nav className="bg-white shadow-md py-4 px-4 md:px-6 fixed w-full top-0 left-0 z-50">
+      <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+
+        {/* Logo + Titre */}
+        <div className="flex items-center gap-3 shrink-0">
           <Link to="/">
-            <h1 className="text-xl font-bold">
+            <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
+          </Link>
+          <Link to="/">
+            <h1 className="text-xl font-bold whitespace-nowrap">
               <span className="text-red-500">LocaTech</span>
             </h1>
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <Link to="/" className="text-black py-2">Accueil</Link>
-          <a href="#acheter" className="text-black py-2">Acheter</a>
-          <a href="#louer" className="text-black py-2">Louer</a>
-          <Link to="/blog" className="text-black py-2">Blog</Link>
-          <Link to="/contactUs" className="text-black py-2">Contactez-nous</Link>
+        {/* Les liens + boutons */}
+        <div className="flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap">
+          {/* <Link to="/" className="text-black">Accueil</Link> */}
+          <Link to="/acheter" className="text-black">Acheter</Link>
+          <Link to="/louer" className="text-black">Louer</Link>
+          <Link to="/blog" className="text-black">Blog</Link>
+          <Link to="/contactUs" className="text-black">Contactez-nous</Link>
 
-          {/* Affichage du bouton Rechercher seulement après scroll */}
-          {isScrolled && (
+          {isHomepage && isScrolled && (
             <button
-              onClick={handleScrollTop}
-              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition text-sm"
+              onClick={() =>
+                document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
             >
               Rechercher
             </button>
           )}
 
-          <Link to="/block" className="bg-[#F44336] text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-sm flex items-center gap-2">
+          {!isHomepage && (
+            <Link
+              to="/"
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+            >
+              Rechercher
+            </Link>
+          )}
+
+          <Link
+            to="/block"
+            className="bg-[#F44336] text-white px-4 py-2 rounded-full hover:bg-red-600 transition flex items-center gap-2"
+          >
             <FaPlusCircle />
             <span>Déposer une annonce</span>
           </Link>
 
-          <Link to="/login" className="border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition text-sm flex items-center gap-2">
+          <Link
+            to="/login"
+            className="border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition flex items-center gap-2"
+          >
             <FaUserCircle />
             <span>Mon Espace</span>
           </Link>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 
