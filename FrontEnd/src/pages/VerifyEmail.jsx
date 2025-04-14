@@ -4,6 +4,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import verifiiedIcon from "../assets/verifiied-icon.png";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/actions";
 const VerifyEmail = () => {
   const { id, hash } = useParams();
   const [message, setMessage] = useState("");
@@ -13,6 +15,7 @@ const VerifyEmail = () => {
   const getCsrfToken = async () => {
     await axios.get("http://localhost:8000/sanctum/csrf-cookie");
   };
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
@@ -27,8 +30,9 @@ const VerifyEmail = () => {
           },
         });
         setMessage("Email a été verifieé !");
-        if (response.status >= 200) {
+        if (response.status >= 200 && response.status <= 300) {
           setAllowed(true);
+          dispatch(register(token, response.data.user));
         }
       } catch (error) {
         setMessage(error.response?.data?.message || "Verification failed.");
@@ -47,7 +51,11 @@ const VerifyEmail = () => {
         </div>
       ) : (
         <div className="text-center flex flex-col justify-center ">
-          <img src={verifiiedIcon} alt="email-verified" className="w-20 mx-auto" />
+          <img
+            src={verifiiedIcon}
+            alt="email-verified"
+            className="w-20 mx-auto"
+          />
           <h2>{message}</h2>
           {allowed ? (
             <Link to={"/user"} target="_blank" className="text-green-500 px-4">
@@ -56,7 +64,8 @@ const VerifyEmail = () => {
           ) : (
             <div className="">
               <p className="text-gray-500">
-              s'il y a un problème, revenez en arrière et renvoyez un e-mail de vérification{" "}
+                s'il y a un problème, revenez en arrière et renvoyez un e-mail
+                de vérification{" "}
               </p>
               <Link className="text-blue-400" to={"/resend_verification_email"}>
                 aller retourner

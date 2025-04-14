@@ -24,7 +24,7 @@ const ResetPassword = () => {
     };
     setLoading(true);
     try {
-      const toastLoading = toast.loading("wait for it ...");
+      const toastLoading = toast.loading("attends ça ...");
       const response = await axios.post("/api/reset-password", info);
       if (response.status >= 200) {
         toast.dismiss(toastLoading);
@@ -74,24 +74,24 @@ const ResetPassword = () => {
     <div className="w-full flex justify-center ">
       <div className="md:block w-1/2  flex  h-screen items-center justify-center  ">
         <form onSubmit={handleFormData} className=" w-1/2 mx-auto mt-52">
-        <h1 className="text-xl font-bold">Reset Your Password</h1>
+        <h1 className="text-xl font-bold">Réinitialisez votre mot de passe</h1>
           <div className="py-1 ">
-            <label className="block text-sm mb-1">password</label>
+            <label className="block text-sm mb-1">mot de passe</label>
             <div></div>
             <input
               type={`${visiblePassword ? "text" : "password"}`}
               name="password"
-              placeholder="enter your new password"
+              placeholder="entrer votre nouveau mot de passe"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
             />
           </div>
           <div className="py-1 ">
-            <label className="block text-sm mb-1">confirm password</label>
+            <label className="block text-sm mb-1">confirmer le mot de passe</label>
             <div></div>
             <input
               type={`${visiblePassword ? "text" : "password"}`}
               name="password_confirmation"
-              placeholder="password confirmation"
+              placeholder="mot de passe confirmation"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
             />
           </div>
@@ -103,7 +103,7 @@ const ResetPassword = () => {
               onChange={() => setVisiblePassword(!visiblePassword)}
             />
             <label htmlFor="show" className="ms-2">
-              show password
+              voir password
             </label>
           </div>
           <button
@@ -111,14 +111,14 @@ const ResetPassword = () => {
               loading ? "bg-slate-500 text-slate-800" : "bg-red-500 text-white"
             }   py-2 rounded hover:${loading ? "" : "bg-red-600"} transition `}
           >
-            Send Reset Password
+            envoie réinitialiseation de mot de passe
           </button>
           <div className="text-center w-full mt-3">
             <Link
               to={"/login"}
               className="cursor-pointer text-green-400 text-sm hover:text-green-500"
             >
-              Go Back To Login
+              return et s'inscrir
             </Link>
           </div>
         </form>

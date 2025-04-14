@@ -1,64 +1,35 @@
-// components/Navbar.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  FaHome,
-  FaShoppingCart,
-  FaKey,
-  FaBlog,
-  FaEnvelope,
-  FaPlusCircle,
-  FaUserCircle,
-} from "react-icons/fa";
-import "../index.css";
-import logo from "../assets/Location.png"; // vérifie que le chemin vers le logo est correct
+import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
+import logo from "../assets/Location.png";
 
 const Navbar = () => {
   return (
-    <nav className="navbar text-sm">
-      <div className="navbar-brand">
-        <div className="logo-container">
-          <img src={logo} alt="Logo" className="logo-image" />
-          <h1 className="logo">
-            <span className="logo-red">Loca</span>
-            <span className="logo-green">Tech</span>
-          </h1>
-        </div>
+    <nav className="bg-white shadow-md py-5 px-6 flex justify-between items-center ">
+      <div className="flex items-center space-x-2">
+        <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
+        <Link to='/'>
+        <h1 className="text-xl font-bold">
+          <span className="text-red-500">Loca</span>
+          <span className="text-green-500">Tech</span>
+        </h1>
+        </Link>
       </div>
 
-      <div className="navbar-links">
-        <Link to="/" className="nav-link">
-          <FaHome className="nav-icon" />
-          <span>Accueil</span>
-        </Link>
+      <div className="flex items-center space-x-6 text-sm font-medium">
+        <Link to="/" className="text-black py-2">Accueil</Link>
+        <a href="#acheter" className="text-black py-2">Acheter</a>
+        <a href="#louer" className="text-black py-2">Louer</a>
+        <Link to="/blog" className="text-black py-2">Blog</Link>
+        <Link to="/contactUs" className="text-black py-2">Contactez-nous</Link>
 
-        <a href="#acheter" className="nav-link">
-          <FaShoppingCart className="nav-icon" />
-          <span>Acheter</span>
-        </a>
-
-        <a href="#louer" className="nav-link">
-          <FaKey className="nav-icon" />
-          <span>Louer</span>
-        </a>
-
-        <Link to="/blog" className="nav-link">
-          <FaBlog className="nav-icon" />
-          <span>Blog</span>
-        </Link>
-
-        <Link to="/contactUs" className="nav-link">
-          <FaEnvelope className="nav-icon" />
-          <span>Contactez-nous</span>
-        </Link>
-
-        <a href="#annonce" className="nav-link highlight-red">
-          <FaPlusCircle className="nav-icon" />
+        <Link to="/block" className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-sm flex items-center gap-2">
+          <FaPlusCircle />
           <span>Déposer une annonce</span>
-        </a>
+        </Link>
 
-        <Link to="/login" className="nav-link border-red">
-          <FaUserCircle className="nav-icon" />
+        <Link to="/login" className="border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition text-sm flex items-center gap-2">
+          <FaUserCircle />
           <span>Mon Espace</span>
         </Link>
       </div>

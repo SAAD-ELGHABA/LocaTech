@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('age')->nullable();
             $table->string('role')->default('user');
             $table->string('sexe')->nullable();
-            $table->string('telephone')->unique();
+            $table->string('telephone');
             $table->string('adresse')->nullable();
             $table->string('code_postal')->nullable();
             $table->string('ville')->nullable();
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('email_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

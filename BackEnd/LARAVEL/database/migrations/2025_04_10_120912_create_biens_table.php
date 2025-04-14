@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('biens', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('courtier_id');
+            $table->foreign('courtier_id')->references('id')->on('courtiers')->onDelete('cascade');
+            $table->string('title');
+            $table->text('description');
+            $table->string('budget');
+            $table->string('superficier');
+            $table->text('mapUrl')->nullable();
+            $table->string('ville');
+            $table->string('type')->nullable();
+            $table->string('typeAffaire')->nullable();
+            $table->json('images')->nullable();
+            $table->string('video_url')->nullable();
+            $table->string('status')->default('recente');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('biens');
+    }
+};

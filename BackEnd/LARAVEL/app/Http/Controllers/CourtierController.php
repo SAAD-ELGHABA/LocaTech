@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Agence;
 use App\Models\Courtier;
 use App\Models\User;
+use App\Mail\CourtierActivated; // Ensure this class exists in the App\Mail namespace and implements Mailable
 use Illuminate\Validation\Rule;
 use Error;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+
+use function Laravel\Prompts\error;
 
 class CourtierController extends Controller
 {
@@ -78,5 +83,54 @@ class CourtierController extends Controller
                 'message' => $error
             ], 500);
         }
+    }
+
+    public function recentCourtiers()
+    {
+        $recentCourtiers = Courtier::where('status', 'pas activé')
+            ->with(['user', 'agence'])
+            ->get();
+        return response()->json($recentCourtiers, 200);
+    }
+
+    public function StatusCourtiers(Request $request)
+    {
+        try {
+            $courtier_id = $request->input('idCourtie');
+            $status = $request->input('status');
+
+            $courtier = Courtier::find($courtier_id);
+            if (!$courtier) {
+                return response()->json([
+                    'message' => 'Courtier introuvable.'
+                ], 404);
+            }
+
+            $courtier->status = $status;
+            $courtier->user->email_verified_at = now();
+            $courtier->user->email_verified = true;
+            $courtier->user->save();
+            $courtier->save();
+            if ($status === 'activé') {
+                if ($courtier->user && $courtier->user->email) {
+                    $token = $courtier->user->createToken('courtier-token')->plainTextToken;
+                    Mail::to($courtier->user->email)->send(new CourtierActivated($courtier, $token));
+                }
+            }
+            return response()->json([
+                'message' => "Le statut du courtier a été mis à jour avec succès. avec le status $status"
+            ], 200);
+        } catch (Error $error) {
+            return response()->json([
+                'message' => $error
+            ]);
+        }
+    }
+    public function ActuelCourtier(Request $request)
+    {
+        $ActuelCourtier = Courtier::findOrFail($request->input('user_id'));
+        return response()->json([
+            'ActuelCourtier' => $ActuelCourtier
+        ], 200);
     }
 }
