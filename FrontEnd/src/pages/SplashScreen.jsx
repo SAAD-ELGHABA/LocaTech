@@ -1,12 +1,11 @@
 import logo from '../assets/Location.png';
 export default function SplashScreen() {
-  const title = "LocaTech"; // "Loca" en rouge, "Tech" en vert
+  const title = "LocaTech";
 
   return (
     <div className="splash-screen">
       <div className="logo-container">
         <div className="title-wrapper">
-          {/* Ajout de l'image à côté du titre */}
           <img 
             src={logo}
             alt="Logo" 

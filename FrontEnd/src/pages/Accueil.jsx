@@ -1,42 +1,12 @@
-import React, { useState,useEffect } from "react";
-// import { useState } from "react";
-import {
-  FaHome,
-  FaCity,
-  FaSearch,
-  FaMoneyBillWave,
-  FaMapMarkerAlt,
-  FaShoppingCart,
-  FaKey,
-  FaBlog,
-  FaEnvelope,
-  FaPlusCircle,
-  FaUserCircle,
-  FaChartLine,
-  FaTag,
-  FaBuilding,
-  FaSchool,
-  FaBus,
-  FaStore,
-} from "react-icons/fa";
-import {
-  FaFacebook,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedin,
-  FaPhoneAlt,
-  FaCcPaypal,
-  FaCcVisa,
-} from "react-icons/fa";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // White arrows
+import React, { useRef , useState,useEffect } from "react";
 import { Sparkles } from 'lucide-react';
 import { Quote } from "lucide-react";
-import { MdRecommend } from "react-icons/md";
+import { toast } from "sonner";
 import Navbar from "../components/Navbar";
 import logo from "../assets/Location.png";
-import image1 from '../assets/image1.png'; // Adjust this path
-import image2 from '../assets/image2.png'; // Adjust this path
-import image3 from '../assets/image3.png'; // Adjust this path
+import image1 from '../assets/image1.png'; 
+import image2 from '../assets/image2.png'; 
+import image3 from '../assets/image3.png'; 
 import pricingImage from "../assets/pricing-image.png"; 
 import sellImage from "../assets/sell-image.png"; 
 import infoCard1 from "../assets/infoCard1.png";
@@ -52,13 +22,157 @@ import Essaouira from "../assets/essaouira.png";
 import Ifrane from "../assets/ifrane.png";
 import Casablanca from "../assets/casablanca.png";
 import Agadir from "../assets/agadir.png";
-
-import "../index.css";
+import ChatAI from "../components/ChatAI/ChatAI";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
+import "../index.css";
+
+
+
 
 
 const HeroSection = () => {
+
+
+  const [showChatAI, setShowChatAI] = useState(false);
+
+  const handleGoToAI = () => {
+    setShowChatAI(true);
+  };
+
+  const villesMaroc = [
+    "Agadir", "Aït Melloul", "Al Hoceïma", "Azrou", "Beni Mellal", "Ben Guerir", "Berkane",
+    "Boujdour", "Bouskoura", "Casablanca", "Chefchaouen", "Dakhla", "Dcheira El Jihadia",
+    "El Jadida", "Errachidia", "Essaouira", "Fès", "Fquih Ben Salah", "Guelmim", "Guercif",
+    "Ifrane", "Inezgane", "Jerada", "Kénitra", "Khémisset", "Khénifra", "Khouribga", "Laâyoune",
+    "Larache", "Marrakech", "Martil", "Meknès", "Mohammédia", "Nador", "Ouarzazate", "Oujda",
+    "Rabat", "Safi", "Salé", "Settat", "Sidi Bennour", "Sidi Kacem", "Sidi Slimane", "Tanger",
+    "Tan-Tan", "Taourirt", "Taroudant", "Taza", "Témara", "Tétouan", "Tiflet", "Tinghir",
+    "Tiznit", "Zagora"
+  ];
+  
+
+  
+  const [ville, setVille] = useState("");
+const [showVilleSuggestions, setShowVilleSuggestions] = useState(false);
+
+
+const handleVilleChange = (e) => {
+  const value = e.target.value;
+  setVille(value);
+  setShowVilleSuggestions(true);
+};
+
+const handleVilleSelect = (selectedVille) => {
+  setVille(selectedVille);
+  setShowVilleSuggestions(false);
+};
+
+const searchBoxRef = useRef(null);
+const villeRef = useRef(null);
+const budgetRef = useRef(null);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      searchBoxRef.current &&
+      !searchBoxRef.current.contains(event.target)
+    ) {
+      setShowVilleSuggestions(false);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleScroll = () => {
+    setShowVilleSuggestions(false);
+    setShowSuggestions(false);
+  };
+
+  document.addEventListener('click', handleClickOutside);
+  window.addEventListener('scroll', handleScroll);
+
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+    window.removeEventListener('scroll', handleScroll);
+  };
+}, []);
+  
+
+
+  const navigate = useNavigate(); // Create navigate function
+
+
+  // const handleGoToAI = () => {
+  //   navigate("/chat-ai"); // Assure-toi que cette route existe
+  // };
+
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [budget, setBudget] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  
+  // Predefined budget ranges
+  const budgetOptions = [
+    "0 à 100 000 MAD",
+    "100 000 à 200 000 MAD",
+    "200 000 à 300 000 MAD",
+    "300 000 à 400 000 MAD",
+    "400 000 à 500 000 MAD",
+    "500 000 à 600 000 MAD",
+    "600 000 à 700 000 MAD",
+    "700 000 à 800 000 MAD",
+    "800 000 à 900 000 MAD",
+    "900 000 à 1 000 000 MAD",
+    "1 000 000 à 2 000 000 MAD",
+    "2 000 000 à 3 000 000 MAD",
+    "3 000 000 à 4 000 000 MAD",
+    "4 000 000 à 5 000 000 MAD",
+    "5 000 000 MAD et +",
+  ];
+  
+  const handleBudgetChange = (e) => {
+    const value = e.target.value;
+    setBudget(value);
+    setShowSuggestions(true);
+  };
+  
+  const handleSuggestionClick = (suggestion) => {
+    setBudget(suggestion);
+    setShowSuggestions(false);
+  };
+  
+
+
+
+
+
+  const handleSearch = () => {
+    if (selectedOption && ville && selectedType && budget) {
+      const action = selectedOption === "acheter" ? "Acheter" : "Louer";
+      const searchData = {
+        ville,
+        type: selectedType,
+        budget,
+        action
+      };
+  
+      if (selectedOption === "acheter") {
+        navigate("/acheter", { state: searchData });
+      } else if (selectedOption === "louer") {
+        navigate("/louer", { state: searchData });
+      }
+    } else {
+      toast.error("Merci de remplir tous les champs.");
+    }
+  };
+  
+  
+  
+  
   return (
+
+
+    
     <div className="relative h-[70vh] bg-emerald-30 text-green-800 flex flex-col justify-center items-center">
       {/* Texte */}
       <div className="text-center">
@@ -71,33 +185,140 @@ const HeroSection = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="absolute bottom-0 w-full px-4 flex justify-center items-center pb-10">
-        <div className="bg-white p-6 rounded-xl border border-gray-400 shadow-lg flex flex-wrap items-center justify-between gap-4 w-[90%] max-w-5xl">
-          <select className="border border-gray-300 p-2 rounded-md">
-            <option>Achat</option>
-          </select>
-          <select className="border border-gray-300 p-2 rounded-md">
-            <option>Ville</option>
-          </select>
-          <select className="border border-gray-300 p-2 rounded-md">
-            <option>Type</option>
-          </select>
-          <input type="text" placeholder="Budget                   MAD" className="border border-gray-300 p-2 rounded-md" />
-          <div className="flex gap-2">
-            <button className="bg-[#F44336] hover:bg-red-700 text-white px-4 py-2 rounded-md cursor-pointer">
-              Rechercher
-            </button>
-            {/* Bouton AI avec border dégradé */}
-            <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
-              <button className="flex items-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md cursor-pointer">
-                <Sparkles className="w-4 h-4 text-purple-500" />
-                Prévoir des recommandations
-              </button>
-            </div>
-          </div>
+      
+      <div
+  ref={searchBoxRef}
+  className="absolute bottom-0 w-full px-4 flex justify-center items-center pb-10"
+>
+  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-lg w-full max-w-7xl flex flex-wrap md:flex-nowrap gap-4 justify-between items-center">
+    
+    {/* Achat */}
+    <select
+      className="border border-gray-300 p-2 rounded-md text-gray-500 w-full md:w-[150px]"
+      value={selectedOption}
+      onChange={(e) => setSelectedOption(e.target.value)}
+    >
+      <option value="" disabled hidden>Achat</option>
+      <option value="acheter">Acheter</option>
+      <option value="louer">Louer</option>
+    </select>
+
+    {/* Ville */}
+    <div className="relative w-full md:w-[180px]">
+      <input
+        type="text"
+        placeholder="Ville"
+        value={ville}
+        onChange={handleVilleChange}
+        onFocus={() => setShowVilleSuggestions(true)}
+        className="border border-gray-300 p-2 rounded-md w-full text-gray-700"
+      />
+      {showVilleSuggestions && (
+        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 z-20 max-h-60 overflow-y-auto shadow-lg">
+          {villesMaroc
+            .filter((v) => v.toLowerCase().includes(ville.toLowerCase()))
+            .map((v, index) => (
+              <div
+                key={index}
+                onClick={() => handleVilleSelect(v)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-700"
+              >
+                {v}
+              </div>
+            ))}
         </div>
-      </div>
+      )}
     </div>
+
+    {/* Type */}
+    <select
+      className="border border-gray-300 p-2 rounded-md text-gray-500 w-full md:w-[150px]"
+      value={selectedType}
+      onChange={(e) => setSelectedType(e.target.value)}
+    >
+      <option value="" disabled hidden>Type</option>
+      <option value="appartement">Appartement</option>
+      <option value="maison">Maison</option>
+      <option value="villa">Villa</option>
+    </select>
+
+    {/* Budget */}
+    <div className="relative w-full md:w-[200px]">
+      <input
+        type="text"
+        placeholder="Budget                     MAD"
+        value={budget}
+        onChange={handleBudgetChange}
+        onFocus={() => setShowSuggestions(true)}
+        className="border border-gray-300 p-2 rounded-md w-full text-gray-700"
+      />
+      {showSuggestions && (
+        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 z-20 max-h-60 overflow-y-auto shadow-lg">
+          {budgetOptions
+            .filter((range) =>
+              range.toLowerCase().includes(budget.toLowerCase())
+            )
+            .map((range, index) => (
+              <div
+                key={index}
+                onClick={() => handleSuggestionClick(range)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-700"
+              >
+                {range}
+              </div>
+            ))}
+        </div>
+      )}
+    </div>
+
+    {/* Bouton Rechercher */}
+    <button
+      onClick={handleSearch}
+      className="bg-[#F44336] hover:bg-red-700 text-white px-4 py-2 cursor-pointer rounded-md w-full md:w-auto"
+    >
+      Rechercher
+    </button>
+
+    {/* Bouton AI */}
+    <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto">
+  <button
+    onClick={handleGoToAI}
+    className="flex items-center justify-center gap-2 bg-white cursor-pointer text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto"
+  >
+    <Sparkles className="w-4 h-4 text-purple-500" />
+    Prévoir des recommandations
+  </button>
+</div>
+
+
+{showChatAI && (
+  <div className="fixed inset-0 z-50 backdrop-blur-xs bg-white/30 flex items-center justify-center px-4">
+    <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl relative">
+      <button
+        onClick={() => setShowChatAI(false)}
+        className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+      >
+        ✕
+      </button>
+      <ChatAI
+        ville={ville}
+        selectedType={selectedType}
+        budget={budget}
+      />
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+  </div>
+</div>
+
+      </div>
   );
 };
 
@@ -134,44 +355,46 @@ const ImageCarousel = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="w-full">
-        <img
-          src={images[currentIndex]}
-          alt={`carousel-slide-${currentIndex}`}
-          className="w-full object-cover"
-        />
-      </div>
+    <div className="relative h-64 md:h-80 lg:h-150"> {/* <= hna n9esna l height */}
+  <div className="w-full h-full">
+    <img
+      src={images[currentIndex]}
+      alt={`carousel-slide-${currentIndex}`}
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-60 p-3 rounded-full shadow-xl hover:bg-opacity-90 transition duration-300 ease-in-out"
-      >
-        &#60;
-      </button>
-      <button
-        onClick={goToNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-60 p-3 rounded-full shadow-xl hover:bg-opacity-90 transition duration-300 ease-in-out"
-      >
-        &#62;
-      </button>
+  {/* Fleche l'isar */}
+<button
+  onClick={goToPrevious}
+  className="absolute top-1/2 left-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
+>
+  &#60;
+</button>
 
-      {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <span
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full bg-white opacity-60 cursor-pointer transition-opacity ${
-              currentIndex === index ? "opacity-100" : ""
-            }`}
-          />
-        ))}
-      </div>
-    </div>
+{/* Fleche l'yemin */}
+<button
+  onClick={goToNext}
+  className="absolute top-1/2 right-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
+>
+  &#62;
+</button>
+
+  {/* Dots */}
+  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+    {images.map((_, index) => (
+      <span
+        key={index}
+        onClick={() => setCurrentIndex(index)}
+        className={`w-3 h-3 rounded-full bg-white opacity-60 cursor-pointer transition-opacity ${
+          currentIndex === index ? "opacity-100" : ""
+        }`}
+      />
+    ))}
+  </div>
+</div>
   );
-};
+}
 
 
 function ActualitesImmobilieres() {
@@ -300,16 +523,76 @@ function ActualitesImmobilieres() {
 }
 
 export default function Accueil() {
+
+  const [submissionMessage, setSubmissionMessage] = useState('');
+
+
+useEffect(() => {
+  // جلب الرسالة من localStorage
+  const message = localStorage.getItem('submissionMessage');
+  if (message) {
+    setSubmissionMessage(message);
+    localStorage.removeItem('submissionMessage'); // باش تبان غير مرة وحدة
+  }
+}, []);
+
+useEffect(() => {
+  if (submissionMessage) {
+    const timer = setTimeout(() => {
+      setSubmissionMessage(''); // يختفي بعد 1 ثانية
+    }, 1000); // 1 ثانية (1000 مللي ثانية)
+
+    return () => clearTimeout(timer); // تنظيف التايمر إذا تغيرت الرسالة
+  }
+}, [submissionMessage]);
+
+  
+  const carouselRef = useRef(null);
+const [showButton, setShowButton] = useState(false);
+
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      setShowButton(entry.isIntersecting || window.scrollY > entry.boundingClientRect.top);
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  if (carouselRef.current) {
+    observer.observe(carouselRef.current);
+  }
+
+  return () => {
+    if (carouselRef.current) {
+      observer.unobserve(carouselRef.current);
+    }
+  };
+}, []);
+
+{showButton && (
+  <div className="fixed bottom-4 right-4 z-50">
+    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition">
+      Rechercher
+    </button>
+  </div>
+)}
+
+
+
+
+
+
+
   const [showNavbarSearch, setShowNavbarSearch] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Target the section or section-image elements
       const section = document.querySelector(".section");
       if (section) {
         const rect = section.getBoundingClientRect();
-        // Show the navbar search button when the user scrolls past the section
-        setShowNavbarSearch(rect.top < 0); // This triggers when the section is out of view
+        setShowNavbarSearch(rect.top < 0); 
       }
     };
 
@@ -332,10 +615,25 @@ export default function Accueil() {
       <Navbar showSearchButton={showNavbarSearch} />
       
       <div className="accueil-container">
-      
-      <HeroSection />
+      {submissionMessage && (
+  <div
+    className="fixed top-[100px] left-1/2 transform -translate-x-1/2 bg-[#03a9f4] text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-1000 opacity-100"
+    style={{ width: 'auto', maxWidth: '900px', opacity: submissionMessage ? 1 : 0 }}
+  >
+    {submissionMessage}
+  </div>
+)}
 
-      <ImageCarousel />
+
+      <div id="hero-section">
+      <HeroSection />
+</div>
+
+
+
+      <div ref={carouselRef}>
+  <ImageCarousel />
+</div>
 
         
       <div className="section">
@@ -354,7 +652,7 @@ export default function Accueil() {
   </div>
 </div>
 
-<hr className="section-divider bg-white border-t-2 my-6" />
+<hr className="bg-white border-0 border-t border-gray-300 my-12 w-3/10 mx-auto border-t-2 my-6" />
 
 <div className="section reverse">
   <div className="section-content">
@@ -475,6 +773,7 @@ export default function Accueil() {
     </div>
   </div>
 </section>
+
 
 
 

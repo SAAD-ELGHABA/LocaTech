@@ -6,6 +6,9 @@ import ContactUs from "../pages/ContactUs";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import Block from "../pages/Block";
+import Acheter from "../pages/Acheter";
+import Louer from "../pages/Louer";
+// import ChatAI from "../components/ChatAI/ChatAI";
 import GoogleLanding from "../components/GoogleLanding";
 import ResetPassword from "../pages/ResetPassword";
 import ForgetPassword from "../pages/ForgetPassword";
@@ -31,6 +34,18 @@ const Router = createBrowserRouter([
         index: true,
         element: <Accueil />,
       },
+      {
+        path: "/acheter",
+        element: <Acheter />,
+      },
+      {
+        path: "/louer",
+        element: <Louer />,
+      },
+      // {
+      //   path: "/chat-ai",
+      //   element: <ChatAI />,
+      // },
       {
         path: "/blog",
         element: <Blog />,

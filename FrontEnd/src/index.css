@@ -13,6 +13,30 @@
 html {
   scroll-behavior: smooth;
 }
+
+@layer utilities {
+  .animate-spin-fast {
+    animation: spin 0.4s linear;
+  }
+}
+
+
+/* @keyframes wiggle {
+  0% { transform: rotate(0deg) translateY(0); }
+  15% { transform: rotate(-8deg) translateY(-3px); }
+  30% { transform: rotate(8deg) translateY(3px); }
+  45% { transform: rotate(-5deg) translateY(-2px); }
+  60% { transform: rotate(5deg) translateY(2px); }
+  75% { transform: rotate(-2deg) translateY(-1px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+@layer utilities {
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+} */
+
 /* Reset pour enlever le scroll */
 /* html, body {
   margin: 0;
@@ -614,7 +638,7 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #ffb8b8, #a8f1c6);
+  background: linear-gradient(135deg, #ef5350, #ffebee);
   position: fixed;
   top: 0;
   left: 0;
@@ -1068,15 +1092,15 @@ body {
 }
 
 /* Divider style (khat sghir grey) */
-.section-divider {
-  background-color: white; /* This line sets the background to white */
+/* .section-divider {
+  background-color: white; 
   border: none;
   border-top: 1px solid #ccc;
   margin: 3rem 0;
   width: 30%;
   margin-left: auto;
   margin-right: auto;
-}
+} */
 
 
 .section-content {
@@ -1465,9 +1489,9 @@ body {
 }
 
 
-/* Styles pour le Footer */
+/* Styles pour le Footer #9fafbc */
 .main-footer {
-  background-color: #b1a7a6;
+  background-color: #8e8480; 
   color: #fff;
   padding: 40px 60px;
 }
