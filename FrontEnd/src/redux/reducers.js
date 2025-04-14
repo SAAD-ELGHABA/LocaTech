@@ -8,7 +8,7 @@ export const userReducer = (state = user, action) => {
         case "LOGIN":
             return {
                 ...state,
-                user: action.payload.user, 
+                user: action.payload, 
                 token: action.payload.token
             };
         case "REGISTER":
@@ -27,6 +27,8 @@ export const userReducer = (state = user, action) => {
             return state;
     }
 };
+
+
 
 const CourtierSignUp = {
     step1:{
@@ -58,6 +60,98 @@ export const CourtierSignUpReducer = (state=CourtierSignUp,action)=>{
     }
 }
 
+const ActuelCourtier = [
+
+]
+
+export const ActuelCourtierReducer = (state=ActuelCourtier,action)=>{
+    switch (action.type){
+        case "ActuelCourtier":
+            return action.payload;
+        default :
+        return state;
+    }
+}
+
+const recentCourtiers = [
+
+]
+
+const loadingGlobal = true;
+
+export const loadingReducer = (state = loadingGlobal, action) => {
+    switch (action.type) {
+      case 'SET_LOADING':
+        return action.payload;
+      default:
+        return state;
+    }
+  };
+
+export const RecentCourtiers = (state=recentCourtiers,action)=>{
+    switch (action.type){
+        case "GET_RECENT_COURTIERS":
+            return  action.payload;
+            
+            default:
+                return state;
+    }
+}
+
+const files = [
+
+]
+
+export const filesReducer = (state=files,action)=>{
+    switch(action.type){
+        case "SET_FILES":
+            return action.payload;
+        case "RESET_FILES":
+            return files;
+            default:
+            return state
+    }
+}
+
+const createBien = {
+    title:null,
+    description:null,
+    budget:null,
+    superficier:null,
+    mapUrl:null,
+    ville:null,
+    type:null,
+    typeAffaire:null,
+    images:[],
+    video:null,
+    status:"recent"
+}
+
+
+export const CreateBienReducer = (state=createBien,action)=>{
+    switch(action.type){
+        case "SET_CREATE_BIEN":
+            return {
+                ...state,
+                ...action.payload,
+              };
+        case "RESET_CREATE_BIEN":
+            return createBien;
+        default :
+        return state;
+    }
+}
+
+const CreateBienToggle = false;
+
+export const CreateBienToggleReducer = (state = CreateBienToggle, action) => {
+    switch (action.type) {
+      case 'SHOW_CREATEBIENTOGGLE':
+        return action.payload;
+      default:
+        return state;
+    }
+  };
 
 const biens = [
 
@@ -65,11 +159,20 @@ const biens = [
 export const BienReducer = (state=biens,action)=>{
     switch (action.type){
         case "ALLBIENS":
-            return {
-                ...state,
-                payload:action.payload
-            }
+            return action.payload;
         default :
         return state;
+    }
+}
+
+const villes = []
+
+export const VillesReducer = (state=villes,action)=>{
+    switch (action.type){
+        case "GET_VILLES":
+            return action.payload;
+
+        default:
+            return state;
     }
 }

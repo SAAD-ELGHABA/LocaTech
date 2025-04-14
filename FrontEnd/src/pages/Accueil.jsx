@@ -27,16 +27,17 @@ import {
   FaCcPaypal,
   FaCcVisa,
 } from "react-icons/fa";
-// أيقونات السوشيال ميديا (مثال)
+import { Sparkles } from 'lucide-react';
 import { Quote } from "lucide-react";
 import { MdRecommend } from "react-icons/md";
 import logo from "../assets/Location.png";
-import pricingImage from "../assets/pricing-image.png"; // Import image for pricing section
-import sellImage from "../assets/sell-image.png"; // Import image for sell section
+import pricingImage from "../assets/pricing-image.png"; 
+import sellImage from "../assets/sell-image.png"; 
 import infoCard1 from "../assets/infoCard1.png";
 import infoCard2 from "../assets/infoCard2.png";
 import infoCard3 from "../assets/infoCard3.png";
 import Témoignage from "../assets/Témoignage.png";
+import appartement from "../assets/appartement.png";
 import Rabat from "../assets/rabat.png";
 import Marrakech from "../assets/marrakech.png";
 import Tanger from "../assets/tanger.png";
@@ -49,55 +50,58 @@ import Agadir from "../assets/agadir.png";
 import "../index.css";
 import { Link } from "react-router-dom";
 
-// Composant Navbar
-// function Navbar() {
-//   return (
-//     <nav className="navbar ">
-//       <div className="navbar-brand">
-//         <div className="logo-container">
-//           <img src={logo} alt="Logo" className="logo-image" />
-//           <h1 className="logo">
-//             <span className="logo-red">Loca</span>
-//             <span className="logo-green">Tech</span>
-//           </h1>
-//         </div>
-//       </div>
 
-//       <div className="navbar-links">
-//         <a href="#accueil" className="nav-link">
-//           <FaHome className="nav-icon" />
-//           <span>Accueil</span>
-//         </a>
-//         <a href="#acheter" className="nav-link">
-//           <FaShoppingCart className="nav-icon" />
-//           <span>Acheter</span>
-//         </a>
-//         <a href="#louer" className="nav-link">
-//           <FaKey className="nav-icon" />
-//           <span>Louer</span>
-//         </a>
-//         <a href="#blog" className="nav-link">
-//           <FaBlog className="nav-icon" />
-//           <Link to="/blog" className="text-gray-800 hover:text-green-600">
-//   <span>Blog</span>
-// </Link>
-//         </a>
-//         <a href="#contact" className="nav-link">
-//           <FaEnvelope className="nav-icon" />
-//           <span>Contactez-nous</span>
-//         </a>
-//         <a href="#annonce" className="nav-link highlight-red">
-//           <FaPlusCircle className="nav-icon" />
-//           <span>Déposer une annonce</span>
-//         </a>
-//         <a href="#espace" className="nav-link border-red">
-//           <FaUserCircle className="nav-icon" />
-//           <span>Mon Espace</span>
-//         </a>
-//       </div>
-//     </nav>
-//   );
-// }
+const HeroSection = () => {
+  return (
+    <div className="relative h-[70vh] bg-emerald-30 text-green-800 flex flex-col justify-center items-center">
+      
+      {/* Texte */}
+      <div className="text-center">
+        <h1 className="text-green-500 text-xl md:text-3xl font-bold mb-4 leading-snug">
+          Trouvez votre maison/<br /> appartement idéal en toute simplicité !
+        </h1>
+        <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-5 py-2 mt-4 rounded-full text-sm cursor-pointer transition-all duration-300">
+          👋 Consulter
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      <div className="absolute -bottom-10 w-full px-4 flex justify-center items-center">
+        <div className="bg-white p-6 rounded-xl border border-gray-400 shadow-lg flex flex-wrap items-center justify-between gap-4 w-[90%] max-w-5xl">
+          
+          <select className="border border-gray-300 p-2 rounded-md">
+            <option>Achat</option>
+          </select>
+          
+          <select className="border border-gray-300 p-2 rounded-md">
+            <option>Ville</option>
+          </select>
+          
+          <select className="border border-gray-300 p-2 rounded-md">
+            <option>Type</option>
+          </select>
+          
+          <input type="text" placeholder="Budget                   MAD" className="border border-gray-300 p-2 rounded-md" />
+          
+          <div className="flex gap-2">
+            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+              Rechercher
+            </button>
+
+            {/* Bouton AI avec border dégradé */}
+            <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
+              <button className="flex items-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md">
+                <Sparkles className="w-4 h-4 text-purple-500" />
+                Prévoir des recommandations
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function ActualitesImmobilieres() {
   const villes = [
@@ -224,85 +228,6 @@ function ActualitesImmobilieres() {
   );
 }
 
-// Composant Footer
-// function Footer() {
-//   return (
-//     <footer className="main-footer">
-//       <div className="footer-columns">
-//         <div className="footer-column">
-//           <h3>Découvrir</h3>
-//           <ul>
-//             <li>
-//               <a href="#">Découvrez LocaTech</a>
-//             </li>
-//             <li>
-//               <a href="#">Découvrez votre futur quartier</a>
-//             </li>
-//             <li>
-//               <a href="#">Achetez et louez votre bien</a>
-//             </li>
-//             <li>
-//               <a href="#">Actualités et conseils immobiliers</a>
-//             </li>
-//           </ul>
-//         </div>
-//         <div className="footer-column">
-//           <h3>L'entreprise</h3>
-//           <ul>
-//             <li>
-//               <a href="#">Nous contacter</a>
-//             </li>
-//             <li>
-//               <a href="#">Besoin d'aide ?</a>
-//             </li>
-//             <li>
-//               <a href="#">Votre avis nous intéresse</a>
-//             </li>
-//           </ul>
-//         </div>
-//         <div className="footer-column follow-us">
-//           <h3>Retrouvez-nous sur :</h3>
-//           <div className="social-icons">
-//             <a href="#">
-//               <FaFacebook size={20} />
-//             </a>
-//             <a href="#">
-//               <FaTwitter size={20} />
-//             </a>
-//             <a href="#">
-//               <FaInstagram size={20} />
-//             </a>
-//             <a href="#">
-//               <FaLinkedin size={20} />
-//             </a>
-//             <a href="#">
-//               <FaPhoneAlt size={20} />
-//             </a>{" "}
-//             {/* Téléphone */}
-//             <a href="#">
-//               <FaCcPaypal size={20} />
-//             </a>{" "}
-//             {/* PayPal */}
-//             <a href="#">
-//               <FaCcVisa size={20} />
-//             </a>{" "}
-//             {/* Carte de crédit (Visa) */}
-//           </div>
-//         </div>
-//       </div>
-//       <div className="footer-bottom">
-//           <div className="logo-container">
-//       <img src={logo} alt="LocaTech Logo" className="footer-logo" />
-//       <span><span className="logo-red">Loca</span><span className="logo-green">Tech</span></span>
-//     </div>
-
-//         <p>&copy; LocaTech - 2025</p>
-//       </div>
-//     </footer>
-//   );
-// }
-
-// Composant Accueil
 export default function Accueil() {
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in-element");
@@ -316,35 +241,14 @@ export default function Accueil() {
 
   return (
     <div className="accueil-page">
-      {/* <Navbar /> */}
+      
       <div className="accueil-container">
-        {/* Hero Section */}
-      <div className="hero-section">
-        <div className="overlay">
-          <h1>
-            Trouvez votre maison/<br /> appartement idéal en toute simplicité !
-          </h1>
-          <p>
-            Découvrez des centaines d’annonces d’appartements et de maisons à
-            vendre ou à louer partout au Maroc.
-          </p>
-          <button className="cta-button">Consulter</button>
-        </div>
-      </div>
+        
+      <HeroSection />
 
-      {/* Search Section */}
-<div className="search-section">
-  <select><option>Achat</option></select>
-  <select><option>Ville</option></select>
-  <select><option>Type</option></select>
-  <input type="text" placeholder="Budget                        MAD" />
-  <div className="button-group">
-    <button className="search-btn">Rechercher</button>
-    <button className="ai-btn">Prévoir des recommandations 🔮</button>
-  </div>
-</div>
+    
 
-        {/* Section 1 - Pricing */}
+        
 <div className="section">
   <div className="section-image">
     <img src={pricingImage} alt="Prix immobilier" />
@@ -361,10 +265,8 @@ export default function Accueil() {
   </div>
 </div>
 
-{/* Divider */}
 <hr className="section-divider" />
 
-{/* Section 2 - Sell */}
 <div className="section reverse">
   <div className="section-content">
     <span className="tag">100% gratuit</span>
@@ -382,7 +284,7 @@ export default function Accueil() {
 </div>
 
 
-        {/* Info Cards */}
+        
         <div className="info-cards-title">
           <h3>
             Trouvez votre futur logement, que ce soit pour acheter et louer
@@ -411,7 +313,7 @@ export default function Accueil() {
             </p>
           </div>
         </div>
-        {/* Témoignage Section */}
+        
         <div className="testimonial-section">
           <h2 className="testimonial-title ">
             Ils ont vendu ou loué grâce à LocaTech
@@ -442,11 +344,8 @@ export default function Accueil() {
           </div>
         </div>
 
-        {/* Section Actualités Immobilières (القسم الجديد) */}
-        <ActualitesImmobilieres />
+        {/* <ActualitesImmobilieres /> */}
 
-        {/* Footer (الفوتر الجديد) */}
-        {/* <Footer /> */}
       </div>
     </div>
   );

@@ -2,28 +2,14 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SignUpClient = () => {
-  const [villes, setVilles] = useState([]);
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
-  useEffect(() => {
-    const getVilles = async () => {
-      try {
-        const response = await axios.get("/api/ville");
-        if (response.status >= 200) {
-          setVilles(response.data.villes);
-        } else {
-          toast.error("Error fetching cities");
-        }
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-      }
-    };
-    getVilles();
-  }, []);
+
 
   const handleRegister = async (e) => {
     setLoading(true);

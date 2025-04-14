@@ -1,9 +1,17 @@
 import {combineReducers,legacy_createStore} from 'redux'
-import {userReducer} from './reducers'
+import {ActuelCourtierReducer, BienReducer, CreateBienReducer, CreateBienToggleReducer, filesReducer, loadingReducer, RecentCourtiers, userReducer, VillesReducer} from './reducers'
 import { CourtierSignUpReducer } from './reducers';
 const reducers = combineReducers({
     userReducer,
-    CourtierSignUpReducer
+    CourtierSignUpReducer,
+    RecentCourtiers,
+    loadingReducer,
+    CreateBienReducer,
+    filesReducer,
+    BienReducer,
+    VillesReducer,
+    ActuelCourtierReducer,
+    CreateBienToggleReducer
 })
 
 export const store = legacy_createStore(reducers);

@@ -29,8 +29,8 @@ function ForgetPassword() {
             duration: 5000,
             description: (
               <span className="text-white">
-                go to your email and check fo our message then reset your
-                password
+                Accédez à votre boîte mail et consultez nos messages, puis
+                réinitialisez votre mot de passe.
               </span>
             ),
             style: {
@@ -131,7 +131,7 @@ function ForgetPassword() {
             backgroundImage: "url(accueil 1.png)", // Replace with actual path
           }}
         >
-          <img src={asideimg} alt="aside image" className="w-full"/>
+          <img src={asideimg} alt="aside image" className="w-full" />
         </div>
       </div>
     </div>

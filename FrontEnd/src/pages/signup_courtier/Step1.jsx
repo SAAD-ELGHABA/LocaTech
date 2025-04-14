@@ -71,6 +71,15 @@ function Step1({ setStep }) {
             name="nom"
             id=""
             value={step1.step1.nom && step1.step1.nom}
+            onChange={(e) => {
+              dispatch({
+                type: "STEP1",
+                payload: {
+                  ...step1.step1,
+                  nom: e.target.value,
+                },
+              });
+            }}
             className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
@@ -84,6 +93,15 @@ function Step1({ setStep }) {
             name="prenom"
             id=""
             value={step1.step1.prenom && step1.step1.prenom}
+            onChange={(e) => {
+              dispatch({
+                type: "STEP1",
+                payload: {
+                  ...step1.step1,
+                  prenom: e.target.value,
+                },
+              });
+            }}
             className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
@@ -97,6 +115,15 @@ function Step1({ setStep }) {
             name="email"
             id=""
             value={step1.step1.email && step1.step1.email}
+            onChange={(e) => {
+              dispatch({
+                type: "STEP1",
+                payload: {
+                  ...step1.step1,
+                  email: e.target.value,
+                },
+              });
+            }}
             className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
@@ -110,6 +137,15 @@ function Step1({ setStep }) {
             name="telephone"
             id=""
             value={step1.step1.telephone && step1.step1.telephone}
+            onChange={(e) => {
+              dispatch({
+                type: "STEP1",
+                payload: {
+                  ...step1.step1,
+                  telephone: e.target.value,
+                },
+              });
+            }}
             className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>

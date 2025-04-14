@@ -1,6 +1,7 @@
 /* Add Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 @import "tailwindcss";
+
 /* Dégradé background red to green */
 /* .splash-screen, .main-screen {
   height: 100vh;
@@ -24,16 +25,16 @@
   transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.accueil-container {
+/* .accueil-container {
   width: 100%;
   padding-top: 80px;
   min-height: 100vh;
-  background-color: #f9f9f9; /* Gris très clair */
-  background-image: url('./assets/accueil 1.png');
-  /* background-size: cover; */
-  /* background-position: center; */
+  background-color: #f9f9f9; 
+  background-image: url('./assets/Témoignage.png');
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-}
+} */
 
 
 /* Section Hero */
@@ -814,14 +815,14 @@ body {
 } */
 
 /* Hero Section */
-.hero-section {
+/* .hero-section {
   background: url('https://upload.wikimedia.org/wikipedia/commons/d/dc/Casablanca_skyline.jpg') center/cover no-repeat;
   height: 500px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .overlay {
   background-color: rgba(0, 0, 0, 0.6);
@@ -1702,14 +1703,14 @@ footer .logo-container span {
 
 
 /* Hero Section */
-.hero-section {
+/* .hero-section {
   background: url('https://upload.wikimedia.org/wikipedia/commons/d/dc/Casablanca_skyline.jpg') center/cover no-repeat;
   height: 500px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .overlay {
   background-color: rgba(0, 0, 0, 0.6);

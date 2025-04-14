@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\VilleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -43,5 +44,16 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     Log::info('Hash: ' . $request->hash);
     Log::info('Signature: ' . $request->query('signature'));
     $request->fulfill();
-    return response()->json(['message' => 'Email verified successfully!']);
+    return response()->json(['message' => 'E-mail vérifié avec succès !']);
 })->middleware(['auth:sanctum'])->name('verification.verify');
+
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {});
+Route::get('/recentCourtiers', [CourtierController::class, 'recentCourtiers'])->name('recentCourtiers');
+Route::post('/StatusCourtiers', [CourtierController::class, 'StatusCourtiers'])->name('StatusCourtiers');
+
+
+Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien');
+Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
+Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
+Route::post('/delete-Bien/{id}',[BienController::class,'delete'])->name('deleteBien');

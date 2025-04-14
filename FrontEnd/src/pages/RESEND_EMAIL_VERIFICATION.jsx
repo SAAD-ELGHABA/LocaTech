@@ -27,7 +27,7 @@ function RESEND_EMAIL_VERIFICATION() {
         toast.success(message);
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || "Failed to resend email.");
+      setMessage(error.response?.data?.message || "Échec du renvoi de l'e-mail.");
     } finally {
       setLoading(false);
     }

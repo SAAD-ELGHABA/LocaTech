@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Courtier;
 use App\Models\User;
 use App\Models\Ville;
 use Illuminate\Support\Facades\Hash;
@@ -65,12 +66,28 @@ class AuthController extends Controller
 
             if ($user) {
                 // User exists, log them in
-                $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json([
-                    'message' => 'connexion succée !',
-                    'user' => $user,
-                    'token' => $token
-                ]);
+                if ($user->role === 'user') {
+                    $token = $user->createToken('authToken')->plainTextToken;
+                    return response()->json([
+                        'message' => 'connexion succée !',
+                        'user' => $user,
+                        'token' => $token
+                    ]);
+                } else if ($user->role === 'courtier') {
+                    $courtier = Courtier::with(['user', 'agence'])->where('user_id', $user->id)->first();
+                    if ($courtier->status === 'activé') {
+                        $token = $user->createToken('authToken')->plainTextToken;
+                        return response()->json([
+                            'message' => 'connexion succée !',
+                            'user' => $courtier,
+                            'token' => $token
+                        ]);
+                    } else {
+                        return response()->json([
+                            'message' => "votre compte n'est pas activé !!"
+                        ]);
+                    }
+                }
             } else {
                 $user = User::create([
                     'nom' => $googleData['family_name'],
@@ -141,12 +158,12 @@ class AuthController extends Controller
             event(new Registered($user));
             if (!$user) {
                 return response()->json([
-                    'message' => 'something went wrong !'
+                    'message' => "quelque chose s'est mal passé !"
                 ], 500);
             } else {
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json([
-                    'message' => 'Please check your email for verification.',
+                    'message' => 'Veuillez vérifier votre e-mail pour vérification.',
                     'user' => $user,
                     'token' => $token
                 ]);

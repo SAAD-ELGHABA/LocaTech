@@ -4,9 +4,11 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 
 function GoogleLanding() {
   const nav = useNavigate();
+  const dispatch = useDispatch();
   const handleLoginSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
     try {
@@ -19,8 +21,16 @@ function GoogleLanding() {
         toast.success(response.data.message);
         console.log(response);
         localStorage.setItem("token", response.data.token);
+        dispatch({
+          type:'LOGIN',
+          payload:response.data.user
+        })
         setTimeout(() => {
-          nav("/");
+          if (response.data.user.role === "user") {
+            nav("/");
+          } else if (response.data.user.user.role === "courtier") {
+            nav("/courtier-index");
+          }
         }, 2000);
       } else {
         toast.error("Login Failed");
