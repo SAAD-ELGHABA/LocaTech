@@ -1,37 +1,83 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/Location.png";
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 500);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const isHomepage = location.pathname === "/";
+
   return (
-    <nav className="bg-white shadow-md py-5 px-6 flex justify-between items-center ">
-      <div className="flex items-center space-x-2">
-        <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
-        <Link to='/'>
-        <h1 className="text-xl font-bold">
-          <span className="text-red-500">Loca</span>
-          <span className="text-green-500">Tech</span>
-        </h1>
-        </Link>
-      </div>
+    <nav className="bg-white shadow-md py-4 px-4 md:px-6 fixed w-full top-0 left-0 z-50">
+      <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 
-      <div className="flex items-center space-x-6 text-sm font-medium">
-        <Link to="/" className="text-black py-2">Accueil</Link>
-        <a href="#acheter" className="text-black py-2">Acheter</a>
-        <a href="#louer" className="text-black py-2">Louer</a>
-        <Link to="/blog" className="text-black py-2">Blog</Link>
-        <Link to="/contactUs" className="text-black py-2">Contactez-nous</Link>
 
-        <Link to="/block" className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-sm flex items-center gap-2">
-          <FaPlusCircle />
-          <span>Déposer une annonce</span>
-        </Link>
+        {/* Logo + Titre */}
+        <div className="flex items-center gap-3 shrink-0">
+          <Link to="/">
+            <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
+          </Link>
+          <Link to="/">
+            <h1 className="text-xl font-bold whitespace-nowrap">
+              <span className="text-red-500">LocaTech</span>
+            </h1>
+          </Link>
+        </div>
 
-        <Link to="/login" className="border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition text-sm flex items-center gap-2">
-          <FaUserCircle />
-          <span>Mon Espace</span>
-        </Link>
+        {/* Les liens + boutons */}
+        <div className="flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap">
+          {/* <Link to="/" className="text-black">Accueil</Link> */}
+          <Link to="/acheter" className="text-black">Acheter</Link>
+          <Link to="/louer" className="text-black">Louer</Link>
+          <Link to="/blog" className="text-black">Blog</Link>
+          <Link to="/contactUs" className="text-black">Contactez-nous</Link>
+
+          {isHomepage && isScrolled && (
+            <button
+              onClick={() =>
+                document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+            >
+              Rechercher
+            </button>
+          )}
+
+          {!isHomepage && (
+            <Link
+              to="/"
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+            >
+              Rechercher
+            </Link>
+          )}
+
+          <Link
+            to="/block"
+            className="bg-[#F44336] text-white px-4 py-2 rounded-full hover:bg-red-600 transition flex items-center gap-2"
+          >
+            <FaPlusCircle />
+            <span>Déposer une annonce</span>
+          </Link>
+
+          <Link
+            to="/login"
+            className="border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition flex items-center gap-2"
+          >
+            <FaUserCircle />
+            <span>Mon Espace</span>
+          </Link>
+        </div>
       </div>
     </nav>
   );

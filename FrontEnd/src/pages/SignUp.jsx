@@ -28,8 +28,8 @@ function SignUp() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
-            <div className="relative flex justify-center text-sm text-gray-500">
-              OU
+            <div className="relative flex justify-center text-sm text-gray-500  ">
+              <p className="bg-white px-2">OU</p>
             </div>
           </div>
 
@@ -96,7 +96,7 @@ function SignUp() {
           backgroundImage: "url(accueil 1.png)", // Replace with actual path
         }}
       >
-        <img src={asideimg} alt="aside image" className="w-full"/>
+        <img src={asideimg} alt="aside image" className="w-full" />
       </div>
     </div>
   );
