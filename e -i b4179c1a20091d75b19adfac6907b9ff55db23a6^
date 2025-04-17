@@ -1,0 +1,129 @@
+[33mcommit 949a9048e8281e5db982e9cbc395aca14d7b08b5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m)[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 17 18:08:12 2025 +0100
+
+     Removed OpenAI API Key from files
+
+[33mcommit a8dbb55c66b470e32d543ebc18c7c5ee2fbf8c84[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 17 17:11:00 2025 +0100
+
+    LocaTech ChatAI ...
+
+[33mcommit 1d17106a4976f029ccdf2e75e862f4e521ab81a6[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 17 17:08:21 2025 +0100
+
+    LocaTech ChatAI ...
+
+[33mcommit b4179c1a20091d75b19adfac6907b9ff55db23a6[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 17 15:41:33 2025 +0100
+
+    LocaTech ChatAI
+
+[33mcommit 5eb9f6262a13fdf29e0dc05c200a7f822de49bf6[m[33m ([m[1;31morigin/dev[m[33m)[m
+Merge: 7f4266b 0c52de4
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 14 19:31:52 2025 +0100
+
+    courtier-Bien crud .. done
+
+[33mcommit 7f4266be617412cf8635402e9ad3dc52d14468df[m
+Merge: a802d9a b0f6650
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 14 19:01:07 2025 +0100
+
+    courtier-Bien crud .. done
+
+[33mcommit 0c52de431647df7401433582b17c860bd49e6da4[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Mon Apr 14 18:41:09 2025 +0100
+
+    Contact-us,Blog,Search-Bar,ChatAI,Page Acheter et Page Louer
+
+[33mcommit 57687eb17627ad179438129be6928bd7fd6fa87f[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 10 20:34:23 2025 +0100
+
+    Search Bar and ImageCarousel
+
+[33mcommit d4cdfce8e405f60b5bbbc428b42df5fc3b90e05b[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 10 14:16:24 2025 +0100
+
+    Some Changes
+
+[33mcommit a802d9a4e244fa9dbf469d1307f6d2f94bdb42f3[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Thu Apr 10 12:35:31 2025 +0100
+
+    courtier+agence backEnd
+
+[33mcommit b0f66503161c278825aa8bfa0ade14511dbf0c17[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Thu Apr 10 12:26:09 2025 +0100
+
+    Les changements
+
+[33mcommit 609b0bf9619ed76deb8acd516aab041510481fc4[m
+Merge: b53d425 9b680d7
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Tue Apr 8 18:46:17 2025 +0100
+
+    Blog , ContactUs et SignUpCourtier
+
+[33mcommit b53d4255d3af21e549e5a5a7e2910e1eb0d7127a[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Tue Apr 8 18:26:33 2025 +0100
+
+    Blog+ContactUs+SignUpCourtier
+
+[33mcommit 9b680d79cdc72b343c30553ee88f9c7bbc101aaf[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Tue Apr 8 18:13:59 2025 +0100
+
+    auth client done
+
+[33mcommit 15bd0247a38166107b126d6f90f86a28533e3cc0[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 7 19:22:45 2025 +0100
+
+    signup client
+
+[33mcommit 3efc144952f397e89a186cd8489116c32a051916[m
+Merge: 44bae56 6d91d10
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 7 17:42:29 2025 +0100
+
+    some changes 4/7/25
+
+[33mcommit 44bae56f4ab409a55afe2a0171f84846f948a767[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 7 17:00:51 2025 +0100
+
+    login (google and normal case with backend)
+
+[33mcommit 6d91d10f2c148bb148d42602d66135ad4da204c5[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Mon Apr 7 15:50:50 2025 +0100
+
+    configuration SignUpClient et Blog
+
+[33mcommit 9de28038369032481916cfa6a38f18af20f94c5a[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Mon Apr 7 15:09:53 2025 +0100
+
+    configuration (tailwind,routes)
+
+[33mcommit b78dfa172de58de8e31e5fbb0bbb07bc13b1f1e2[m
+Author: SaadBaouli <baoulisaad@gmail.com>
+Date:   Mon Apr 7 12:51:08 2025 +0100
+
+    configuration page d'accueil
+
+[33mcommit ac608c51aba4b32df107d75ca55b7c4efd0ccf39[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: SAAD-ELGHABA <saadlraba@gmail.com>
+Date:   Fri Apr 4 21:56:27 2025 +0000
+
+    set up the LocaTech project
