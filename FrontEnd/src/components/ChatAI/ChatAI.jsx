@@ -13,7 +13,7 @@ const ChatAI = ({ onClose }) => {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   const conversationRef = useRef(null);
-
+  const test = ''
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
