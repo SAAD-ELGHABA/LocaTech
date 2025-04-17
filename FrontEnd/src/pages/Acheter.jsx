@@ -85,7 +85,6 @@ const Acheter = () => {
       >
         « Précédent
       </button>
-
       {Array.from({ length: totalPages }, (_, i) => (
         <button
           key={i + 1}
@@ -99,7 +98,6 @@ const Acheter = () => {
           {i + 1}
         </button>
       ))}
-
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}

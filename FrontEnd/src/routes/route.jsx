@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Index from "../layouts/UserLayout/Index.user";
 import Accueil from "../pages/Accueil";
 import Blog from "../pages/Blog";
+import Apropos from "../pages/Apropos";
+import Merci from "../pages/Merci";
 import ContactUs from "../pages/ContactUs";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
@@ -67,6 +69,14 @@ const Router = createBrowserRouter([
       {
         path: "/louer",
         element: <Louer />,
+      },
+      {
+        path: "/Apropos",
+        element: <Apropos />,
+      },
+      {
+        path: "/merci",
+        element: <Merci />,
       },
       {
         path: "/blog",

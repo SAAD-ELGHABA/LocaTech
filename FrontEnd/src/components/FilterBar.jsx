@@ -66,8 +66,8 @@ function FilterBar() {
       filterBiensReducer.typeAffaire === "Louer"
     ) {
       nav("/louer");
-    }else{
-      nav('/consulter-bien')
+    } else {
+      nav("/consulter-bien");
     }
     setIsloading(true);
     try {
@@ -93,7 +93,7 @@ function FilterBar() {
   const handleGoToAI = () => {
     setShowChatAI(true);
   };
-
+  const handleCloseAI = () => setShowChatAI(false);
   return (
     <div className="sticky top-24 z-[999] transition-all duration-300">
       <div
@@ -226,21 +226,15 @@ function FilterBar() {
 
           {/* Chat AI Popup */}
           {showChatAI && (
-            <div className="fixed inset-0 z-50 backdrop-blur-xs bg-white/30 flex items-center justify-center px-4">
-              <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl relative">
-                <button
-                  onClick={() => setShowChatAI(false)}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-                >
-                  ✕
-                </button>
-                <ChatAI
-                  ville={ville}
-                  selectedType={selectedType}
-                  budget={budget}
-                />
+            <>
+              {/* overlay blur */}
+              <div className="fixed inset-0 bg-white/10 backdrop-blur-sm z-40"></div>
+
+              {/* Chat centered */}
+              <div className="fixed inset-0 z-50 flex items-center justify-center">
+                <ChatAI onClose={handleCloseAI} />
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

@@ -210,3 +210,19 @@ export const filterBiensReducer = (state=filterBiens,action)=>{
     }
 }
 
+
+
+const messages = [
+    
+]
+
+export const ChatAiReducer = (state=messages,action)=>{
+    switch (action.type){
+        case "PUSH_MESSAGE":
+            return [
+                ...state,action.payload
+            ]
+        default:
+            return messages;
+    }
+}

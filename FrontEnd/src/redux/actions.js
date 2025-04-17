@@ -16,3 +16,9 @@ export const logout = ()=>{
         type:"LOGOUT"
     }
 }
+
+
+export const msgChatAi = (message) => ({
+    type: "PUSH_MESSAGE",
+    payload: message,
+});

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
+import { FaPlusCircle, FaSearch, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/Location.png";
 import { useSelector } from "react-redux";
 import logoUser from "../assets/logo-user.png";
@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const user = useSelector((state) => state.userReducer.userInfo);
   const dropdownRef = useRef();
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 500);
@@ -60,6 +60,9 @@ const Navbar = () => {
             <Link to="/blog" className="text-black">
               Blog
             </Link>
+            <Link to="/Apropos" className="text-black">
+              A propos
+            </Link>
             <Link to="/contactUs" className="text-black">
               Contactez-nous
             </Link>
@@ -71,18 +74,20 @@ const Navbar = () => {
                     .getElementById("hero-section")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+                className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition flex items-center space-x-2"
               >
-                Rechercher
+                <FaSearch />
+                <span>Rechercher</span>
               </button>
             )}
 
             {!isHomepage && (
               <Link
                 to="/"
-                className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+                className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition flex items-center space-x-2"
               >
-                Rechercher
+                <FaSearch />
+                <span>Rechercher</span>
               </Link>
             )}
 

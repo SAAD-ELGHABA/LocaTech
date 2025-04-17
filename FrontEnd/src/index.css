@@ -1906,6 +1906,40 @@ footer .logo-container span {
 
 
 
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translateX(-50%);
+    opacity: 0.5;
+  }
+  45% {
+    transform: translateX(-20%);
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(-20%);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(20%);
+    opacity: 0.9;
+  }
+  95% {
+    transform: translateX(60%);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+.animate-loadingBar {
+  animation: loadingBar 4s ease-in-out forwards;
+}
 
 
 

@@ -144,7 +144,6 @@ const HeroSection = () => {
   const [selectedType, setSelectedType] = useState("");
   const [budget, setBudget] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-
   // Predefined budget ranges
   const budgetOptions = [
     "0 à 100 000 MAD",
@@ -163,13 +162,11 @@ const HeroSection = () => {
     "4 000 000 à 5 000 000 MAD",
     "5 000 000 MAD et +",
   ];
-
   const handleBudgetChange = (e) => {
     const value = e.target.value;
     setBudget(value);
     setShowSuggestions(true);
   };
-
   const handleSuggestionClick = (suggestion) => {
     setBudget(suggestion);
     setShowSuggestions(false);
@@ -182,9 +179,9 @@ const HeroSection = () => {
         ville,
         type: selectedType,
         budget,
-        action,
+        action
       };
-
+  
       if (selectedOption === "acheter") {
         navigate("/acheter", { state: searchData });
       } else if (selectedOption === "louer") {
@@ -694,7 +691,6 @@ export default function Accueil() {
             </p>
           </div>
         </div>
-
         <div className="testimonial-section">
           <h2 className="testimonial-title ">
             Ils ont vendu ou loué grâce à LocaTech

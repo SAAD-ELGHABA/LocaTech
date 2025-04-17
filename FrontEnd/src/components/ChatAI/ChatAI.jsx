@@ -1,117 +1,159 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
+import { toast } from "sonner";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { msgChatAi } from "../../redux/actions";
+import generatePrompt from "./prompt"; // ✅ had prompt.js dyalek
 
-const ChatAI = ({ ville, selectedType, budget }) => {
-  const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
-  const [spin, setSpin] = useState(false);
-  const chatRef = useRef(null);
+const ChatAI = ({ onClose }) => {
+  const messagesChatAi = useSelector((state) => state.ChatAiReducer);
+  const [thinking, setThinking] = useState(false);
+  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+  const conversationRef = useRef(null);
+  const test = ''
+  useEffect(() => {
+    if (conversationRef.current) {
+      conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
+    }
+  }, [messagesChatAi]);
 
-  const playSound = () => {
-    const sound = new Audio("/path-to-sound/beep.mp3");
-    sound.play();
-  };
+  const sendMessage = async () => {
+    if (input.trim() === "") return;
 
-  const handleSend = async () => {
-    if (!message.trim()) return;
-  
-    setChat((prev) => [...prev, { role: "user", content: message }]);
-    setMessage("");
-    playSound();
-  
-    const userMessage = `
-      Tu es un assistant intelligent pour le site LocaTech, spécialisé dans l'immobilier au Maroc.
-      Ta mission est d'aider les utilisateurs, répondre à toutes leurs questions, et leur donner des conseils utiles sur les services du site LocaTech.
-      Réponds toujours en français, avec un minimum de 50 caractères.
-      Ne te limite pas aux salutations.
-  
-      Voici la question de l'utilisateur :
-      "${message}"
-  
-      Critères de l'utilisateur :
-      - Ville : ${ville || "non spécifiée"}
-      - Type : ${selectedType || "non spécifié"}
-      - Budget : ${budget || "non spécifié"}
-    `;
-  
+    const userMessage = input.trim();
+    dispatch(msgChatAi({ data: userMessage, role: "user" }));
+    setInput("");
+    setThinking(true);
+
+    // ✅ Generate prompt dynamiquement
+    const prompt = generatePrompt(userMessage);
+
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    };
+
     try {
-      const response = await fetch("/api/gemini-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
-      });
-  
+      const response = await fetch(import.meta.env.VITE_OPENAI_API_URL, options);
       const data = await response.json();
-      const assistantReply = data.reply || "";
-  
-      const defaultReply =
-        "Merci pour votre question ! Voici quelques conseils : explorez les biens disponibles, filtrez selon vos besoins, et utilisez notre moteur de recherche avancé.";
-  
-      const finalReply =
-        assistantReply.length < 50 ? defaultReply : assistantReply;
-  
-      setChat((prev) => [...prev, { role: "assistant", content: finalReply }]);
-      playSound();
+
+      if (
+        response.ok &&
+        data.candidates &&
+        data.candidates[0] &&
+        data.candidates[0].content &&
+        data.candidates[0].content.parts &&
+        data.candidates[0].content.parts[0]
+      ) {
+        dispatch(
+          msgChatAi({
+            data: data.candidates[0].content.parts[0].text,
+            role: "ai",
+          })
+        );
+      } else {
+        toast.error("Failed to get response from AI.");
+      }
     } catch (error) {
-      setChat((prev) => [
-        ...prev,
-        { role: "assistant", content: "Désolé, une erreur est survenue lors de la réponse." },
-      ]);
+      console.error("Error fetching AI response:", error);
+      toast.error("Error communicating with AI.");
+    } finally {
+      setThinking(false);
     }
   };
-  
-
-  useEffect(() => {
-    setSpin(true);
-    const timer = setTimeout(() => setSpin(false), 500);
-    return () => clearTimeout(timer);
-  }, [chat]);
-
-  useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chat]);
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white border border-gray-200 rounded-xl shadow-lg p-4 md:p-6 space-y-4">
-      <div className="flex items-center justify-center space-x-2 mb-4 md:mb-6">
-        <div className={`${spin ? "animate-spin-fast" : ""} transform rotate-0 origin-center`}>
-          <Sparkles className="w-8 h-8 text-purple-500" />
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-md w-full max-w-md h-[500px] flex flex-col z-50">
+      {/* Header */}
+      <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
+        <div className="flex items-center space-x-2">
+          <Sparkles className="text-purple-500 text-lg" />
+          <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
+            LocaTech ChatAI
+          </h2>
         </div>
-        <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
-          LocaTech ChatAI
-        </h2>
+        <button
+          className="text-gray-500 hover:text-gray-700 focus:outline-none"
+          onClick={onClose}
+        >
+          <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
+        </button>
       </div>
 
-      <div ref={chatRef} className="h-64 md:h-72 overflow-y-auto space-y-2 border rounded-md p-4 bg-gray-50 scroll-smooth">
-  {chat.map((msg, i) => (
-    <div key={i} className={`whitespace-pre-line ${msg.role === "user" ? "text-right text-blue-600" : "text-left text-purple-600"}`}>
-      <p>{msg.content}</p>
-    </div>
-  ))}
-</div>
+      {/* Chat Conversation */}
+      <div
+        ref={conversationRef}
+        className="p-4 overflow-y-auto flex-1 space-y-2"
+        id="conversation"
+      >
+        {messagesChatAi && messagesChatAi.length > 0 ? (
+          messagesChatAi.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                msg.role === "ai" ? "justify-start" : "justify-end"
+              }`}
+            >
+              <div
+                className={`rounded-lg p-3 text-sm break-words ${
+                  msg.role === "ai"
+                    ? "bg-gray-100 text-gray-800"
+                    : "bg-blue-100 text-blue-800"
+                } w-2/3`}
+              >
+                {msg.role === "ai" && (
+                  <Sparkles className="text-gray-400 inline-block mr-1 align-text-bottom h-4" />
+                )}
+                {msg.data}
+                {msg.role === "user" && (
+                  <div className="text-blue-600 font-semibold text-xs text-right mt-1">
+                    You
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">Start a conversation...</p>
+        )}
+        {thinking && (
+          <div className="flex justify-start">
+            <div className="rounded-lg p-3 text-sm bg-gray-100 text-gray-800 w-fit">
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin w-5 h-5" />
+            </div>
+          </div>
+        )}
+      </div>
 
-
-      <div className="flex flex-col sm:flex-row gap-2 mt-4">
-        <input
-          type="text"
-          className="flex-1 border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400"
-          placeholder="Posez une question sur LocaTech..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <button
-          onClick={handleSend}
-          className="relative inline-block p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
-        >
-          <span className="block bg-white px-4 py-2 rounded cursor-pointer">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 font-semibold">
-              Envoyer
-            </span>
-          </span>
-        </button>
+      {/* Input Area */}
+      <div className="p-3 border-t border-gray-200">
+        <div className="flex items-center">
+          <input
+            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Poser vos questions..."
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          />
+          <button
+            onClick={sendMessage}
+            className={`ml-2 px-4 py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+              thinking || input.trim() === ""
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-purple-500 hover:bg-purple-600 cursor-pointer"
+            }`}
+            disabled={thinking || input.trim() === ""}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} /> Envoyer
+          </button>
+        </div>
       </div>
     </div>
   );
