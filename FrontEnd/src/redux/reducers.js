@@ -176,3 +176,20 @@ export const VillesReducer = (state=villes,action)=>{
             return state;
     }
 }
+
+
+
+const messages = [
+    
+]
+
+export const ChatAiReducer = (state=messages,action)=>{
+    switch (action.type){
+        case "PUSH_MESSAGE":
+            return [
+                ...state,action.payload
+            ]
+        default:
+            return messages;
+    }
+}

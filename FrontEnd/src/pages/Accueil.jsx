@@ -34,11 +34,14 @@ import "../index.css";
 const HeroSection = () => {
 
 
+  
+
+
   const [showChatAI, setShowChatAI] = useState(false);
 
-  const handleGoToAI = () => {
-    setShowChatAI(true);
-  };
+  const handleGoToAI = () => setShowChatAI(true);
+  const handleCloseAI = () => setShowChatAI(false);
+
 
   const villesMaroc = [
     "Agadir", "Aït Melloul", "Al Hoceïma", "Azrou", "Beni Mellal", "Ben Guerir", "Berkane",
@@ -281,17 +284,47 @@ useEffect(() => {
 
     {/* Bouton AI */}
     <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto">
-  <button
-    onClick={handleGoToAI}
-    className="flex items-center justify-center gap-2 bg-white cursor-pointer text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto"
-  >
-    <Sparkles className="w-4 h-4 text-purple-500" />
-    Prévoir des recommandations
-  </button>
-</div>
+        <button
+          onClick={handleGoToAI}
+          className="flex items-center justify-center gap-2 bg-white cursor-pointer text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto"
+        >
+          <Sparkles className="w-4 h-4 text-purple-500" />
+          Prévoir des recommandations
+        </button>
+      </div>
+
+
+
+      {/* ChatAI Popup */}
+      {showChatAI && (
+        <>
+          {/* overlay blur */}
+          <div className="fixed inset-0 bg-white/10 backdrop-blur-sm z-40"></div>
+
+          {/* Chat centered */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <ChatAI onClose={handleCloseAI} />
+          </div>
+        </>
+      )}
+
+{/* {showChatAI && <ChatAI />}
 
 
 {showChatAI && (
+  <>
+    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-[2px] z-40"></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <ChatAI onClose={handleCloseAI} />
+    </div>
+  </>
+)} */}
+
+
+
+
+
+{/* {showChatAI && (
   <div className="fixed inset-0 z-50 backdrop-blur-xs bg-white/30 flex items-center justify-center px-4">
     <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl relative">
       <button
@@ -307,7 +340,7 @@ useEffect(() => {
       />
     </div>
   </div>
-)}
+)} */}
 
 
 
@@ -659,9 +692,9 @@ useEffect(() => {
     <span className="tag mb-3">100% gratuit</span>
     <h1 className="text-2xl font-bold mb-5">Vendez vous-même un bien immobilier sur <span className="highlight">LocaTech</span></h1>
     <ul className="space-y-2 mb-7">
-      <li>✅ Présentez votre bien et ses caractéristiques</li>
-      <li>✅ Définissez le prix de vente de votre maison ou appartement</li>
-      <li>✅ Mettez en avant ce qui le rend unique</li>
+      <li><span className="text-gray-500 mr-2">✔</span> Présentez votre bien et ses caractéristiques</li>
+      <li><span className="text-gray-500 mr-2">✔</span> Définissez le prix de vente de votre maison ou appartement</li>
+      <li><span className="text-gray-500 mr-2">✔</span> Mettez en avant ce qui le rend unique</li>
     </ul>
     <button className="btn-secondary mb-7">Découvrir les annonces →</button>
   </div>

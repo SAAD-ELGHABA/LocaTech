@@ -7,6 +7,7 @@ use App\Http\Controllers\VilleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Ville;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -57,3 +58,31 @@ Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien')
 Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
 Route::post('/delete-Bien/{id}',[BienController::class,'delete'])->name('deleteBien');
+
+
+
+Route::post('/chat', function (Request $request) {
+    // dd(env('OPENAI_API_KEY'));
+    $prompt = $request->input('message');
+
+    try {
+        $response = Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'user', 'content' => "Tu es un assistant LocaTech. Réponds en français : {$prompt}"]
+            ],
+            'max_tokens' => 150,
+            'temperature' => 0.7
+        ]);
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'Erreur avec OpenAI', 'details' => $response->body()], 500);
+        }
+
+        return $response->json();
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Erreur exception', 'message' => $e->getMessage()], 500);
+    }
+});
+
+

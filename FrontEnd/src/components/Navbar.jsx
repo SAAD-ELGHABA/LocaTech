@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
+import { FaPlusCircle, FaUserCircle , FaSearch } from "react-icons/fa";
 import logo from "../assets/Location.png";
 
 const Navbar = () => {
@@ -40,6 +40,7 @@ const Navbar = () => {
           <Link to="/acheter" className="text-black">Acheter</Link>
           <Link to="/louer" className="text-black">Louer</Link>
           <Link to="/blog" className="text-black">Blog</Link>
+          <Link to="/Apropos" className="text-black">A propos</Link>
           <Link to="/contactUs" className="text-black">Contactez-nous</Link>
 
           {isHomepage && isScrolled && (
@@ -47,8 +48,9 @@ const Navbar = () => {
               onClick={() =>
                 document.getElementById("hero-section")?.scrollIntoView({ behavior: "smooth" })
               }
-              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition flex items-center gap-2"
             >
+              <FaSearch/>
               Rechercher
             </button>
           )}
@@ -56,8 +58,9 @@ const Navbar = () => {
           {!isHomepage && (
             <Link
               to="/"
-              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition"
+              className="bg-[#F44336] text-white px-4 py-2 rounded-full cursor-pointer hover:bg-red-600 transition flex items-center gap-2"
             >
+              <FaSearch/>
               Rechercher
             </Link>
           )}

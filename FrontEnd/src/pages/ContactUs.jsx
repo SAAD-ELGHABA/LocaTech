@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { FiArrowRight } from 'react-icons/fi';
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import React, { useState } from "react"; 
+import { FiArrowRight, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { useNavigate } from "react-router-dom";
 import emailjs from 'emailjs-com';
 import contactImg from '../assets/contactUs.png';
 
@@ -18,39 +17,41 @@ const ContactUs = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [touchedFields, setTouchedFields] = useState({});
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setTouchedFields({ ...touchedFields, [name]: true });  // ولات تعمر كل مرة تلمس فيها الشامب
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = {};
-
     for (const field in formData) {
       if (!formData[field]) {
         validationErrors[field] = "Ce champ est obligatoire";
       }
     }
-
+  
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
       setErrors({});
-
+      // هنا تتبع الإجراءات الأخرى ديال الإرسال، مثل emailjs...
+  
       const serviceID = 'service_ob448ie';
       const templateID = 'template_wb5anxy';
       const publicKey = 'VT45WTgA23GdfOX5Z';
 
       emailjs.send(serviceID, templateID, formData, publicKey)
-        .then((response) => {
-          console.log('SUCCESS!', response.status, response.text);
+        .then(() => {
           alert("✅ Votre demande a été envoyée à LocaTech avec succès !");
-          localStorage.setItem('submissionMessage', 'Votre demande a été envoyée à LocaTech. Nous reviendrons vers vous dans les plus brefs délais !'); // Store the message
+          localStorage.setItem('submissionMessage', 'Votre demande a été envoyée à LocaTech. Nous reviendrons vers vous dans les plus brefs délais !');
           setTimeout(() => {
-            navigate('/'); // Redirect to the home page after 1 seconds
+            navigate('/');
           }, 1000);
           setFormData({
             profile: "",
@@ -62,6 +63,7 @@ const ContactUs = () => {
             email: "",
             phone: "",
           });
+          setTouchedFields({});
         }, (err) => {
           console.log('FAILED...', err);
           alert("❌ Une erreur est survenue. Veuillez réessayer.");
@@ -70,12 +72,15 @@ const ContactUs = () => {
   };
 
   const renderInputIcon = (field) => {
-    if (formData[field]) {
+    // هنا كنديرو check واش القيمة خاوية ولا لا من بعد ما تدير submit
+    if (errors[field]) {  // إذا كان عندنا خطأ فالشامب
+      return <FiXCircle className="text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />;
+    } else if (formData[field]) {  // إلا كانت القيمة معمّرة
       return <FiCheckCircle className="text-green-500 absolute right-3 top-1/2 transform -translate-y-1/2" />;
     }
-    return <FiXCircle className="text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />;
+    return null; // إلا ما كانش خطأ وما كانتش القيمة، ما كيظهر والو
   };
-
+  
 
   return (
     <div className="bg-white">
@@ -90,10 +95,11 @@ const ContactUs = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* profile & request */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Profile */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Vous êtes*</label>
                 <div className="relative">
-                  <select 
+                  <select
                     name="profile"
                     className={`w-full border ${errors.profile ? 'border-red-500' : formData.profile ? 'border-green-500' : 'border-gray-300'} rounded px-4 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none`}
                     value={formData.profile}
@@ -105,13 +111,14 @@ const ContactUs = () => {
                   </select>
                   {renderInputIcon('profile')}
                 </div>
-                {errors.profile && <p className="text-red-500 text-sm text-center">{errors.profile}</p>}
+                {errors.profile && <p className="text-red-500 text-sm text-center mt-1">{errors.profile}</p>}
               </div>
 
+              {/* Request */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Vous souhaitez*</label>
                 <div className="relative">
-                  <select 
+                  <select
                     name="request"
                     className={`w-full border ${errors.request ? 'border-red-500' : formData.request ? 'border-green-500' : 'border-gray-300'} rounded px-4 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none`}
                     value={formData.request}
@@ -124,7 +131,7 @@ const ContactUs = () => {
                   </select>
                   {renderInputIcon('request')}
                 </div>
-                {errors.request && <p className="text-red-500 text-sm text-center">{errors.request}</p>}
+                {errors.request && <p className="text-red-500 text-sm text-center mt-1">{errors.request}</p>}
               </div>
             </div>
 
@@ -142,11 +149,12 @@ const ContactUs = () => {
                 ></textarea>
                 {renderInputIcon('message')}
               </div>
-              {errors.message && <p className="text-red-500 text-sm text-center">{errors.message}</p>}
+              {errors.message && <p className="text-red-500 text-sm text-center mt-1">{errors.message}</p>}
             </div>
 
             {/* first & last name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* First Name */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Votre prénom*</label>
                 <div className="relative">
@@ -159,9 +167,10 @@ const ContactUs = () => {
                   />
                   {renderInputIcon('firstName')}
                 </div>
-                {errors.firstName && <p className="text-red-500 text-sm text-center">{errors.firstName}</p>}
+                {errors.firstName && <p className="text-red-500 text-sm text-center mt-1">{errors.firstName}</p>}
               </div>
 
+              {/* Last Name */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Votre nom*</label>
                 <div className="relative">
@@ -174,12 +183,13 @@ const ContactUs = () => {
                   />
                   {renderInputIcon('lastName')}
                 </div>
-                {errors.lastName && <p className="text-red-500 text-sm text-center">{errors.lastName}</p>}
+                {errors.lastName && <p className="text-red-500 text-sm text-center mt-1">{errors.lastName}</p>}
               </div>
             </div>
 
             {/* postal code & email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Postal Code */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Votre code postal*</label>
                 <div className="relative">
@@ -192,9 +202,10 @@ const ContactUs = () => {
                   />
                   {renderInputIcon('postalCode')}
                 </div>
-                {errors.postalCode && <p className="text-red-500 text-sm text-center">{errors.postalCode}</p>}
+                {errors.postalCode && <p className="text-red-500 text-sm text-center mt-1">{errors.postalCode}</p>}
               </div>
 
+              {/* Email */}
               <div>
                 <label className="block text-sm mb-1 font-medium">Votre e-mail*</label>
                 <div className="relative">
@@ -207,7 +218,7 @@ const ContactUs = () => {
                   />
                   {renderInputIcon('email')}
                 </div>
-                {errors.email && <p className="text-red-500 text-sm text-center">{errors.email}</p>}
+                {errors.email && <p className="text-red-500 text-sm text-center mt-1">{errors.email}</p>}
               </div>
             </div>
 
@@ -224,10 +235,10 @@ const ContactUs = () => {
                 />
                 {renderInputIcon('phone')}
               </div>
-              {errors.phone && <p className="text-red-500 text-sm text-center">{errors.phone}</p>}
+              {errors.phone && <p className="text-red-500 text-sm text-center mt-1">{errors.phone}</p>}
             </div>
 
-            <p className="text-xs text-center text-gray-500 mt-2"> 
+            <p className="text-xs text-center text-gray-500 mt-2">
               En cochant cette case, j’accepte le traitement de mes données selon <span className="text-stone-400 cursor-pointer">la politique de confidentialité</span> de LocaTech.
             </p>
 
@@ -241,7 +252,6 @@ const ContactUs = () => {
         </div>
       </div>
 
-      {/* Footer newsletter */}
       <div className="py-10 bg-white-100">
         <p className="mb-2 text-lg font-medium text-center">Suivre l’actualité de LocaTech</p>
         <div className="flex justify-center items-center gap-2 max-w-md mx-auto">
@@ -261,6 +271,5 @@ const ContactUs = () => {
     </div>
   );
 };
-
 
 export default ContactUs;
