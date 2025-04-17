@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import { Cpu } from "lucide-react";
-// import spinner from "../Assets/spinner.gif";
+import React, { useEffect, useRef, useState } from "react";
+import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faPaperPlane, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { msgChatAi } from "../../redux/actions";
-import { Link } from "react-router-dom";
+import generatePrompt from "./prompt"; // ✅ had prompt.js dyalek
 
-const ChatBot = () => {
+const ChatAI = ({ onClose }) => {
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
   const [thinking, setThinking] = useState(false);
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
-
   const conversationRef = useRef(null);
+
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
@@ -23,139 +22,141 @@ const ChatBot = () => {
 
   const sendMessage = async () => {
     if (input.trim() === "") return;
-    dispatch(msgChatAi({ data: input, role: "user" }));
 
+    const userMessage = input.trim();
+    dispatch(msgChatAi({ data: userMessage, role: "user" }));
+    setInput("");
     setThinking(true);
-    const languages = [
-      "javascript",
-      "python",
-      "php",
-      "html",
-      "css",
-      "bootstrap",
-      "react",
-      "laravel",
-      "java",
-    ];
-    const prompt = `You are a virtual guide. Talk under 20 words just about the programming languages: ${languages}. Help the user navigate the platform. Question: ${input}`;
+
+    // ✅ Generate prompt dynamiquement
+    const prompt = generatePrompt(userMessage);
 
     const options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
+        contents: [{ parts: [{ text: prompt }] }],
       }),
     };
 
     try {
-      const response = await fetch(
-        import.meta.env.VITE_OPENAI_API_URL,
-        options
-      );
+      const response = await fetch(import.meta.env.VITE_OPENAI_API_URL, options);
       const data = await response.json();
-      if (response.ok) {
+
+      if (
+        response.ok &&
+        data.candidates &&
+        data.candidates[0] &&
+        data.candidates[0].content &&
+        data.candidates[0].content.parts &&
+        data.candidates[0].content.parts[0]
+      ) {
         dispatch(
           msgChatAi({
             data: data.candidates[0].content.parts[0].text,
             role: "ai",
           })
         );
+      } else {
+        toast.error("Failed to get response from AI.");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      console.error("Error fetching AI response:", error);
+      toast.error("Error communicating with AI.");
     } finally {
       setThinking(false);
-      setInput("");
     }
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center shadow shadow-blue-500">
-      <div className="w-full max-w-md mx-auto overflow-hidden">
-        <div className="flex flex-col h-[500px]">
-          <div
-            ref={conversationRef}
-            className={`flex-1 px-4 py-5 overflow-y-auto ${
-              messagesChatAi.length > 0
-                ? "space-y-3"
-                : "flex items-center justify-center"
-            }`}
-            id="conversation"
-          >
-            {messagesChatAi && messagesChatAi.length > 0 ? (
-              messagesChatAi.map((msg, index) =>
-                msg.role === "ai" ? (
-                  <div key={index} className="w-full flex justify-start">
-                    <div className="flex items-start space-x-2 bg-[#25538b2f] p-3 rounded w-2/3">
-                      <Cpu className="text-gray-400 text-lg" />
-                      <p className="text-gray-100 text-sm">{msg.data}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div key={index} className="w-full flex justify-end">
-                    <div className="flex items-end text-sm justify-start space-x-2 w-2/3 bg-[#163050] text-gray-100 p-3 rounded ">
-                      <div>
-                        <div className="font-bold text-gray-400">You</div>
-                        <p>{msg.data}</p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              )
-            ) : (
-              <p className="text-gray-500 text-center">
-                Start a conversation...
-              </p>
-            )}
-          </div>
-          <div className="border w-5/6 mx-auto border-blue-500 rounded flex">
-            <input
-              className="flex-1 rounded-lg px-4 py-2 text-gray-200 focus:ring-none focus:outline-none"
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-            />
-            <button
-              onClick={sendMessage}
-              className={`${input.length == 0 ? 'cursor-not-allowed':"cursor-pointer" } text-gray-900 ml-4 px-4 py-2 ${
-                thinking
-                  ? "bg-gray-900 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
-              }`}
-              disabled={thinking}
-            >
-              {thinking ? (
-                // <img
-                //   src={spinner}
-                //   alt="Loading..."
-                //   className="w-5 h-5 mx-auto"
-                // />
-                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                
-              ) : (
-                <FontAwesomeIcon icon={faPaperPlane} />
-              )}
-            </button>
-          </div>
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-md w-full max-w-md h-[500px] flex flex-col z-50">
+      {/* Header */}
+      <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
+        <div className="flex items-center space-x-2">
+          <Sparkles className="text-purple-500 text-lg" />
+          <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
+            LocaTech ChatAI
+          </h2>
         </div>
-      </div>
-      <div className="flex space-x-2 text-sm items-center w-full -mb-12 pt-2 ms-5 text-blue-400">
-        <Link
-          className="flex items-center hover:bg-gray-800 px-4 py-2"
-          to={"/help"}
+        <button
+          className="text-gray-500 hover:text-gray-700 focus:outline-none"
+          onClick={onClose}
         >
-          <FontAwesomeIcon icon={faChevronLeft} />
-          <p>Go to chat</p>
-        </Link>
+          <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Chat Conversation */}
+      <div
+        ref={conversationRef}
+        className="p-4 overflow-y-auto flex-1 space-y-2"
+        id="conversation"
+      >
+        {messagesChatAi && messagesChatAi.length > 0 ? (
+          messagesChatAi.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                msg.role === "ai" ? "justify-start" : "justify-end"
+              }`}
+            >
+              <div
+                className={`rounded-lg p-3 text-sm break-words ${
+                  msg.role === "ai"
+                    ? "bg-gray-100 text-gray-800"
+                    : "bg-blue-100 text-blue-800"
+                } w-2/3`}
+              >
+                {msg.role === "ai" && (
+                  <Sparkles className="text-gray-400 inline-block mr-1 align-text-bottom h-4" />
+                )}
+                {msg.data}
+                {msg.role === "user" && (
+                  <div className="text-blue-600 font-semibold text-xs text-right mt-1">
+                    You
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">Start a conversation...</p>
+        )}
+        {thinking && (
+          <div className="flex justify-start">
+            <div className="rounded-lg p-3 text-sm bg-gray-100 text-gray-800 w-fit">
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin w-5 h-5" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Input Area */}
+      <div className="p-3 border-t border-gray-200">
+        <div className="flex items-center">
+          <input
+            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Poser vos questions..."
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          />
+          <button
+            onClick={sendMessage}
+            className={`ml-2 px-4 py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+              thinking || input.trim() === ""
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-purple-500 hover:bg-purple-600 cursor-pointer"
+            }`}
+            disabled={thinking || input.trim() === ""}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} /> Envoyer
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default ChatBot;
+export default ChatAI;
