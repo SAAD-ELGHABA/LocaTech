@@ -19,16 +19,28 @@ function GoogleLanding() {
       });
       if (response.status >= 200) {
         toast.success(response.data.message);
-        console.log(response);
         localStorage.setItem("token", response.data.token);
+
+        if (response.data.user.role === "courtier") {
+          console.log(response.data);
+          
+          dispatch({
+            type: "ActuelCourtier",
+            payload: response.data.courtier,
+          });
+        }
         dispatch({
-          type:'LOGIN',
-          payload:response.data.user
-        })
+          type: "SET_LOADING",
+          payload: false,
+        });
+        dispatch({
+          type: "LOGIN",
+          payload: response.data.user,
+        });
         setTimeout(() => {
           if (response.data.user.role === "user") {
             nav("/");
-          } else if (response.data.user.user.role === "courtier") {
+          } else if (response.data.user.role === "courtier") {
             nav("/courtier-index");
           }
         }, 2000);

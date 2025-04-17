@@ -35,55 +35,102 @@ class BienController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->input('images');
         try {
             $validatedData = $request->validate([
-            'id' => 'nullable|exists:biens,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'budget' => 'required',
-            'superficier' => 'required',
-            'mapUrl' => 'required',
-            'ville' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'typeAffaire' => 'required|string|max:255',
+                'id' => 'nullable|exists:biens,id',
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'budget' => 'required|numeric',
+                'superficier' => 'required|numeric',
+                'ville' => 'required|string|max:255',
+                'quartier' => 'nullable|string|max:255',
+                'type' => 'required|string|max:255',
+                'typeAffaire' => 'required|string|max:255',
+                'images' => 'required|array',
+                'courtier_id' => 'required|exists:courtiers,id',
+                'status' => 'nullable|boolean',
+                'chambres' => 'nullable|integer|min:0',
+                'salles_de_bain' => 'nullable|integer|min:0',
+                'etage' => 'nullable|integer|min:0',
+                'meuble' => 'nullable|boolean',
+                'video_url' => 'nullable|url',
             ]);
 
-            $validatedData['courtier_id'] = $request->input('courtier_id');
-            $validatedData['images'] = $request->input('images');
-
-            if (!$validatedData) {
-            return response()->json([
-                'message' => 'Validation error.'
-            ], 400);
-            }
-
-            $bien = Bien::find($validatedData['id']);
+            $bien = Bien::find($validatedData['id'] ?? null);
 
             if ($bien) {
-            $bien->update($validatedData);
-            return response()->json([
-                'message' => 'Bien a été modifié avec succée !',
-                'data' => $bien,
-            ], 200);
+                $bien->update($validatedData);
+                return response()->json([
+                    'message' => 'Bien a été modifié avec succès !',
+                    'data' => $bien,
+                ], 200);
             } else {
-            $bien = Bien::create($validatedData);
-            return response()->json([
-                'message' => 'Bien a été crée avec succée',
-                'data' => $bien,
-            ], 201);
+                $bien = Bien::create($validatedData);
+                return response()->json([
+                    'message' => 'Bien a été créé avec succès !',
+                    'data' => $bien,
+                ], 201);
             }
-        } catch (Error $error) {
+        } catch (\Throwable $error) {
             return response()->json([
-            'message' => 'erreur quand faire ce process .. !',
-            'error' => $error,
+                'message' => 'Une erreur est survenue lors du traitement.',
+                'error' => $error->getMessage(),
             ], 400);
         }
     }
 
+
     /**
      * Display the specified resource.
      */
+    public function filter(Request $request)
+    {
+        try {
+            $filters = $request->only(['type', 'typeAffaire', 'budget', 'ville']);
+
+            $query = Bien::query();
+
+            // Apply 'type' filter
+            if (!empty($filters['type'])) {
+                $query->where('type', $filters['type']);
+            }
+
+            // Apply 'typeAffaire' filter
+            if (!empty($filters['typeAffaire'])) {
+                $query->where('typeAffaire', $filters['typeAffaire']);
+            }
+
+            // Apply 'ville' filter
+            if (!empty($filters['ville'])) {
+                $query->where('ville', $filters['ville']);
+            }
+
+            // Apply 'budget' filter (expecting ['min' => value, 'max' => value|null])
+            if (!empty($filters['budget']) && is_array($filters['budget'])) {
+                if (isset($filters['budget']['min']) && $filters['budget']['min'] !== null) {
+                    $query->where('budget', '>=', $filters['budget']['min']);
+                }
+                if (array_key_exists('max', $filters['budget']) && $filters['budget']['max'] !== null) {
+                    $query->where('budget', '<=', $filters['budget']['max']);
+                }
+            }
+
+            $biens = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'biens' => $biens
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+
+
     public function show(Bien $bien)
     {
         //

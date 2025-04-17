@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\VilleController;
+use App\Models\Status;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Ville;
 use Illuminate\Http\Request;
@@ -57,3 +58,9 @@ Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien')
 Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
 Route::post('/delete-Bien/{id}',[BienController::class,'delete'])->name('deleteBien');
+
+Route::get('/status',function(){
+    return Status::all();
+});
+
+Route::post('/filterBiens',[BienController::class,'filter'])->name('filterBiens');

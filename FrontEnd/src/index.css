@@ -1,6 +1,7 @@
 /* Add Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 @import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
 
 /* Dégradé background red to green */
 /* .splash-screen, .main-screen {

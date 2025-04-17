@@ -17,8 +17,10 @@ import { useNavigate } from "react-router";
 function CreateBien() {
   const [frame, setFrame] = useState("images");
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.userReducer.userInfo);
+
   const createBien = useSelector((state) => state.CreateBienReducer);
-  const userCourtier = useSelector((state) => state.userReducer.user);
+  const userCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const files = useSelector((state) => state.filesReducer);
   const [isLoading, setIsLoading] = useState(false);
   const nav = useNavigate();
@@ -33,9 +35,12 @@ function CreateBien() {
       !createBien.description ||
       !createBien.budget ||
       !createBien.superficier ||
-      !createBien.mapUrl ||
       !createBien.ville ||
       !createBien.type ||
+      !createBien.quartier ||
+      !createBien.chambres ||
+      !createBien.salles_de_bain ||
+      !createBien.etage ||
       !files
     ) {
       toast.error("Veuillez remplir tous les champs obligatoires.");
@@ -51,7 +56,7 @@ function CreateBien() {
       const newBien = {
         ...createBien,
         images: urls,
-        courtier_id: userCourtier.user.id,
+        courtier_id: userCourtier.id,
       };
 
       console.log(newBien);

@@ -12,9 +12,14 @@ function SignUp() {
       <div className="bg-white w-1/3">
         <div className="w-full md:w-2/3 flex mt-32 justify-center flex-col mx-auto">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-red-500">
-              <span className="text-green-500">Loca</span>Tech
-            </h1>
+            <div className="flex items-center justify-center">
+              <Link to={'/'} className="flex items-center">
+                <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
+                <h1 className="text-3xl font-bold">
+                  <span className="text-red-500">LocaTech</span>
+                </h1>
+              </Link>
+            </div>
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>
           </div>
           <h1 className="block w-full text-center text-xl font-bold text-gray-800 mb-6">

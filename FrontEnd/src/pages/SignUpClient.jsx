@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import logo from "../assets/Location.png";
 
 const SignUpClient = () => {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
-
 
   const handleRegister = async (e) => {
     setLoading(true);
@@ -18,13 +18,13 @@ const SignUpClient = () => {
     const data = Object.fromEntries(formData.entries());
 
     const validateEmail = (email) => {
-      setLoading(false)
+      setLoading(false);
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     const validatePhoneNumber = (phone) => {
       const phoneRegex = /^\d{10}$/;
-      setLoading(false)
+      setLoading(false);
       return phoneRegex.test(phone);
     };
 
@@ -48,12 +48,7 @@ const SignUpClient = () => {
       return;
     }
 
-    if (
-      !data.nom ||
-      !data.prenom ||
-      !data.telephone ||
-      !data.email
-    ) {
+    if (!data.nom || !data.prenom || !data.telephone || !data.email) {
       toast.error("Veuillez remplir tous les champs !");
       return;
     }
@@ -66,8 +61,8 @@ const SignUpClient = () => {
       if (response.status >= 200) {
         toast.success(response.data.message);
         console.log(response);
-        localStorage.setItem('token',response.data.token)
-        nav('/resend_verification_email')
+        localStorage.setItem("token", response.data.token);
+        nav("/resend_verification_email");
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -79,9 +74,14 @@ const SignUpClient = () => {
     <div className="flex h-screen items-center">
       <div className="w-2/3 mx-auto rounded shadow bg-white p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-red-500">
-            <span className="text-green-500">Loca</span>Tech
-          </h1>
+          <div className="flex items-center justify-center">
+            <Link to={"/"} className="flex items-center">
+              <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
+              <h1 className="text-3xl font-bold">
+                <span className="text-red-500">LocaTech</span>
+              </h1>
+            </Link>
+          </div>
           <p className="mt-2 text-lg font-semibold">Bienvenue</p>
         </div>
         <form className="p-6 text-sm space-y-4" onSubmit={handleRegister}>

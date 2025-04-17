@@ -8,14 +8,15 @@ export const userReducer = (state = user, action) => {
         case "LOGIN":
             return {
                 ...state,
-                user: action.payload, 
-                token: action.payload.token
+                userInfo: action.payload, 
+                token: action.payload.token,
+                isLoggedIn:true
             };
         case "REGISTER":
             return {
-                ...state,
-                user: action.payload.user,
-                token: action.payload.token
+                userInfo: action.payload, 
+                token: action.payload.token,
+                isLoggedIn:true
             };
         case "LOGOUT":
             localStorage.removeItem('token');
@@ -118,13 +119,17 @@ const createBien = {
     description:null,
     budget:null,
     superficier:null,
-    mapUrl:null,
+    chambres:null,
+    salles_de_bain:null,
+    etage:null,
+    meublé:false,
     ville:null,
     type:null,
     typeAffaire:null,
+    quartier:null,
     images:[],
     video:null,
-    status:"recent"
+    status:1
 }
 
 
@@ -176,3 +181,32 @@ export const VillesReducer = (state=villes,action)=>{
             return state;
     }
 }
+
+const status = []
+
+export const statusReducer = (state=status,action)=>{
+    switch (action.type){
+        case "GET_STATUS":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+const filterBiens = {
+    type:null,
+    typeAffaire:null,
+    budget:null,
+    ville:null
+}
+export const filterBiensReducer = (state=filterBiens,action)=>{
+    switch(action.type){
+        case "SET_FILTER":
+            return action.payload;
+        case "RESET_FILTER":
+            return filterBiens;
+        default :
+            return state;
+    }
+}
+

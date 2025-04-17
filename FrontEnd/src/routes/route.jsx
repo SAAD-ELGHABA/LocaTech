@@ -25,6 +25,7 @@ import Courtiers from "../layouts/AdminLayout/adminPages/Courtiers";
 import DashboardIndexCourtier from "../layouts/CourtierLayout/Courtierpages/DashboardIndexCourtier";
 import MesBiens from "../layouts/CourtierLayout/Courtierpages/MesBiens";
 import DetailsBien from "../components/DetailsBien";
+import ConsulterBiens from "../pages/ConsulterBiens";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -43,7 +44,10 @@ const COURTIERS = "/courtiers";
 const COURTIE_INDEX = "/courtier-index";
 const MESBIENS = "/MesBiens";
 
+const CONSULTER_BIENS = "/consulter-bien";
+
 const DETAILS_BIEN = "/details-bien/:id";
+const DETAILS_BIEN_CLIENT = "/details-bien-client/:id";
 
 const ADMIN_INDEX = "/admin-index";
 const HOME = "/";
@@ -64,10 +68,6 @@ const Router = createBrowserRouter([
         path: "/louer",
         element: <Louer />,
       },
-      // {
-      //   path: "/chat-ai",
-      //   element: <ChatAI />,
-      // },
       {
         path: "/blog",
         element: <Blog />,
@@ -121,6 +121,14 @@ const Router = createBrowserRouter([
         path: COURTIE,
         element: <Courtier />,
       },
+      {
+        path: DETAILS_BIEN_CLIENT,
+        element: <DetailsBien />,
+      },
+      {
+        path: CONSULTER_BIENS,
+        element: <ConsulterBiens />,
+      },
     ],
   },
   {
@@ -139,10 +147,10 @@ const Router = createBrowserRouter([
         path: MESBIENS,
         element: <MesBiens />,
       },
-      {
-        path: DETAILS_BIEN,
-        element: <DetailsBien />,
-      },
+      // {
+      //   path: DETAILS_BIEN,
+      //   element: <DetailsBien />,
+      // },
     ],
   },
   {

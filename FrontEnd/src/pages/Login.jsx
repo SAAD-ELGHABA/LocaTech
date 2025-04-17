@@ -33,9 +33,10 @@ const LoginPage = () => {
       });
       if (response.status >= 200) {
         toast.success(response.data.message);
-        console.log(response);
+        console.log(response.data.user);
         dispatch(login(response.data.token, response.data.user));
         localStorage.setItem("token", response.data.token);
+
         setTimeout(() => {
           if (response.data.user.role === "user") {
             nav("/");
@@ -56,13 +57,14 @@ const LoginPage = () => {
     <div className="min-h-screen flex ">
       <div className="w-full md:w-1/3  flex mt-32 justify-center  ">
         <div className="max-w-md w-4/6 space-y-2">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <img src={logo} alt="logo" className="w-10 h-20" />
-              <h1 className="text-3xl font-bold">
-                <span className="text-green-500">Loca</span>
-                <span className="text-red-500">Tech</span>
-              </h1>
+          <div className="text-center flex flex-col justify-center">
+            <div className="flex items-center justify-center">
+              <Link to={'/'} className="flex items-center">
+                <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
+                <h1 className="text-3xl font-bold">
+                  <span className="text-red-500">LocaTech</span>
+                </h1>
+              </Link>
             </div>
 
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>

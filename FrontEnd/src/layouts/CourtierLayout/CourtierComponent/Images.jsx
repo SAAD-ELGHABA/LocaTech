@@ -4,7 +4,8 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import carrousel from "../../../assets/carrousel.gif";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -13,27 +14,34 @@ function Images() {
   const createBien = useSelector((state) => state.CreateBienReducer);
   const files = useSelector((state) => state.filesReducer);
   const dispatch = useDispatch();
-  const addFile = useRef();
   const fileInputs = useRef([]);
 
-  const initialLength = Math.max(
-    createBien.images?.length || 0,
-    files?.length || 0
+  const allImages = [...(createBien.images || []), ...files];
+  const [selectedImage, setSelectedImage] = useState(null);
+  console.log(allImages);
+  
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const totalImages = allImages.length + acceptedFiles.length;
+      if (totalImages > 20) {
+        toast.error("Vous avez dépassé la limite de 20 images.");
+        return;
+      }
+
+      dispatch({
+        type: "SET_FILES",
+        payload: [...files, ...acceptedFiles],
+      });
+    },
+    [files, allImages.length, dispatch]
   );
 
-  const [numImages, setNumImages] = useState(initialLength);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleSetNumImages = (e) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target).entries());
-    const number = parseInt(data.numImages);
-    if (number > 20) {
-      toast.error("Vous avez dépassé la limite de 20 images.");
-    } else {
-      setNumImages(number);
-    }
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+    multiple: true,
+    maxSize: 10 * 1024 * 1024,
+  });
 
   const handleDivClick = (index) => {
     fileInputs.current[index]?.click();
@@ -42,15 +50,19 @@ function Images() {
 
   const handleFileChange = (event, index) => {
     const file = event.target.files[0];
+    const totalImages = allImages.length + 1;
+    if (totalImages > 20) {
+      toast.error("Vous avez dépassé la limite de 20 images.");
+      return;
+    }
+
     dispatch({
       type: "SET_FILES",
       payload: [...files, file],
     });
-    setNumImages((prev) => Math.max(prev, index + 1));
   };
 
   const handleRemoveImage = (index) => {
-    const allImages = [...(createBien.images || []), ...files];
     const isFile = index >= (createBien.images?.length || 0);
 
     if (isFile) {
@@ -64,11 +76,30 @@ function Images() {
         payload: { ...createBien, images: updatedImages },
       });
     }
-
-    setNumImages((prev) => prev - 1);
   };
 
-  const allImages = [...(createBien.images || []), ...files];
+  const handleCoverSelect = (index) => {
+    if (index === 0) return;
+
+    const isFile = index >= (createBien.images?.length || 0);
+    const imagesLength = createBien.images?.length || 0;
+
+    if (isFile) {
+      const fileIndex = index - imagesLength;
+      const updatedFiles = [...files];
+      const [selectedFile] = updatedFiles.splice(fileIndex, 1);
+      updatedFiles.unshift(selectedFile);
+      dispatch({ type: "SET_FILES", payload: updatedFiles });
+    } else {
+      const updatedImages = [...createBien.images];
+      const [selectedImage] = updatedImages.splice(index, 1);
+      updatedImages.unshift(selectedImage);
+      dispatch({
+        type: "SET_CREATE_BIEN",
+        payload: { ...createBien, images: updatedImages },
+      });
+    }
+  };
 
   return (
     <div>
@@ -77,97 +108,94 @@ function Images() {
           <FontAwesomeIcon icon={faCircleInfo} />
           <p>
             Vous avez le droit à 20 images, la première image sera l'image de
-            couverture par défaut
+            couverture par défaut.
           </p>
         </h1>
       </div>
 
-      <div className="flex justify-center items-center text-sm">
-        <form
-          onSubmit={handleSetNumImages}
-          className="border border-[#a4161a] rounded w-1/3 flex justify-between"
-        >
-          <input
-            type="number"
-            name="numImages"
-            max={20}
-            min={0}
-            className="px-2 w-3/4 focus:outline-none"
-            placeholder="Entrer le nombre d'images.."
-          />
-          <button className="bg-[#a4161a] hover:bg-[#161a1def] h-full text-white px-4 py-1.5 w-1/4 cursor-pointer">
-            Générer
-          </button>
-        </form>
+      <div
+        {...getRootProps()}
+        className="w-1/2 mx-auto border-2 border-dashed border-[#a4161a] p-6 my-4 rounded cursor-pointer text-center hover:bg-[#a4161a11] transition"
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p className="text-[#a4161a]">Déposez les images ici ...</p>
+        ) : (
+          <p>
+            Glissez-déposez des images ici ou cliquez pour en sélectionner (max
+            20)
+          </p>
+        )}
       </div>
-
+      {allImages.length > 0 && (
+        <div className="w-full flex justify-center ">
+          <h1 className="text-center flex space-x-2">
+            <span className="font-semibold">
+              {allImages.length}
+              <span className="font-normal">/20</span>
+            </span>
+            <span>images</span>
+          </h1>
+        </div>
+      )}
       <div>
-        {numImages > 0 ? (
-          <div className="flex justify-start items-center overflow-x-auto overflow-y-hidden space-x-2 mt-20 px-4">
-            {Array.from({ length: numImages }, (_, index) => {
-              const imageSrc = allImages[index];
-
-              return (
-                <div
-                  key={index}
-                  onClick={() => !imageSrc && handleDivClick(index)}
-                  className={`relative ${
-                    !imageSrc && "cursor-pointer"
-                  } min-w-[20rem] h-56 border rounded border-[#b1a7a6] hover:bg-[#b1a7a623] flex items-center justify-center text-[#161a1d] text-xl font-bold`}
-                >
-                  {imageSrc ? (
-                    <img
-                      src={
-                        imageSrc instanceof File
-                          ? URL.createObjectURL(imageSrc)
-                          : imageSrc
-                      }
-                      alt={`Image ${index}`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex flex-col w-full h-full justify-center text-center">
-                      <span className="text-sm absolute top-1 left-2 font-light">
-                        {index + 1}
-                      </span>
-                      <FontAwesomeIcon
-                        icon={faCloudArrowUp}
-                        className="text-[#161a1d]"
-                      />
-                    </div>
-                  )}
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    ref={(el) => (fileInputs.current[index] = el)}
-                    onChange={(e) => handleFileChange(e, index)}
+        {allImages.length > 0 ? (
+          <div className="flex justify-start items-center overflow-x-auto overflow-y-hidden space-x-2 mt-5 px-4">
+            {allImages.map((imageSrc, index) => (
+              <div
+                key={index}
+                onClick={() => !imageSrc && handleDivClick(index)}
+                className={`relative min-w-[20rem] h-56 border rounded border-[#b1a7a6] hover:bg-[#b1a7a623] flex items-center justify-center text-[#161a1d] text-xl font-bold`}
+              >
+                {imageSrc ? (
+                  <img
+                    src={
+                      imageSrc instanceof File
+                        ? URL.createObjectURL(imageSrc)
+                        : imageSrc
+                    }
+                    alt={`Image ${index}`}
+                    className="w-full h-full object-cover"
                   />
+                ) : (
+                  <div className="flex flex-col w-full h-full justify-center text-center">
+                    <span className="text-sm absolute top-1 left-2 font-light">
+                      {index + 1}
+                    </span>
+                    <FontAwesomeIcon
+                      icon={faCloudArrowUp}
+                      className="text-[#161a1d]"
+                    />
+                  </div>
+                )}
 
-                  {imageSrc && (
-                    <div className="text-sm absolute top-1 right-2">
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        onClick={() => handleRemoveImage(index)}
-                        className="text-[#a4161a] hover:text-gray-800 cursor-pointer"
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  ref={(el) => (fileInputs.current[index] = el)}
+                  onChange={(e) => handleFileChange(e, index)}
+                />
 
-            <div
-              className="cursor-pointer min-w-[20rem] h-56 bg-[#b1a7a6] hover:bg-[#b1a7a688] flex items-center justify-center text-white text-3xl font-bold"
-              onClick={() => {
-                numImages >= 20
-                  ? toast.error("Vous avez dépassé le maximum des images !!")
-                  : setNumImages(numImages + 1);
-              }}
-            >
-              +
-            </div>
+                {imageSrc && (
+                  <div className="text-sm absolute top-1 right-2 flex items-center space-x-2">
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      onClick={() => handleRemoveImage(index)}
+                      className="text-[#a4161a] hover:text-gray-800 cursor-pointer"
+                    />
+
+                    <input
+                      type="checkbox"
+                      checked={index === 0}
+                      onChange={() => handleCoverSelect(index)}
+                      title="Définir comme image de couverture"
+                      className="form-checkbox text-[#a4161a] w-4 h-4 cursor-pointer"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         ) : (
           <div className="w-full flex justify-center mt-10">

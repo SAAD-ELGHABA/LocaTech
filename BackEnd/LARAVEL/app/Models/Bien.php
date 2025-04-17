@@ -15,13 +15,16 @@ class Bien extends Model
         'description',
         'budget',
         'superficier',
-        'mapUrl',
         'ville',
         'type',
         'images',
         'typeAffaire',
         'courtier_id',
-        'status'
+        'status',
+        'chambres',
+        'salles_de_bain',
+        'etage',
+        'meuble'
     ];
     protected $casts = [
         'images' => 'array',

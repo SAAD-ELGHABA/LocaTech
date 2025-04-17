@@ -1,18 +1,12 @@
-import React, { useState } from "react";
-import GoogleMapComponent from "../../../components/GoogleMapComponent";
-import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
-import MapFromUrl from "../../../components/MapFormUrl";
-
 function Info() {
   const dispatch = useDispatch();
   const createBien = useSelector((state) => state.CreateBienReducer);
   const villes = useSelector((state) => state.VillesReducer);
 
   return (
-    <div className="mx-8 my-2 flex space-x-1">
+    <div className="mx-8 my-2 flex space-x-6 overflow-y-auto">
       <div className="w-1/3 flex flex-col space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">
@@ -73,10 +67,10 @@ function Info() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">
-            Superficier d'annonce
+            Superficie d'annonce
           </label>
           <input
-            type="text"
+            type="number"
             name="superficier"
             placeholder="Veuillez entrer la superficier d'annonce"
             value={createBien.superficier || ""}
@@ -158,32 +152,99 @@ function Info() {
           </select>
         </div>
       </div>
-      <div className="w-1/3 flex flex-col  space-y-9">
+      <div className="w-1/3 flex flex-col  space-y-6">
         <div>
           <label className="block text-sm font-medium mb-1">
-            Map d'annonce (url)
+            Nombre de chambres
           </label>
           <input
-            type="url"
-            name="map"
-            value={createBien.mapUrl || ""}
+            type="number"
+            name="chambres"
+            placeholder="Veuillez entrer le Nombre de chambres"
+            value={createBien.chambres || ""}
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
-                payload: { mapUrl: e.target.value },
+                payload: { chambres: e.target.value },
               });
             }}
-            placeholder="Veuillez entrer le lien de google map d'annonce"
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
           />
         </div>
-        <div className="flex justify-center space-x-4">
-          <p>voir dans google map Simulateur</p>
-          <span>
-            <FontAwesomeIcon icon={faAnglesDown} />
-          </span>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Nombre de salles de bain
+          </label>
+          <input
+            type="number"
+            name="salles_de_bain"
+            placeholder="Veuillez entrer le Nombre de salles de bain"
+            value={createBien.salles_de_bain || ""}
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            onChange={(e) => {
+              dispatch({
+                type: "SET_CREATE_BIEN",
+                payload: { salles_de_bain: e.target.value },
+              });
+            }}
+          />
         </div>
-        <MapFromUrl mapUrl={createBien.mapUrl} />
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Étage (si applicable)
+          </label>
+          <input
+            type="number"
+            name="etage"
+            placeholder="Veuillez entrer le Nombre d'Étage"
+            value={createBien.etage || ""}
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            onChange={(e) => {
+              dispatch({
+                type: "SET_CREATE_BIEN",
+                payload: { etage: e.target.value },
+              });
+            }}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Quartier
+          </label>
+          <input
+            type="text"
+            name="Quartier"
+            placeholder="Veuillez entrer la Quartier de bien"
+            value={createBien.quartier || ""}
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            onChange={(e) => {
+              dispatch({
+                type: "SET_CREATE_BIEN",
+                payload: { quartier: e.target.value },
+              });
+            }}
+          />
+        </div>
+        <div className="flex items-center space-x-4">
+          <label className="block text-sm font-medium mb-1">
+            Meublé
+            <span className="text-gray-600 ms-2 ">
+              (veuillez coucher ce case à cocher si la bein est meublé)
+            </span>
+          </label>
+          <input
+            type="checkbox"
+            name="meublé"
+            placeholder="Veuillez entrer le Nombre d'Étage"
+            value={createBien.meublé || ""}
+            onChange={(e) => {
+              dispatch({
+                type: "SET_CREATE_BIEN",
+                payload: { meublé: e.target.value },
+              });
+            }}
+          />
+        </div>
       </div>
     </div>
   );

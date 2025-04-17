@@ -1,14 +1,14 @@
-import React, { useRef , useState,useEffect } from "react";
-import { Sparkles } from 'lucide-react';
+import React, { useRef, useState, useEffect } from "react";
+import { Bath, Bed, Heart, LandPlot, Sparkles } from "lucide-react";
 import { Quote } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "../components/Navbar";
 import logo from "../assets/Location.png";
-import image1 from '../assets/image1.png'; 
-import image2 from '../assets/image2.png'; 
-import image3 from '../assets/image3.png'; 
-import pricingImage from "../assets/pricing-image.png"; 
-import sellImage from "../assets/sell-image.png"; 
+import image1 from "../assets/image1.png";
+import image2 from "../assets/image2.png";
+import image3 from "../assets/image3.png";
+import pricingImage from "../assets/pricing-image.png";
+import sellImage from "../assets/sell-image.png";
 import infoCard1 from "../assets/infoCard1.png";
 import infoCard2 from "../assets/infoCard2.png";
 import infoCard3 from "../assets/infoCard3.png";
@@ -24,83 +24,117 @@ import Casablanca from "../assets/casablanca.png";
 import Agadir from "../assets/agadir.png";
 import ChatAI from "../components/ChatAI/ChatAI";
 import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import "../index.css";
-
-
-
-
+import { useSelector } from "react-redux";
 
 const HeroSection = () => {
-
-
   const [showChatAI, setShowChatAI] = useState(false);
-
   const handleGoToAI = () => {
     setShowChatAI(true);
   };
 
   const villesMaroc = [
-    "Agadir", "Aït Melloul", "Al Hoceïma", "Azrou", "Beni Mellal", "Ben Guerir", "Berkane",
-    "Boujdour", "Bouskoura", "Casablanca", "Chefchaouen", "Dakhla", "Dcheira El Jihadia",
-    "El Jadida", "Errachidia", "Essaouira", "Fès", "Fquih Ben Salah", "Guelmim", "Guercif",
-    "Ifrane", "Inezgane", "Jerada", "Kénitra", "Khémisset", "Khénifra", "Khouribga", "Laâyoune",
-    "Larache", "Marrakech", "Martil", "Meknès", "Mohammédia", "Nador", "Ouarzazate", "Oujda",
-    "Rabat", "Safi", "Salé", "Settat", "Sidi Bennour", "Sidi Kacem", "Sidi Slimane", "Tanger",
-    "Tan-Tan", "Taourirt", "Taroudant", "Taza", "Témara", "Tétouan", "Tiflet", "Tinghir",
-    "Tiznit", "Zagora"
+    "Agadir",
+    "Aït Melloul",
+    "Al Hoceïma",
+    "Azrou",
+    "Beni Mellal",
+    "Ben Guerir",
+    "Berkane",
+    "Boujdour",
+    "Bouskoura",
+    "Casablanca",
+    "Chefchaouen",
+    "Dakhla",
+    "Dcheira El Jihadia",
+    "El Jadida",
+    "Errachidia",
+    "Essaouira",
+    "Fès",
+    "Fquih Ben Salah",
+    "Guelmim",
+    "Guercif",
+    "Ifrane",
+    "Inezgane",
+    "Jerada",
+    "Kénitra",
+    "Khémisset",
+    "Khénifra",
+    "Khouribga",
+    "Laâyoune",
+    "Larache",
+    "Marrakech",
+    "Martil",
+    "Meknès",
+    "Mohammédia",
+    "Nador",
+    "Ouarzazate",
+    "Oujda",
+    "Rabat",
+    "Safi",
+    "Salé",
+    "Settat",
+    "Sidi Bennour",
+    "Sidi Kacem",
+    "Sidi Slimane",
+    "Tanger",
+    "Tan-Tan",
+    "Taourirt",
+    "Taroudant",
+    "Taza",
+    "Témara",
+    "Tétouan",
+    "Tiflet",
+    "Tinghir",
+    "Tiznit",
+    "Zagora",
   ];
-  
 
-  
   const [ville, setVille] = useState("");
-const [showVilleSuggestions, setShowVilleSuggestions] = useState(false);
+  const [showVilleSuggestions, setShowVilleSuggestions] = useState(false);
 
+  const handleVilleChange = (e) => {
+    const value = e.target.value;
+    setVille(value);
+    setShowVilleSuggestions(true);
+  };
 
-const handleVilleChange = (e) => {
-  const value = e.target.value;
-  setVille(value);
-  setShowVilleSuggestions(true);
-};
+  const handleVilleSelect = (selectedVille) => {
+    setVille(selectedVille);
+    setShowVilleSuggestions(false);
+  };
 
-const handleVilleSelect = (selectedVille) => {
-  setVille(selectedVille);
-  setShowVilleSuggestions(false);
-};
+  const searchBoxRef = useRef(null);
+  const villeRef = useRef(null);
+  const budgetRef = useRef(null);
 
-const searchBoxRef = useRef(null);
-const villeRef = useRef(null);
-const budgetRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target)
+      ) {
+        setShowVilleSuggestions(false);
+        setShowSuggestions(false);
+      }
+    };
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      searchBoxRef.current &&
-      !searchBoxRef.current.contains(event.target)
-    ) {
+    const handleScroll = () => {
       setShowVilleSuggestions(false);
       setShowSuggestions(false);
-    }
-  };
+    };
 
-  const handleScroll = () => {
-    setShowVilleSuggestions(false);
-    setShowSuggestions(false);
-  };
+    document.addEventListener("click", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
 
-  document.addEventListener('click', handleClickOutside);
-  window.addEventListener('scroll', handleScroll);
-
-  return () => {
-    document.removeEventListener('click', handleClickOutside);
-    window.removeEventListener('scroll', handleScroll);
-  };
-}, []);
-  
-
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navigate = useNavigate(); // Create navigate function
-
 
   // const handleGoToAI = () => {
   //   navigate("/chat-ai"); // Assure-toi que cette route existe
@@ -110,7 +144,7 @@ useEffect(() => {
   const [selectedType, setSelectedType] = useState("");
   const [budget, setBudget] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  
+
   // Predefined budget ranges
   const budgetOptions = [
     "0 à 100 000 MAD",
@@ -129,22 +163,17 @@ useEffect(() => {
     "4 000 000 à 5 000 000 MAD",
     "5 000 000 MAD et +",
   ];
-  
+
   const handleBudgetChange = (e) => {
     const value = e.target.value;
     setBudget(value);
     setShowSuggestions(true);
   };
-  
+
   const handleSuggestionClick = (suggestion) => {
     setBudget(suggestion);
     setShowSuggestions(false);
   };
-  
-
-
-
-
 
   const handleSearch = () => {
     if (selectedOption && ville && selectedType && budget) {
@@ -153,9 +182,9 @@ useEffect(() => {
         ville,
         type: selectedType,
         budget,
-        action
+        action,
       };
-  
+
       if (selectedOption === "acheter") {
         navigate("/acheter", { state: searchData });
       } else if (selectedOption === "louer") {
@@ -165,171 +194,63 @@ useEffect(() => {
       toast.error("Merci de remplir tous les champs.");
     }
   };
-  
-  
-  
-  
+  const villes = useSelector((state) => state.VillesReducer);
+
   return (
-
-
-    
-    <div className="relative h-[70vh] bg-emerald-30 text-green-800 flex flex-col justify-center items-center">
-      {/* Texte */}
-      <div className="text-center">
-        <h1 className="text-red-500 text-xl md:text-3xl font-bold mb-4 leading-snug">
-          Trouvez votre maison/<br /> appartement idéal en toute simplicité !
-        </h1>
-        <button className="bg-[#F44336] hover:bg-red-700 text-white font-semibold px-5 py-2 mt-4 rounded-full text-sm cursor-pointer transition-all duration-300">
-          Consulter
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      
-      <div
-  ref={searchBoxRef}
-  className="absolute bottom-0 w-full px-4 flex justify-center items-center pb-10"
+<div
+  className="pt-40 space-y-10 flex flex-col justify-center"
+  style={{
+    background: `
+      linear-gradient(
+        to right,
+        rgba(229, 56, 59, 0.2) 0%,
+        #fb2c360a 25%,
+        #fb2c360a 75%,
+        rgba(229, 56, 59, 0.2) 100%
+      )
+    `,
+  }}
 >
-  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-lg w-full max-w-7xl flex flex-wrap md:flex-nowrap gap-4 justify-between items-center">
-    
-    {/* Achat */}
-    <select
-      className="border border-gray-300 p-2 rounded-md text-gray-500 w-full md:w-[150px]"
-      value={selectedOption}
-      onChange={(e) => setSelectedOption(e.target.value)}
+  {/* Texte */}
+  <div className="text-center">
+    <h1
+      className="text-transparent text-xl md:text-3xl font-bold mb-6 leading-snug w-3/6 mx-auto"
+      style={{
+        WebkitTextStroke: "1px #ef4444",
+      }}
     >
-      <option value="" disabled hidden>Achat</option>
-      <option value="acheter">Acheter</option>
-      <option value="louer">Louer</option>
-    </select>
+      Trouvez votre maison/ appartement idéal en toute simplicité !
+    </h1>
 
-    {/* Ville */}
-    <div className="relative w-full md:w-[180px]">
-      <input
-        type="text"
-        placeholder="Ville"
-        value={ville}
-        onChange={handleVilleChange}
-        onFocus={() => setShowVilleSuggestions(true)}
-        className="border border-gray-300 p-2 rounded-md w-full text-gray-700"
-      />
-      {showVilleSuggestions && (
-        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 z-20 max-h-60 overflow-y-auto shadow-lg">
-          {villesMaroc
-            .filter((v) => v.toLowerCase().includes(ville.toLowerCase()))
-            .map((v, index) => (
-              <div
-                key={index}
-                onClick={() => handleVilleSelect(v)}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-700"
-              >
-                {v}
-              </div>
-            ))}
-        </div>
-      )}
-    </div>
-
-    {/* Type */}
-    <select
-      className="border border-gray-300 p-2 rounded-md text-gray-500 w-full md:w-[150px]"
-      value={selectedType}
-      onChange={(e) => setSelectedType(e.target.value)}
+    <Link
+      to={"/consulter-bien"}
+      className="flex items-center mx-auto bg-red-500 w-28 px-4 py-2 rounded-3xl space-x-2 text-sm text-white hover:scale-105"
     >
-      <option value="" disabled hidden>Type</option>
-      <option value="appartement">Appartement</option>
-      <option value="maison">Maison</option>
-      <option value="villa">Villa</option>
-    </select>
-
-    {/* Budget */}
-    <div className="relative w-full md:w-[200px]">
-      <input
-        type="text"
-        placeholder="Budget                     MAD"
-        value={budget}
-        onChange={handleBudgetChange}
-        onFocus={() => setShowSuggestions(true)}
-        className="border border-gray-300 p-2 rounded-md w-full text-gray-700"
-      />
-      {showSuggestions && (
-        <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 z-20 max-h-60 overflow-y-auto shadow-lg">
-          {budgetOptions
-            .filter((range) =>
-              range.toLowerCase().includes(budget.toLowerCase())
-            )
-            .map((range, index) => (
-              <div
-                key={index}
-                onClick={() => handleSuggestionClick(range)}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-700"
-              >
-                {range}
-              </div>
-            ))}
-        </div>
-      )}
-    </div>
-
-    {/* Bouton Rechercher */}
-    <button
-      onClick={handleSearch}
-      className="bg-[#F44336] hover:bg-red-700 text-white px-4 py-2 cursor-pointer rounded-md w-full md:w-auto"
-    >
-      Rechercher
-    </button>
-
-    {/* Bouton AI */}
-    <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto">
-  <button
-    onClick={handleGoToAI}
-    className="flex items-center justify-center gap-2 bg-white cursor-pointer text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto"
-  >
-    <Sparkles className="w-4 h-4 text-purple-500" />
-    Prévoir des recommandations
-  </button>
-</div>
-
-
-{showChatAI && (
-  <div className="fixed inset-0 z-50 backdrop-blur-xs bg-white/30 flex items-center justify-center px-4">
-    <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-2xl relative">
-      <button
-        onClick={() => setShowChatAI(false)}
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-      >
-        ✕
-      </button>
-      <ChatAI
-        ville={ville}
-        selectedType={selectedType}
-        budget={budget}
-      />
-    </div>
+      <div>Consulter</div>
+      <FontAwesomeIcon icon={faChevronRight} />
+    </Link>
   </div>
-)}
 
-
-
-
-
-
-
+  {/* Search Bar */}
+  <div>
+    <FilterBar />
   </div>
 </div>
 
-      </div>
   );
 };
-
-
+import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FilterBar from "../components/FilterBar";
 
 const ImageCarousel = () => {
   const images = [
-    image1,  // Imported image
-    image2,  // Imported image
-    image3,  // Imported image
+    image1, // Imported image
+    image2, // Imported image
+    image3, // Imported image
   ];
+  const Biens = useSelector((state) => state.BienReducer);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -355,47 +276,113 @@ const ImageCarousel = () => {
   };
 
   return (
-    <div className="relative h-64 md:h-80 lg:h-150"> {/* <= hna n9esna l height */}
-  <div className="w-full h-full">
-    <img
-      src={images[currentIndex]}
-      alt={`carousel-slide-${currentIndex}`}
-      className="w-full h-full object-cover"
-    />
-  </div>
+    <div className="relative h-64 md:h-80 lg:h-150">
+      {" "}
+      <div className="w-full h-full relative overflow-hidden">
+        {/* Blurred background overlay */}
+        <div className="absolute inset-0 backdrop-blur-xs z-0" />
 
-  {/* Fleche l'isar */}
-<button
-  onClick={goToPrevious}
-  className="absolute top-1/2 left-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
->
-  &#60;
-</button>
+        {/* Background Image */}
+        <img
+          src={images[currentIndex]}
+          alt={`carousel-slide-${currentIndex}`}
+          className="w-full h-full object-cover absolute inset-0 z-[-1]"
+        />
 
-{/* Fleche l'yemin */}
-<button
-  onClick={goToNext}
-  className="absolute top-1/2 right-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
->
-  &#62;
-</button>
-
-  {/* Dots */}
-  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-    {images.map((_, index) => (
-      <span
-        key={index}
-        onClick={() => setCurrentIndex(index)}
-        className={`w-3 h-3 rounded-full bg-white opacity-60 cursor-pointer transition-opacity ${
-          currentIndex === index ? "opacity-100" : ""
-        }`}
-      />
-    ))}
-  </div>
-</div>
+        {/* Centered Biens container */}
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 w-[80%]  rounded p-8 flex flex-col md:flex-row gap-6 z-10 ">
+          {Biens &&
+            Biens.slice(0, 3).map((bien) => (
+              <Link
+                to={`/details-bien-client/${bien.id}`}
+                key={bien.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 w-full relative"
+              >
+                <img
+                  src={bien.images[0]}
+                  alt="bien"
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-3 space-y-1 text-sm">
+                  <h2 className="text-lg font-semibold text-gray-800 truncate">
+                    {bien.title}
+                  </h2>
+                  <p className="text-gray-600 flex items-center gap-2">
+                    <img
+                      src={brocheDeLocalisation}
+                      alt="localisation"
+                      className="h-5"
+                    />
+                    <span>{bien.ville}</span>
+                  </p>
+                  <div className="text-gray-600 flex justify-between text-sm">
+                    <p className="flex items-center gap-1.5">
+                      <LandPlot className="w-4" />
+                      <span>{bien.superficier} m²</span>
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <span>{bien.chambres}</span>
+                      <Bed className="w-4" />
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <span>{bien.salles_de_bain}</span>
+                      <Bath className="w-4" />
+                    </p>
+                  </div>
+                  <p className="text-[#f56565] font-bold">
+                    {new Intl.NumberFormat("de-DE", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(bien.budget)}{" "}
+                    MAD
+                  </p>
+                </div>
+                {
+                  
+                }
+                <Heart className="w-5 text-red-500 absolute top-2 right-2" />
+              </Link>
+            ))}
+        </div>
+        <div className="z-10 absolute bottom-20 left-1/2 transform -translate-x-1/2">
+          <Link
+            to={"/consulter-bien"}
+            className="bg-red-500 text-white rounded-2xl px-6 py-2.5 text-sm flex items-center space-x-2"
+          >
+            <span>Voir Plus</span>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Link>
+        </div>
+      </div>
+      {/* Fleche l'isar */}
+      <button
+        onClick={goToPrevious}
+        className="absolute top-1/2 left-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
+      >
+        &#60;
+      </button>
+      {/* Fleche l'yemin */}
+      <button
+        onClick={goToNext}
+        className="absolute top-1/2 right-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
+      >
+        &#62;
+      </button>
+      {/* Dots */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {images.map((_, index) => (
+          <span
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-3 h-3 rounded-full bg-white opacity-60 cursor-pointer transition-opacity ${
+              currentIndex === index ? "opacity-100" : ""
+            }`}
+          />
+        ))}
+      </div>
+    </div>
   );
-}
-
+};
 
 function ActualitesImmobilieres() {
   const villes = [
@@ -523,67 +510,62 @@ function ActualitesImmobilieres() {
 }
 
 export default function Accueil() {
+  const [submissionMessage, setSubmissionMessage] = useState("");
 
-  const [submissionMessage, setSubmissionMessage] = useState('');
+  useEffect(() => {
+    // جلب الرسالة من localStorage
+    const message = localStorage.getItem("submissionMessage");
+    if (message) {
+      setSubmissionMessage(message);
+      localStorage.removeItem("submissionMessage"); // باش تبان غير مرة وحدة
+    }
+  }, []);
 
+  useEffect(() => {
+    if (submissionMessage) {
+      const timer = setTimeout(() => {
+        setSubmissionMessage(""); // يختفي بعد 1 ثانية
+      }, 1000); // 1 ثانية (1000 مللي ثانية)
 
-useEffect(() => {
-  // جلب الرسالة من localStorage
-  const message = localStorage.getItem('submissionMessage');
-  if (message) {
-    setSubmissionMessage(message);
-    localStorage.removeItem('submissionMessage'); // باش تبان غير مرة وحدة
-  }
-}, []);
+      return () => clearTimeout(timer); // تنظيف التايمر إذا تغيرت الرسالة
+    }
+  }, [submissionMessage]);
 
-useEffect(() => {
-  if (submissionMessage) {
-    const timer = setTimeout(() => {
-      setSubmissionMessage(''); // يختفي بعد 1 ثانية
-    }, 1000); // 1 ثانية (1000 مللي ثانية)
-
-    return () => clearTimeout(timer); // تنظيف التايمر إذا تغيرت الرسالة
-  }
-}, [submissionMessage]);
-
-  
   const carouselRef = useRef(null);
-const [showButton, setShowButton] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
-useEffect(() => {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      setShowButton(entry.isIntersecting || window.scrollY > entry.boundingClientRect.top);
-    },
-    {
-      threshold: 0.1,
-    }
-  );
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowButton(
+          entry.isIntersecting || window.scrollY > entry.boundingClientRect.top
+        );
+      },
+      {
+        threshold: 0.1,
+      }
+    );
 
-  if (carouselRef.current) {
-    observer.observe(carouselRef.current);
-  }
-
-  return () => {
     if (carouselRef.current) {
-      observer.unobserve(carouselRef.current);
+      observer.observe(carouselRef.current);
     }
-  };
-}, []);
 
-{showButton && (
-  <div className="fixed bottom-4 right-4 z-50">
-    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition">
-      Rechercher
-    </button>
-  </div>
-)}
+    return () => {
+      if (carouselRef.current) {
+        observer.unobserve(carouselRef.current);
+      }
+    };
+  }, []);
 
-
-
-
-
-
+  {
+    showButton && (
+      <div className="fixed bottom-4 right-4 z-50">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition">
+          Rechercher
+        </button>
+      </div>
+    );
+  }
 
   const [showNavbarSearch, setShowNavbarSearch] = useState(false);
 
@@ -592,7 +574,7 @@ useEffect(() => {
       const section = document.querySelector(".section");
       if (section) {
         const rect = section.getBoundingClientRect();
-        setShowNavbarSearch(rect.top < 0); 
+        setShowNavbarSearch(rect.top < 0);
       }
     };
 
@@ -610,70 +592,80 @@ useEffect(() => {
   }, []);
 
   return (
-    
     <div className="accueil-page">
       <Navbar showSearchButton={showNavbarSearch} />
-      
+
       <div className="accueil-container">
-      {submissionMessage && (
-  <div
-    className="fixed top-[100px] left-1/2 transform -translate-x-1/2 bg-[#03a9f4] text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-1000 opacity-100"
-    style={{ width: 'auto', maxWidth: '900px', opacity: submissionMessage ? 1 : 0 }}
-  >
-    {submissionMessage}
-  </div>
-)}
+        {submissionMessage && (
+          <div
+            className="fixed top-[100px] left-1/2 transform -translate-x-1/2 bg-[#03a9f4] text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-1000 opacity-100"
+            style={{
+              width: "auto",
+              maxWidth: "900px",
+              opacity: submissionMessage ? 1 : 0,
+            }}
+          >
+            {submissionMessage}
+          </div>
+        )}
 
+        <div id="hero-section">
+          <HeroSection />
+        </div>
 
-      <div id="hero-section">
-      <HeroSection />
-</div>
+        <div ref={carouselRef}>
+          <ImageCarousel />
+        </div>
 
+        <div className="section">
+          <div className="section-image">
+            <img src={pricingImage} alt="Prix immobilier" />
+          </div>
+          <div className="section-content">
+            <span className="tag mb-3">Restez informé !</span>
+            <h1 className="text-2xl font-bold mb-5">
+              Découvrez les prix de l'immobilier au Maroc
+            </h1>
+            <p className="mb-7">
+              Découvrez les annonces de{" "}
+              <span className="highlight">LocaTech</span> pour obtenir
+              facilement des informations sur le marché de l’immobilier.
+              Découvrez le prix au mètre carré pour des adresses, des villes et
+              des quartiers spécifiques. Informez-vous et découvrez les prix
+              dans la région de votre choix dès aujourd’hui !
+            </p>
 
+            <Link to={"/acheter"} className="btn-secondary mb-7">
+              Découvrir les annonces →
+            </Link>
+          </div>
+        </div>
 
-      <div ref={carouselRef}>
-  <ImageCarousel />
-</div>
+        <hr className="bg-white border-0 border-t border-gray-300 my-12 w-3/10 mx-auto border-t-2 my-6" />
 
-        
-      <div className="section">
-  <div className="section-image">
-    <img src={pricingImage} alt="Prix immobilier" />
-  </div>
-  <div className="section-content">
-    <span className="tag mb-3">Restez informé !</span>
-    <h1 className="text-2xl font-bold mb-5">Découvrez les prix de l'immobilier au Maroc</h1>
-    <p className="mb-7">
-      Découvrez les annonces de <span className="highlight">LocaTech</span> pour obtenir facilement des informations sur le marché de l’immobilier.
-      Découvrez le prix au mètre carré pour des adresses, des villes et des quartiers spécifiques.
-      Informez-vous et découvrez les prix dans la région de votre choix dès aujourd’hui !
-    </p>
-    <button className="btn-secondary mb-7">Découvrir les annonces →</button>
-  </div>
-</div>
+        <div className="section reverse">
+          <div className="section-content">
+            <span className="tag mb-3">100% gratuit</span>
+            <h1 className="text-2xl font-bold mb-5">
+              Vendez vous-même un bien immobilier sur{" "}
+              <span className="highlight">LocaTech</span>
+            </h1>
+            <ul className="space-y-2 mb-7">
+              <li>✅ Présentez votre bien et ses caractéristiques</li>
+              <li>
+                ✅ Définissez le prix de vente de votre maison ou appartement
+              </li>
+              <li>✅ Mettez en avant ce qui le rend unique</li>
+            </ul>
+            <Link to={"/louer"} className="btn-secondary mb-7">
+              Découvrir les annonces →
+            </Link>
+          </div>
+          <div className="section-image">
+            <img src={sellImage} alt="Vente immobilière" />
+          </div>
+        </div>
 
-<hr className="bg-white border-0 border-t border-gray-300 my-12 w-3/10 mx-auto border-t-2 my-6" />
-
-<div className="section reverse">
-  <div className="section-content">
-    <span className="tag mb-3">100% gratuit</span>
-    <h1 className="text-2xl font-bold mb-5">Vendez vous-même un bien immobilier sur <span className="highlight">LocaTech</span></h1>
-    <ul className="space-y-2 mb-7">
-      <li>✅ Présentez votre bien et ses caractéristiques</li>
-      <li>✅ Définissez le prix de vente de votre maison ou appartement</li>
-      <li>✅ Mettez en avant ce qui le rend unique</li>
-    </ul>
-    <button className="btn-secondary mb-7">Découvrir les annonces →</button>
-  </div>
-  <div className="section-image">
-    <img src={sellImage} alt="Vente immobilière" />
-  </div>
-</div>
-
-
-
-
-        
         <div className="info-cards-title">
           <h3 className="text-red-500">
             Trouvez votre futur logement, que ce soit pour acheter et louer
@@ -702,7 +694,7 @@ useEffect(() => {
             </p>
           </div>
         </div>
-        
+
         <div className="testimonial-section">
           <h2 className="testimonial-title ">
             Ils ont vendu ou loué grâce à LocaTech
@@ -727,7 +719,9 @@ useEffect(() => {
                   les régions rurales proposent des maisons traditionnelles dans
                   des cadres pittoresques.
                 </p>
-                <span className="testimonial-source text-red-500">@LocaTech</span>
+                <span className="testimonial-source text-red-500">
+                  @LocaTech
+                </span>
               </div>
             </div>
           </div>
@@ -735,49 +729,74 @@ useEffect(() => {
 
         {/* <ActualitesImmobilieres /> */}
 
-
-
-       {/* 💬 TÉMOIGNAGES */}
-<section className="mb-24 px-4 md:px-6">
-  <h2 className="text-xl font-semibold text-center text-gray-800 mb-10">💬 Ce que disent nos utilisateurs</h2>
-  <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-3/4 mx-auto text-sm">
-    {/* Testimonial 1 */}
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"Grâce à LocaTech, j’ai trouvé un appartement à Rabat en moins d’une semaine. Simple, rapide et efficace."</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Samira B.</p>
-    </div>
-    {/* Testimonial 2 */}
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"La plateforme est moderne et intuitive, j’ai pu comparer plusieurs biens très facilement."</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Anas M.</p>
-    </div>
-    {/* Testimonial 3 */}
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"J'ai pu trouver l'appartement idéal grâce à une recherche simple et des filtres efficaces."</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Khalid T.</p>
-    </div>
-    {/* Testimonial 4 */}
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"Le processus de vente est super fluide, et le support client est toujours disponible pour nous aider."</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Amina L.</p>
-    </div>
-    {/* Testimonial 5 */}
-    <div className="bg-white border  border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"Une excellente plateforme pour acheter, vendre et louer des propriétés avec une interface simple."</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Mehdi R.</p>
-    </div>
-    {/* Testimonial 6 */}
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
-      <p className="italic">"LocaTech a facilité ma recherche d'appartement, je recommande vivement!"</p>
-      <p className="text-right font-semibold mt-4 text-red-500">— Sofia H.</p>
-    </div>
-  </div>
-</section>
-
-
-
-
-
+        {/* 💬 TÉMOIGNAGES */}
+        <section className="mb-24 px-4 md:px-6">
+          <h2 className="text-xl font-semibold text-center text-gray-800 mb-10">
+            💬 Ce que disent nos utilisateurs
+          </h2>
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-3/4 mx-auto text-sm">
+            {/* Testimonial 1 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "Grâce à LocaTech, j’ai trouvé un appartement à Rabat en moins
+                d’une semaine. Simple, rapide et efficace."
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Samira B.
+              </p>
+            </div>
+            {/* Testimonial 2 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "La plateforme est moderne et intuitive, j’ai pu comparer
+                plusieurs biens très facilement."
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Anas M.
+              </p>
+            </div>
+            {/* Testimonial 3 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "J'ai pu trouver l'appartement idéal grâce à une recherche
+                simple et des filtres efficaces."
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Khalid T.
+              </p>
+            </div>
+            {/* Testimonial 4 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "Le processus de vente est super fluide, et le support client
+                est toujours disponible pour nous aider."
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Amina L.
+              </p>
+            </div>
+            {/* Testimonial 5 */}
+            <div className="bg-white border  border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "Une excellente plateforme pour acheter, vendre et louer des
+                propriétés avec une interface simple."
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Mehdi R.
+              </p>
+            </div>
+            {/* Testimonial 6 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow">
+              <p className="italic">
+                "LocaTech a facilité ma recherche d'appartement, je recommande
+                vivement!"
+              </p>
+              <p className="text-right font-semibold mt-4 text-red-500">
+                — Sofia H.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

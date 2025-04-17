@@ -128,9 +128,25 @@ class CourtierController extends Controller
     }
     public function ActuelCourtier(Request $request)
     {
-        $ActuelCourtier = Courtier::findOrFail($request->input('user_id'));
-        return response()->json([
-            'ActuelCourtier' => $ActuelCourtier
-        ], 200);
+        try {
+            $userId = $request->input('user_id');
+
+            $courtier = Courtier::where('user_id', $userId)->first();
+
+            if (!$courtier) {
+                return response()->json([
+                    'message' => 'Courtier non trouvé.'
+                ], 404);
+            }
+
+            return response()->json([
+                'ActuelCourtier' => $courtier
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération du courtier.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

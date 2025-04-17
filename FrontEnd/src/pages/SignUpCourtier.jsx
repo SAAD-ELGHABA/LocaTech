@@ -7,18 +7,23 @@ import { toast } from "sonner";
 import SignUpProcess from "../components/SignUpProcess";
 import Step1 from "./signup_courtier/Step1";
 import Step2 from "./signup_courtier/Step2";
+import logo from "../assets/Location.png";
 
 const SignUpCourtier = () => {
-
   const [step, setStep] = useState(1);
 
   return (
     <div className="flex h-full flex-col items-center py-10">
       <div className="w-2/3 mx-auto rounded shadow bg-white p-8 relative">
         <div className="text-center">
-          <Link to={"/"} className="text-3xl font-bold text-red-500">
-            <span className="text-green-500">Loca</span>Tech
-          </Link>
+          <div className="flex items-center justify-center">
+            <Link to={"/"} className="flex items-center">
+              <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
+              <h1 className="text-3xl font-bold">
+                <span className="text-red-500">LocaTech</span>
+              </h1>
+            </Link>
+          </div>
           <p className="mt-2 text-lg font-semibold">Bienvenue Courtier</p>
         </div>
         {step === 1 ? (

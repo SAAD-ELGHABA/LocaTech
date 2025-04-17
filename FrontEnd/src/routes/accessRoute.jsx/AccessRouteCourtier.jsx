@@ -4,12 +4,15 @@ import { Navigate } from "react-router";
 
 function AccessRouteCourtier({ children, role = "courtier", path = "/" }) {
   const token = useSelector((state) => state.userReducer.token);
-  const user = useSelector((state) => state.userReducer.user);
-  const userRole = useSelector((state) =>
-    user ? state.userReducer.user.user.role : null
+  const user = useSelector(
+    (state) =>
+      (state.userReducer.userInfo && state.userReducer.userInfo.user) ||
+      state.userReducer.userInfo
   );
-  
-  return user && user.user.email_verified_at && userRole === role ? (
+  const userRole = user ? user.role : null;
+console.log(user);
+
+  return user && user.email_verified_at && userRole === role ? (
     children
   ) : (
     <Navigate to={path} />

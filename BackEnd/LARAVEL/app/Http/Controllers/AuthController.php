@@ -66,6 +66,10 @@ class AuthController extends Controller
 
             if ($user) {
                 // User exists, log them in
+                if (!$user->image) {
+                    $user->image = $googleData['picture'];
+                    $user->save();
+                }
                 if ($user->role === 'user') {
                     $token = $user->createToken('authToken')->plainTextToken;
                     return response()->json([
@@ -74,13 +78,14 @@ class AuthController extends Controller
                         'token' => $token
                     ]);
                 } else if ($user->role === 'courtier') {
-                    $courtier = Courtier::with(['user', 'agence'])->where('user_id', $user->id)->first();
+                    $courtier = Courtier::where('user_id', $user->id)->first();
                     if ($courtier->status === 'activé') {
                         $token = $user->createToken('authToken')->plainTextToken;
                         return response()->json([
                             'message' => 'connexion succée !',
-                            'user' => $courtier,
-                            'token' => $token
+                            'user' => $user,
+                            'token' => $token,
+                            'courtier' => $courtier
                         ]);
                     } else {
                         return response()->json([
@@ -92,18 +97,19 @@ class AuthController extends Controller
                 $user = User::create([
                     'nom' => $googleData['family_name'],
                     'prenom' => $googleData['given_name'],
-                    'age' => $googleData['age'] ?? 18, // Assuming age is optional
-                    'role' => 'user', // Default role
-                    'sexe' => $googleData['gender'] ?? 'male', // Assuming gender is optional
-                    'telephone' => $googleData['phone'] ?? '0000000000', // Assuming phone is optional
-                    'adresse' => $googleData['address'] ?? 'LocaTech', // Assuming address is optional
-                    'code_postal' => $googleData['postal_code'] ?? 'LocaTech code_postal', // Assuming postal code is optional
-                    'ville' => $googleData['city'] ?? 'LocaTech', // Assuming city is optional
-                    'CIN' => $googleData['CIN'] ?? $googleData['sub'], // Assuming CIN is optional
+                    'image' => $googleData['picture'],
+                    'age' => $googleData['age'] ?? 18,
+                    'role' => 'user',
+                    'sexe' => $googleData['gender'] ?? 'male',
+                    'telephone' => $googleData['phone'] ?? '0000000000',
+                    'adresse' => $googleData['address'] ?? 'LocaTech',
+                    'code_postal' => $googleData['postal_code'] ?? 'LocaTech code_postal',
+                    'ville' => $googleData['city'] ?? 'LocaTech',
+                    'CIN' => $googleData['CIN'] ?? $googleData['sub'],
                     'email' => $googleData['email'],
                     'email_verified' => true,
                     'email_verified_at' => now(),
-                    'password' => Hash::make(Str::random(16)), // Generate a random password
+                    'password' => Hash::make(Str::random(16)),
                 ]);
 
                 $token = $user->createToken('authToken')->plainTextToken;

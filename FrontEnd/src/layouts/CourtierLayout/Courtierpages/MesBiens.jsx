@@ -21,6 +21,7 @@ function MesBiens() {
   const ActuelCourtierReducer = useSelector(
     (state) => state.ActuelCourtierReducer
   );
+  
   const LoadinfGlobal = useSelector((state) => state.loadingReducer);
   const dispatch = useDispatch();
 
@@ -46,8 +47,6 @@ function MesBiens() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  console.log(MesBiens);
-  console.log(ActuelCourtierReducer);
   
   const handleDeleteBien = (id) => {
     toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
@@ -123,7 +122,7 @@ function MesBiens() {
                   >
                     <ul className="text-sm text-gray-700">
                       <Link
-                        to={`/details-bien/${bien.id}`}
+                        to={`/details-bien-client/${bien.id}`}
                         className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
                       >
                         <FontAwesomeIcon icon={faInfo} />

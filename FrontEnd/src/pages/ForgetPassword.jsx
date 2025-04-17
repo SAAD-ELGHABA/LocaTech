@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import asideimg from "../assets/login-signup-img.png";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import logo from "../assets/Location.png";
+
 import axios from "axios";
 import {
   faSpinner,
@@ -77,9 +79,14 @@ function ForgetPassword() {
           <div className="max-w-md w-4/6 space-y-2 mt-20">
             {/* Logo */}
             <div className="text-center">
-              <h1 className="text-3xl font-bold text-red-500">
-                <span className="text-green-500">Loca</span>Tech
-              </h1>
+            <div className="flex items-center justify-center">
+              <Link to={'/'} className="flex items-center">
+                <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
+                <h1 className="text-3xl font-bold">
+                  <span className="text-red-500">LocaTech</span>
+                </h1>
+              </Link>
+            </div>
               <p className="mt-2 text-lg font-semibold">Bienvenue</p>
             </div>
 
