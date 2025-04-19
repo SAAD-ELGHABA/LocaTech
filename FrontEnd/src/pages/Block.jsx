@@ -40,7 +40,7 @@ const BlockedPage = () => {
               Vous avez été bloqué(e).
             </p>
 
-            {/* Lien Créer un compte (Azbi) */}
+            {/* Lien Créer un compte  */}
             <Link
               to="/register"
               className="text-xs font-semibold hover:underline mt-6"

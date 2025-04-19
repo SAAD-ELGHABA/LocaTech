@@ -24,7 +24,7 @@ class BiensSeeder extends Seeder
         $unsplashApiKey = 'qD0j0a5xnYos-jARVLIUoMT0nAItGv3tAt8PxxfXZwI'; // Replace with your actual API key
         $unsplashUrl = 'https://api.unsplash.com/photos/random?query=interior,house&count=5&client_id=' . $unsplashApiKey;
 
-        for ($i = 0; $i < 5000; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $images = [];
             $ville = $faker->randomElement($villes);
             $quartiers = Quartier::where('ville_id', $ville->id)->get(); // Get quartiers for the selected city
