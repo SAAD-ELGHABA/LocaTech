@@ -90,22 +90,18 @@ class BienController extends Controller
 
             $query = Bien::query();
 
-            // Apply 'type' filter
             if (!empty($filters['type'])) {
                 $query->where('type', $filters['type']);
             }
 
-            // Apply 'typeAffaire' filter
             if (!empty($filters['typeAffaire'])) {
                 $query->where('typeAffaire', $filters['typeAffaire']);
             }
 
-            // Apply 'ville' filter
             if (!empty($filters['ville'])) {
                 $query->where('ville', $filters['ville']);
             }
 
-            // Apply 'budget' filter (expecting ['min' => value, 'max' => value|null])
             if (!empty($filters['budget']) && is_array($filters['budget'])) {
                 if (isset($filters['budget']['min']) && $filters['budget']['min'] !== null) {
                     $query->where('budget', '>=', $filters['budget']['min']);

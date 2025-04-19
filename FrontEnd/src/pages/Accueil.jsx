@@ -179,9 +179,9 @@ const HeroSection = () => {
         ville,
         type: selectedType,
         budget,
-        action
+        action,
       };
-  
+
       if (selectedOption === "acheter") {
         navigate("/acheter", { state: searchData });
       } else if (selectedOption === "louer") {
@@ -194,10 +194,10 @@ const HeroSection = () => {
   const villes = useSelector((state) => state.VillesReducer);
 
   return (
-<div
-  className="pt-40 space-y-10 flex flex-col justify-center"
-  style={{
-    background: `
+    <div
+      className="pt-40 space-y-10 flex flex-col justify-center"
+      style={{
+        background: `
       linear-gradient(
         to right,
         rgba(229, 56, 59, 0.2) 0%,
@@ -206,40 +206,40 @@ const HeroSection = () => {
         rgba(229, 56, 59, 0.2) 100%
       )
     `,
-  }}
->
-  {/* Texte */}
-  <div className="text-center">
-    <h1
-      className="text-transparent text-xl md:text-3xl font-bold mb-6 leading-snug w-3/6 mx-auto"
-      style={{
-        WebkitTextStroke: "1px #ef4444",
       }}
     >
-      Trouvez votre maison/ appartement idéal en toute simplicité !
-    </h1>
+      {/* Texte */}
+      <div className="text-center">
+        <h1
+          className="text-transparent text-xl md:text-3xl font-bold mb-6 leading-snug w-3/6 mx-auto"
+          style={{
+            WebkitTextStroke: "1px #ef4444",
+          }}
+        >
+          Trouvez votre maison/ appartement idéal en toute simplicité !
+        </h1>
 
-    <Link
-      to={"/consulter-bien"}
-      className="flex items-center mx-auto bg-red-500 w-28 px-4 py-2 rounded-3xl space-x-2 text-sm text-white hover:scale-105"
-    >
-      <div>Consulter</div>
-      <FontAwesomeIcon icon={faChevronRight} />
-    </Link>
-  </div>
+        <Link
+          to={"/consulter-bien"}
+          className="flex items-center mx-auto bg-red-500 w-28 px-4 py-2 rounded-3xl space-x-2 text-sm text-white hover:scale-105"
+        >
+          <div>Consulter</div>
+          <FontAwesomeIcon icon={faChevronRight} />
+        </Link>
+      </div>
 
-  {/* Search Bar */}
-  <div>
-    <FilterBar />
-  </div>
-</div>
-
+      {/* Search Bar */}
+      <div>
+        <FilterBar />
+      </div>
+    </div>
   );
 };
 import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FilterBar from "../components/FilterBar";
+import BienContainer from "../components/BienContainer";
 
 const ImageCarousel = () => {
   const images = [
@@ -261,17 +261,6 @@ const ImageCarousel = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Functions to move to the next/previous image
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
   return (
     <div className="relative h-64 md:h-80 lg:h-150">
       {" "}
@@ -286,60 +275,14 @@ const ImageCarousel = () => {
           className="w-full h-full object-cover absolute inset-0 z-[-1]"
         />
 
-        {/* Centered Biens container */}
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 w-[80%]  rounded p-8 flex flex-col md:flex-row gap-6 z-10 ">
-          {Biens &&
-            Biens.slice(0, 3).map((bien) => (
-              <Link
-                to={`/details-bien-client/${bien.id}`}
-                key={bien.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 w-full relative"
-              >
-                <img
-                  src={bien.images[0]}
-                  alt="bien"
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-3 space-y-1 text-sm">
-                  <h2 className="text-lg font-semibold text-gray-800 truncate">
-                    {bien.title}
-                  </h2>
-                  <p className="text-gray-600 flex items-center gap-2">
-                    <img
-                      src={brocheDeLocalisation}
-                      alt="localisation"
-                      className="h-5"
-                    />
-                    <span>{bien.ville}</span>
-                  </p>
-                  <div className="text-gray-600 flex justify-between text-sm">
-                    <p className="flex items-center gap-1.5">
-                      <LandPlot className="w-4" />
-                      <span>{bien.superficier} m²</span>
-                    </p>
-                    <p className="flex items-center gap-1.5">
-                      <span>{bien.chambres}</span>
-                      <Bed className="w-4" />
-                    </p>
-                    <p className="flex items-center gap-1.5">
-                      <span>{bien.salles_de_bain}</span>
-                      <Bath className="w-4" />
-                    </p>
-                  </div>
-                  <p className="text-[#f56565] font-bold">
-                    {new Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }).format(bien.budget)}{" "}
-                    MAD
-                  </p>
-                </div>
-                {
-                  
-                }
-                <Heart className="w-5 text-red-500 absolute top-2 right-2" />
-              </Link>
-            ))}
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 w-full  rounded p-8 flex flex-col md:flex-row gap-6 z-10 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
+            {Biens &&
+              [...Biens]
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // newest first
+                .slice(0, 3)
+                .map((bien) => <BienContainer key={bien.id} bien={bien}  isRecent={true}/>)}
+          </div>
         </div>
         <div className="z-10 absolute bottom-20 left-1/2 transform -translate-x-1/2">
           <Link
@@ -351,20 +294,6 @@ const ImageCarousel = () => {
           </Link>
         </div>
       </div>
-      {/* Fleche l'isar */}
-      <button
-        onClick={goToPrevious}
-        className="absolute top-1/2 left-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
-      >
-        &#60;
-      </button>
-      {/* Fleche l'yemin */}
-      <button
-        onClick={goToNext}
-        className="absolute top-1/2 right-8 transform -translate-y-1/2 text-white cursor-pointer text-3xl bg-gray bg-opacity-50 p-2 rounded-full border border-gray-300 hover:bg-opacity-80 hover:border-white transition duration-300 ease-in-out shadow-md"
-      >
-        &#62;
-      </button>
       {/* Dots */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {images.map((_, index) => (

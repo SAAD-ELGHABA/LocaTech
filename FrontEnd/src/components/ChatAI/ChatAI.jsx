@@ -1,11 +1,17 @@
+// ChatAI.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Link2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPaperPlane,
+  faSpinner,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { msgChatAi } from "../../redux/actions";
-import generatePrompt from "./prompt"; // ✅ had prompt.js dyalek
+import generatePrompt from "./prompt";
+import { Link } from "react-router-dom"; // Import Link
 
 const ChatAI = ({ onClose }) => {
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
@@ -13,7 +19,9 @@ const ChatAI = ({ onClose }) => {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   const conversationRef = useRef(null);
-  const test = ''
+  const Biens = useSelector((state) => state.BienReducer);
+  const [isSending, setIsSending] = useState(false); // To prevent multiple rapid submissions
+
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
@@ -21,15 +29,17 @@ const ChatAI = ({ onClose }) => {
   }, [messagesChatAi]);
 
   const sendMessage = async () => {
-    if (input.trim() === "") return;
+    if (input.trim() === "" || isSending) return;
 
+    setIsSending(true); // Disable button during sending
     const userMessage = input.trim();
     dispatch(msgChatAi({ data: userMessage, role: "user" }));
     setInput("");
     setThinking(true);
 
     // ✅ Generate prompt dynamiquement
-    const prompt = generatePrompt(userMessage);
+
+    const prompt = generatePrompt(userMessage, Biens);
 
     const options = {
       method: "POST",
@@ -40,7 +50,10 @@ const ChatAI = ({ onClose }) => {
     };
 
     try {
-      const response = await fetch(import.meta.env.VITE_OPENAI_API_URL, options);
+      const response = await fetch(
+        import.meta.env.VITE_OPENAI_API_URL,
+        options
+      );
       const data = await response.json();
 
       if (
@@ -58,18 +71,27 @@ const ChatAI = ({ onClose }) => {
           })
         );
       } else {
-        toast.error("Failed to get response from AI.");
+        toast.error("Un erreur quand parler avec l'assistant ai.");
       }
     } catch (error) {
       console.error("Error fetching AI response:", error);
       toast.error("Error communicating with AI.");
     } finally {
       setThinking(false);
+      setIsSending(false); // Re-enable button
     }
   };
 
+  const handleSendMessageWithDelay = () => {
+    // Simple delay to prevent rapid calls
+    setTimeout(sendMessage, 500); // Wait 500 milliseconds before sending
+  };
+
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-md w-full max-w-md h-[500px] flex flex-col z-50">
+    <div
+      className="fixed top-86 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
+      style={{ zIndex: 1000 }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
@@ -104,15 +126,34 @@ const ChatAI = ({ onClose }) => {
                 className={`rounded-lg p-3 text-sm break-words ${
                   msg.role === "ai"
                     ? "bg-gray-100 text-gray-800"
-                    : "bg-blue-100 text-blue-800"
+                    : "bg-red-100 text-black"
                 } w-2/3`}
               >
                 {msg.role === "ai" && (
                   <Sparkles className="text-gray-400 inline-block mr-1 align-text-bottom h-4" />
                 )}
-                {msg.data}
+                {msg.data
+                  .split(/<link>(.*?)<\/link>/)
+                  .map((part, partIndex) => {
+                    const linkMatch = part.match(/^(.*)\((.*?)\)$/);
+                    if (linkMatch) {
+                      const text = linkMatch[1];
+                      const to = linkMatch[2];
+                      return (
+                        <div className="block border rounded border-gray-400 px-2 py-1 hover:bg-red-100">
+                          <Link2 className="h-4" />
+                          <Link key={`link-${index}-${partIndex}`} to={to}>
+                            {text}
+                          </Link>
+                        </div>
+                      );
+                    }
+                    return (
+                      <span key={`span-${index}-${partIndex}`}>{part}</span>
+                    );
+                  })}
                 {msg.role === "user" && (
-                  <div className="text-blue-600 font-semibold text-xs text-right mt-1">
+                  <div className="text-red-600 font-semibold text-xs text-right mt-1">
                     You
                   </div>
                 )}
@@ -125,7 +166,10 @@ const ChatAI = ({ onClose }) => {
         {thinking && (
           <div className="flex justify-start">
             <div className="rounded-lg p-3 text-sm bg-gray-100 text-gray-800 w-fit">
-              <FontAwesomeIcon icon={faSpinner} className="animate-spin w-5 h-5" />
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="animate-spin w-5 h-5"
+              />
             </div>
           </div>
         )}
@@ -140,18 +184,23 @@ const ChatAI = ({ onClose }) => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Poser vos questions..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessageWithDelay()}
           />
           <button
-            onClick={sendMessage}
-            className={`ml-2 px-4 py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
-              thinking || input.trim() === ""
+            onClick={handleSendMessageWithDelay}
+            className={`flex items-center space-x-2 ml-2 px-4 py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+              thinking || input.trim() === "" || isSending
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-purple-500 hover:bg-purple-600 cursor-pointer"
             }`}
-            disabled={thinking || input.trim() === ""}
+            disabled={thinking || input.trim() === "" || isSending}
           >
-            <FontAwesomeIcon icon={faPaperPlane} /> Envoyer
+            {thinking ? (
+              <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+            ) : (
+              <FontAwesomeIcon icon={faPaperPlane} />
+            )}
+            <span>Envoyer</span>
           </button>
         </div>
       </div>

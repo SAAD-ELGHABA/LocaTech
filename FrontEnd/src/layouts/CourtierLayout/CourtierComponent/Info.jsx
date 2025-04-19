@@ -99,7 +99,7 @@ function Info() {
               });
             }}
           >
-            <option value="">seleter la ville </option>
+            <option value="">Sélectionner la ville </option>
             {villes &&
               villes.map((ville) => (
                 <option value={ville.nom} key={ville.id}>
@@ -124,7 +124,7 @@ function Info() {
               });
             }}
           >
-            <option value="">seleter le type </option>
+            <option value="">Sélectionner le type de bien </option>
             <option value="appartement">appartement</option>
             <option value="maison">maison</option>
             <option value="villa">villa</option>
@@ -146,7 +146,7 @@ function Info() {
               });
             }}
           >
-            <option value="">seleter le type </option>
+            <option value="">Sélectionner le type d'affaire</option>
             <option value="Acheter">Acheter</option>
             <option value="Louer">Louer</option>
           </select>
@@ -208,9 +208,7 @@ function Info() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">
-            Quartier
-          </label>
+          <label className="block text-sm font-medium mb-1">Quartier</label>
           <input
             type="text"
             name="Quartier"
@@ -235,12 +233,11 @@ function Info() {
           <input
             type="checkbox"
             name="meublé"
-            placeholder="Veuillez entrer le Nombre d'Étage"
-            value={createBien.meublé || ""}
+            checked={createBien.meuble || false}
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
-                payload: { meublé: e.target.value },
+                payload: { meuble: e.target.checked },
               });
             }}
           />
