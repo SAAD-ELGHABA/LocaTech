@@ -3,7 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
-use App\Http\Controllers\VilleController;
+use App\Http\Controllers\FavoriController;
+use App\Http\Controllers\VilleController; 
+use App\Http\Controllers\NotificationController;
 use App\Models\Status;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Ville;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,7 +28,10 @@ Route::post('/courtier', [CourtierController::class, 'store'])->name('courtier.s
 Route::post('/googleAuth', [AuthController::class, 'googleAuth'])->name('googleAuth');
 
 Route::post('/forgot-password', [AuthController::class, 'ForgetPassword']);
+
 Route::post('/reset-password', [AuthController::class, 'ResetPassword'])->name('password.reset');
+
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 Route::get("/ville", [VilleController::class, "index"])->name("ville.index");
 
@@ -57,10 +63,23 @@ Route::post('/StatusCourtiers', [CourtierController::class, 'StatusCourtiers'])-
 Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien');
 Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
-Route::post('/delete-Bien/{id}',[BienController::class,'delete'])->name('deleteBien');
+Route::post('/delete-Bien/{id}', [BienController::class, 'delete'])->name('deleteBien');
 
-Route::get('/status',function(){
+Route::get('/status', function () {
     return Status::all();
 });
 
-Route::post('/filterBiens',[BienController::class,'filter'])->name('filterBiens');
+Route::post('/filterBiens', [BienController::class, 'filter'])->name('filterBiens');
+
+Route::post('/add-favoris', [FavoriController::class, 'add_to_favoris'])->name('add-favoris')->middleware('auth:sanctum');
+
+Route::get('get-user-favoris', [FavoriController::class, 'getUserFavoris'])->name('get-user-favoris')->middleware('auth:sanctum');
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/notifications', [NotificationController::class, 'store']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+});

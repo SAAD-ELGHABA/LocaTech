@@ -4,15 +4,10 @@ import logo from "../assets/Location.png";
 import { useDispatch, useSelector } from "react-redux";
 
 const BlockedPage = () => {
-  const user = useSelector(
-    (state) =>
-      (state.userReducer.userInfo && state.userReducer.userInfo.user) ||
-      state.userReducer.userInfo
-  );
+  const user = useSelector((state) => state.userReducer.userInfo);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(user);
-
     user &&
       user.role === "courtier" &&
       dispatch({
@@ -33,28 +28,27 @@ const BlockedPage = () => {
           </div>
         </Link>
       </div>
-      {!user ||
-        (!user.role === "courtier" ? (
-          <div>
-            <p className="text-xl text-black font-medium">
-              Vous avez été bloqué(e).
-            </p>
+      {!user || user.role !== "courtier" ? (
+        <div className="text-center">
+          <p className="text-xl text-black font-medium">
+            Vous avez été bloqué(e).
+          </p>
 
-            {/* Lien Créer un compte  */}
-            <Link
-              to="/register"
-              className="text-xs font-semibold hover:underline mt-6"
-            >
-              Créer un compte
-            </Link>
-          </div>
-        ) : (
-          <div>
-            <Link to={"/courtier-index"} className="hover:underline">
-              Aller à votre tableau de bord pour crée une nouvelle annonce
-            </Link>
-          </div>
-        ))}
+          {/* Lien Créer un compte (Azbi) */}
+          <Link
+            to="/register"
+            className="text-xs font-semibold hover:underline mt-6"
+          >
+            Créer un compte
+          </Link>
+        </div>
+      ) : (
+        <div>
+          <Link to={"/courtier-index"} className="hover:underline">
+            Aller à votre tableau de bord pour crée une nouvelle annonce
+          </Link>
+        </div>
+      )}
       {/* Message */}
     </div>
   );

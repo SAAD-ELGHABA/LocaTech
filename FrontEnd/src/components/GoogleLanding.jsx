@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
+import { fetchInitialData } from "../functions/fetchInitialData";
 
 function GoogleLanding() {
   const nav = useNavigate();
@@ -19,11 +20,9 @@ function GoogleLanding() {
       });
       if (response.status >= 200) {
         toast.success(response.data.message);
+        await fetchInitialData(dispatch, response.data.token);
         localStorage.setItem("token", response.data.token);
-
         if (response.data.user.role === "courtier") {
-          console.log(response.data);
-          
           dispatch({
             type: "ActuelCourtier",
             payload: response.data.courtier,

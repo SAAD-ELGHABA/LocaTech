@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('adresse')->nullable();
             $table->string('code_postal')->nullable();
             $table->string('ville')->nullable();
-            $table->string('CIN')->unique()->nullable();
+            $table->string('CIN')->nullable();
             $table->string('email')->unique();
             $table->string('email_verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();

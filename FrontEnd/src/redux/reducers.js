@@ -122,7 +122,7 @@ const createBien = {
     chambres:null,
     salles_de_bain:null,
     etage:null,
-    meublé:false,
+    meuble:false,
     ville:null,
     type:null,
     typeAffaire:null,
@@ -194,10 +194,10 @@ export const statusReducer = (state=status,action)=>{
 }
 
 const filterBiens = {
-    type:null,
-    typeAffaire:null,
-    budget:null,
-    ville:null
+    type: "",
+    ville: "",
+    typeAffaire: "",
+    budget: null,
 }
 export const filterBiensReducer = (state=filterBiens,action)=>{
     switch(action.type){
@@ -210,6 +210,18 @@ export const filterBiensReducer = (state=filterBiens,action)=>{
     }
 }
 
+const filtredBiens = []
+
+export const filtredBiensReducer = (state=filtredBiens,action)=>{
+    switch(action.type){
+        case "GET_FILTRED_BIENS":
+            return action.payload;
+        case "RESET_FILTERED_BIENS":
+            return [];
+        default:
+            return state;
+    }
+}
 
 
 const messages = [
@@ -224,5 +236,18 @@ export const ChatAiReducer = (state=messages,action)=>{
             ]
         default:
             return messages;
+    }
+}
+
+
+const Favoris = []
+export const FavorisReducer = (state=Favoris,action)=>{
+    switch (action.type){
+        case "ADD_TO_FAVORIS":
+            return action.payload;
+        case "RESET_FAVORIS":
+            return Favoris;
+        default :
+        return state;
     }
 }

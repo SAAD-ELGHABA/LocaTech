@@ -1,60 +1,45 @@
-import Router from '../../routes/route';
+const generatePrompt = (userMessage, Biens) => {
+  const lowerMessage = userMessage.toLowerCase();
 
-// Fonction pour extraire les paths mn les routes
-const extractRoutes = (routes) => {
-  let paths = [];
-
-  routes.forEach(route => {
-    if (route.path) {
-      paths.push(route.path);
-    }
-    if (route.children) {
-      paths = paths.concat(extractRoutes(route.children));
-    }
-  });
-
-  return paths;
-};
-
-const allPaths = extractRoutes(Router.routes);
-
-// ✅ Fonction li katgénérer le prompt dynamiquement
-const generatePrompt = (userMessage) => {
-    const lowerMessage = userMessage.toLowerCase();
-  
-    const wantsRoutes =
-      lowerMessage.includes('routes') ||
-      lowerMessage.includes('navigation') ||
-      lowerMessage.includes('pages') ||
-      lowerMessage.includes('navigate') ||
-      lowerMessage.includes('pages disponibles') ||
-      lowerMessage.includes('fin n9der') ||
-      lowerMessage.includes('fin nqder');
-  
-    // ✅ questions générales (Darija w Français)
-    const generalQuestions =
-      lowerMessage.includes('salut') ||
-      lowerMessage.includes('hi') ||
-      lowerMessage.includes('ach taydir had site') ||
-      lowerMessage.includes('i3tini des liens') ||
-      lowerMessage.includes('shno katdir') ||
-      lowerMessage.includes('shno hada') ||
-      lowerMessage.includes('bonjour');
-  
-    return `
-  Nta wahed l'assistant dyal LocaTech, kay3awn les utilisateurs.
-  
-  Voici la demande :
-  "${userMessage}"
-  
-  ${wantsRoutes ? `Voici les routes disponibles dans l'application :\n${allPaths.join('\n')}` : ''}
-  ${generalQuestions ? `Salam! LocaTech huwa site kay3awn lik bach t7ell 3la l'immobilier f lmaghrib. Kaymchi m3a l'achat, l3ayar w l7okoma dyal biens immobiliers. Bghiti tla3 l9ame3a m3a les pages li kaynin f site: 'Acheter', 'Louer', 'Blog', 'À propos' w bzzaf akhriin.\n\n**Bonjour! LocaTech est un site qui aide à trouver des biens immobiliers au Maroc. Il couvre l'achat, la location et la gestion des biens immobiliers. Vous pouvez explorer des pages comme 'Acheter', 'Louer', 'Blog', 'À propos' et bien plus encore.` : ''}
-  Réponds dima b darija ou français, b style simple w mfhoum.
-  
-  Dima, ila bghiti route précisé, ghan3tiha lik li m3ak. Kolchi fchi haja n9dar njawbak li dertih. 
-  `;
+  const routes = {
+    acheter: "/acheter",
+    louer: "/louer",
+    blog: "/blog",
+    "à propos": "/Apropos",
+    contact: "/contactUs"
   };
-  
-  
+
+  // Format the Biens data into a readable string for the AI
+  const formattedBiens = Biens.map(bien => `- Titre: ${bien.title}, Ville With The Area: ${bien.ville}+${bien.quartier}, Type: ${bien.type}, Budget: ${bien.budget}, ID: ${bien.id}, Description: ${bien.description}, Type Of Business: ${bien.description},
+    Number Of Rooms: ${bien.chambres},
+    Number Of BathRooms: ${bien.salles_de_bain},
+    Number Of Floor: ${bien.etage},
+    `).join("\n");
+
+  const prompt = `
+    Tu es un assistant virtuel pour le site immobilier LocaTech. Ton rôle est d'aider les utilisateurs à naviguer sur le site et à trouver des biens immobiliers.
+
+    Voici les pages disponibles et leurs liens relatifs :
+    - 🔗 Acheter(/acheter)
+    - 🔗 Louer(/louer)
+    - 🔗 Blog(/blog)
+    - 🔗 À propos(/Apropos)
+    - 🔗 Contact(/contactUs)
+
+    Quand un utilisateur pose une question qui concerne une de ces pages, **réponds en incluant un lien cliquable vers cette page en utilisant le format suivant : <link>[Nom de la Page](lien-relatif)</link> , en ajoutant une icône "🔗" avant le nom du lien**.
+
+    Si la question de l'utilisateur concerne une recherche de bien immobilier (maison, appartement, ville, prix, caractéristiques, etc.), utilise les informations sur les biens que je t'ai fournies pour générer des liens vers les pages de détails de biens similaires. **Utilise le format suivant pour les liens de biens : <link>Titre du Bien(/details-bien-client/:id)</link>**, en remplaçant ':id' par l'ID réel du bien. Chaque lien doit apparaître sur une nouvelle ligne. Limite le nombre de suggestions de biens à quelques résultats pertinents.
+
+    Voici les informations sur les biens disponibles :
+    ${formattedBiens}
+
+    Si l'utilisateur demande un bien spécifique, analyse sa requête pour identifier les critères (ville, type, budget, mots-clés dans la description). Recherche dans les informations sur les biens disponibles ceux qui correspondent le mieux à ces critères. Si tu trouves des correspondances, génère un lien vers la page de détails du bien en utilisant le format : <link>[Titre du Bien](/details-bien-client/{ID_DU_BIEN})</link>.
+
+    Voici la question de l'utilisateur :
+    "${lowerMessage}"
+  `;
+
+  return prompt;
+};
 
 export default generatePrompt;

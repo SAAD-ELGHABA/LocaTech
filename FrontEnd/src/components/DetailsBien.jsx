@@ -19,6 +19,7 @@ import BienMap from "./BienMap";
 import {
   Bath,
   CircleCheckBig,
+  Heart,
   LandPlot,
   Layers,
   LayoutGrid,
@@ -26,6 +27,7 @@ import {
   Paperclip,
 } from "lucide-react";
 import BienContainer from "./BienContainer";
+import { handleAddFavoris } from "../functions/handleAddFavoris";
 function DetailsBien() {
   const { id } = useParams();
   useEffect(() => {
@@ -76,14 +78,42 @@ function DetailsBien() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(BienDetails.budget);
-
+  const nav = useNavigate();
   const navigate = useNavigate();
+
+  const handleHeartClick = async (e, id) => {
+    e.preventDefault();
+    if (!user) {
+      toast.custom(() => (
+        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+      ));
+      return;
+    }
+    const { biens_ids, message } = await handleAddFavoris(e, id);
+
+    if (biens_ids && message) {
+      toast.success(message, {
+        icon: (
+          <span className="text-red-500">
+            <Heart className="fill-red-500 h-4" />
+          </span>
+        ),
+      });
+
+      dispatch({
+        type: "ADD_TO_FAVORIS",
+        payload: biens_ids,
+      });
+    }
+  };
+  const FavorisReducer = useSelector((state) => state.FavorisReducer);
+
   if (!BienDetails)
     return <div className="text-center mt-10">Aucun bien trouvé</div>;
 
   return (
     <div className={`flex flex-col space-y-4 my-24`}>
-      <div className="mx-8">
+      <div className="mx-auto w-[90%] flex items-center justify-between">
         <span>
           <button
             onClick={() => navigate(-1)}
@@ -93,6 +123,19 @@ function DetailsBien() {
             <span>retour</span>
           </button>
         </span>
+        <div
+          className={`flex items-center text-sm space-x-1 hover:bg-red-100 rounded px-4 py-2 cursor-pointer 
+            ${FavorisReducer.includes(BienDetails.id) && "bg-red-100"}
+            `}
+          onClick={(e) => handleHeartClick(e, BienDetails.id)}
+        >
+          <Heart className={`h-4 
+            ${FavorisReducer.includes(BienDetails.id) ? "fill-red-500 text-red-500":""}
+            `} />
+          <span>
+            {FavorisReducer.includes(BienDetails.id) ? "Retirer des favoris":"Ajouter aux favoris"}
+          </span>
+        </div>
       </div>
       <div className={`flex items-start justify-between mx-8`}>
         <div className="flex-1 flex justify-center items-center max-h-[550px] overflow-hidden">
@@ -141,7 +184,7 @@ function DetailsBien() {
               <div className="flex space-x-2 items-center text-[#161a1d]">
                 <CircleCheckBig className="w-8" />
                 <p className="text-lg font-semibold">
-                  Un appartement meublé offre tout le nécessaire pour vivre
+                  Ce Bien est meublé, offre tout le nécessaire pour vivre
                   confortablement, avec des meubles, des appareils et des
                   accessoires.
                 </p>
@@ -192,31 +235,39 @@ function DetailsBien() {
           </div>
           <div className={` flex justify-between text-sm`}>
             {user && user.role === "courtier" ? (
-              <div className="flex items-center">
-                <div>
+              <div className="flex flex-col items-center justify-start space-y-2">
+                <div className="flex items-center text-start justify-start w-full">
                   <p>Action :</p>
+                  <button
+                    onClick={() => {
+                      nav("/MesBiens");
+                      dispatch({
+                        type: "SHOW_CREATEBIENTOGGLE",
+                        payload: true,
+                      });
+                      dispatch({
+                        type: "SET_CREATE_BIEN",
+                        payload: BienDetails,
+                      });
+                    }}
+                    className="px-2 py-2 cursor-pointer flex space-x-4 items-center"
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </button>
+                  <button
+                    className="px-2 py-2  cursor-pointer text-red-500 flex space-x-4 items-center"
+                    onClick={() => handleDeleteBien(BienDetails.id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    dispatch({
-                      type: "SHOW_CREATEBIENTOGGLE",
-                      payload: true,
-                    });
-                    dispatch({
-                      type: "SET_CREATE_BIEN",
-                      payload: BienDetails,
-                    });
-                  }}
-                  className="px-2 py-2 cursor-pointer flex space-x-4 items-center"
-                >
-                  <FontAwesomeIcon icon={faPen} />
-                </button>
-                <button
-                  className="px-2 py-2  cursor-pointer text-red-500 flex space-x-4 items-center"
-                  onClick={() => handleDeleteBien(BienDetails.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
+                <div className="flex items-center space-x-4 text-gray-600">
+                  <div className="text-xs">
+                    <p>{new Date(BienDetails.created_at).toLocaleString()}</p>
+                    <p>{new Date(BienDetails.updated_at).toLocaleString()}</p>
+                  </div>
+                  <FontAwesomeIcon icon={faCalendar} />
+                </div>
               </div>
             ) : (
               <div className="w-full">
@@ -224,15 +275,6 @@ function DetailsBien() {
                   <FontAwesomeIcon icon={faComments} />
                   <span>commencer à négocier </span>
                 </button>
-              </div>
-            )}
-            {user && user.role === "courtier" && (
-              <div className="flex items-center space-x-4 text-gray-600">
-                <FontAwesomeIcon icon={faCalendar} />
-                <div>
-                  <p>{new Date(BienDetails.created_at).toLocaleString()}</p>
-                  <p>{new Date(BienDetails.updated_at).toLocaleString()}</p>
-                </div>
               </div>
             )}
           </div>
@@ -255,7 +297,7 @@ function DetailsBien() {
                 <BienContainer bien={bien} />
               ))}
               <Link
-                className="w-48 text-center flex items-center hover:underline"
+                className="w-48 text-center flex items-end hover:underline space-x-2"
                 to={"/consulter-bien"}
               >
                 <span>voir tous les biens</span>

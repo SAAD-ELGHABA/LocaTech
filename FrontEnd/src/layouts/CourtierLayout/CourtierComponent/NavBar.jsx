@@ -44,7 +44,7 @@ function NavBar() {
             </button>
           </div>
           {user.image ? (
-            <img src={user.image || logoUser} alt="image courtier" />
+            <img src={user.image || logoUser} alt="image courtier" className="h-8 w-8 rounded-full"/>
           ) : (
             <img
               src={logoUser}

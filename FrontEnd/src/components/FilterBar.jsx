@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import ChatAI from "./ChatAI/ChatAI";
-import { Funnel, Sparkles } from "lucide-react";
+import { Funnel, RouteOff, Sparkles } from "lucide-react";
 import axios from "axios";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -73,20 +73,15 @@ function FilterBar() {
     try {
       const response = await axios.post("/api/filterBiens", filterBiensReducer);
       if (response.status >= 200 && response.status <= 300) {
-        console.log(response.data);
         dispatch({
-          type: "ALLBIENS",
+          type: "GET_FILTRED_BIENS",
           payload: response.data.biens,
         });
       }
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Erreur lors du filtrage.");
     } finally {
       setIsloading(false);
-      // dispatch({
-      //   type: "RESET_FILTER",
-      // });
     }
   };
 
@@ -197,7 +192,29 @@ function FilterBar() {
               </option>
             ))}
           </select>
+          <button
+            className="flex items-center justify-center hover:border-gray-400 border rounded border-transparent px-2 py-2.5 cursor-pointer"
+            onClick={async () => {
+              const resetFilter = toast.loading(
+                "Réinitialisation des filtres..."
+              );
+              try {
+                dispatch({ type: "RESET_FILTER" });
+                dispatch({ type: "RESET_FILTERED_BIENS" });
 
+                toast.success("Filtres réinitialisés !");
+              } catch (error) {
+                toast.error(
+                  error?.response?.data?.message ||
+                    "Erreur lors de la réinitialisation."
+                );
+              } finally {
+                toast.dismiss(resetFilter);
+              }
+            }}
+          >
+            <RouteOff className="h-4" />
+          </button>
           {/* Filtrer */}
           <button
             onClick={handleSearch}
@@ -231,7 +248,7 @@ function FilterBar() {
               <div className="fixed inset-0 bg-white/10 backdrop-blur-sm z-40"></div>
 
               {/* Chat centered */}
-              <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="absolute inset-0 z-50 flex items-center justify-center">
                 <ChatAI onClose={handleCloseAI} />
               </div>
             </>

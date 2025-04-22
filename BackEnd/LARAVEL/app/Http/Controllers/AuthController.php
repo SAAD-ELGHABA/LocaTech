@@ -127,11 +127,12 @@ class AuthController extends Controller
         }
     }
 
-    public function index()
+    public function logout(Request $request)
     {
-        //
-    }
+        $request->user()->currentAccessToken()->delete();
 
+        return response()->json(['message' => 'Déconnexion réussie']);
+    }
     /**
      * Store a newly created resource in storage.
      */

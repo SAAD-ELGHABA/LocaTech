@@ -1,15 +1,64 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlusCircle, FaSearch, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/Location.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import logoUser from "../assets/logo-user.png";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import Favoris from "./Favoris";
+import axios from "axios";
+import { toast } from "sonner";
+import { fetchInitialData } from "../functions/fetchInitialData";
+import Notifications from "./Notifications";
+import { IoNotificationsOutline } from "react-icons/io5";
+
+
+
 const Navbar = () => {
+  const MySwal = withReactContent(Swal);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
   const user = useSelector((state) => state.userReducer.userInfo);
   const dropdownRef = useRef();
+  const dispatch = useDispatch();
+
+  const [showNotifications, setShowNotifications] = useState(false);
+const [unreadCount, setUnreadCount] = useState(0);
+
+
+
+
+
+useEffect(() => {
+  const fetchUnreadNotifications = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      const response = await axios.get("/api/notifications/unread-count", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUnreadCount(response.data.count);
+    } catch (error) {
+      console.error("Erreur lors du chargement des notifications", error);
+    }
+  };
+
+  fetchUnreadNotifications();
+}, [user]);
+
+
+
+
+
+
+  
+
+ 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,13 +79,65 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleLogOut = () => {
+    MySwal.fire({
+      title: "Se déconnecter?",
+      text: "Êtes-vous sûr de se déconnecter?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Oui, se déconnecter",
+      cancelButtonText: "Annuler",
+    }).then(async (result) => {
+      const deconnecter = toast.loading("se déconnecter..");
+      if (result.isConfirmed) {
+        try {
+          await axios.post(
+            "/api/logout",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          dispatch({ type: "LOGOUT" });
+          localStorage.removeItem("token");
+          await fetchInitialData(dispatch, null);
+          toast.success("Déconnexion réussie !");
+          MySwal.fire({
+            title: "Déconnecté",
+            text: "Vous avez été déconnecté avec succès.",
+            icon: "success",
+            confirmButtonColor: "#3b82f6",
+          });
+          nav("/login");
+        } catch (error) {
+          toast.error("Échec de la déconnexion.");
+          console.error(error);
+        } finally {
+          toast.dismiss(deconnecter);
+        }
+      }
+    });
+  };
+
+  
+
+  
+
+
   const isHomepage = location.pathname === "/";
+  const FavorisReducer = useSelector((state) => state.FavorisReducer);
+  const [showFavoris, setShowFavoris] = useState(false);
+
 
   return (
     <div className="relative">
       <nav
         className="bg-white shadow-md py-4 px-4 md:px-6 fixed w-full top-0 left-0 z-50"
-        style={{ zIndex: 9000 }}
+        style={{ zIndex: 1000 }}
       >
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div className="flex items-center gap-3 shrink-0">
@@ -135,13 +236,15 @@ const Navbar = () => {
                 <span>Mon Espace</span>
               </Link>
             )}
+
+            
           </div>
         </div>
       </nav>
 
       {showDropdown && user && (
         <ul
-          style={{ zIndex: 9001 }}
+          style={{ zIndex: 1000 }}
           ref={dropdownRef}
           className="fixed flex space-y-1 flex-col right-6 top-16 text-sm text-[#161a1d] bg-white border rounded border-gray-300 shadow-lg w-48 z-50"
         >
@@ -151,23 +254,68 @@ const Navbar = () => {
           <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Parametres
           </li>
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-            Favoris
+          <li
+            className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+            onClick={() => setShowFavoris(true)}
+          >
+            {FavorisReducer.length > 0 ? (
+              <div className="flex justify-between items-center">
+                <span>Favoris</span>
+                <span className=" bg-red-500 rounded-full px-1 text-[10px] text-white">
+                  {FavorisReducer.length}
+                </span>
+              </div>
+            ) : (
+              "Favoris"
+            )}
           </li>
           <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Messages
           </li>
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-            Notifications
-          </li>
+
+          <li
+          className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+          onClick={() => setShowNotifications(true)}
+        >
+          <div className="relative cursor-pointer" onClick={() => setShowNotifications(true)}>
+  <span>Notifications</span>
+  {unreadCount > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+      {unreadCount}
+    </span>
+  )}
+</div>
+
+        </li>
+
+
+        <Link to='/contactUs'>
+
           <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Centre d'aide
           </li>
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
+
+          </Link>
+          <li
+            className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+            onClick={handleLogOut}
+          >
             Déconnexion
           </li>
         </ul>
       )}
+      {showFavoris && <Favoris setShowFavoris={setShowFavoris} />}
+      
+      // Ajoute le composant Notifications à la fin du return
+      {showNotifications && (
+  <Notifications
+    setShowNotifications={setShowNotifications}
+    setUnreadCount={setUnreadCount}
+  />
+)}
+
+
+      
     </div>
   );
 };
