@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Http;
 
 class BiensSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faker = Faker::create();
@@ -21,37 +18,53 @@ class BiensSeeder extends Seeder
         $types = ['maison', 'villa', 'appartement'];
         $typeAffaires = ['acheter', 'louer'];
 
-        $unsplashApiKey = 'qD0j0a5xnYos-jARVLIUoMT0nAItGv3tAt8PxxfXZwI'; // Replace with your actual API key
-        $unsplashUrl = 'https://api.unsplash.com/photos/random?query=interior,house&count=5&client_id=' . $unsplashApiKey;
+        $unsplashApiKey = 'ImFD6SXKkYd1isb7FW9uA5dgMTi1Gq5ZFVOqiUgJckA';
+        $unsplashUrl = 'https://api.unsplash.com/photos/random';
 
-        for ($i = 0; $i < 5000; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $images = [];
+
             $ville = $faker->randomElement($villes);
-            $quartiers = Quartier::where('ville_id', $ville->id)->get(); // Get quartiers for the selected city
+            $quartiers = Quartier::where('ville_id', $ville->id)->get();
 
             try {
-                $response = Http::get($unsplashUrl);
-                $imageData = $response->json();
+                $response = Http::get($unsplashUrl, [
+                    'query' => 'interior,house',
+                    'count' => 5,
+                    'client_id' => $unsplashApiKey,
+                ]);
 
-                foreach ($imageData as $image) {
-                    if (isset($image['urls']['regular'])) {
-                        $images[] = $image['urls']['regular'];
+                if ($response->successful()) {
+                    $imageData = $response->json();
+
+                    if (is_array($imageData)) {
+                        foreach ($imageData as $image) {
+                            if (isset($image['urls']['regular'])) {
+                                $images[] = $image['urls']['regular'];
+                            }
+                        }
                     }
                 }
             } catch (\Exception $e) {
+                // Nothing to do, fallback later
+            }
+
+            // If Unsplash fails or returns wrong data, fallback to static Unsplash
+            if (count($images) < 5) {
+                $images = [];
                 for ($j = 0; $j < 5; $j++) {
-                    $images[] = 'https://source.unsplash.com/1200x700/?interior,house&sig=' . rand(1, 1000);
+                    $images[] = 'https://source.unsplash.com/1200x700/?interior,house&sig=' . rand(1, 100);
                 }
             }
 
             DB::table('biens')->insert([
-                'courtier_id'      => 1,
+                'courtier_id'      => 2,
                 'title'            => $faker->sentence(6),
                 'description'      => $faker->paragraph(4),
                 'budget'           => $faker->numberBetween(50000, 1000000),
                 'superficier'      => $faker->numberBetween(50, 500),
                 'ville'            => $ville->nom,
-                'quartier'         => $quartiers->isNotEmpty() ? $faker->randomElement($quartiers)->nom : null, // Random quartier name
+                'quartier'         => $quartiers->isNotEmpty() ? $faker->randomElement($quartiers)->nom : null,
                 'type'             => $faker->randomElement($types),
                 'typeAffaire'      => $faker->randomElement($typeAffaires),
                 'images'           => json_encode($images),

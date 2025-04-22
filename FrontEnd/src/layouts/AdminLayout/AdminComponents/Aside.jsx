@@ -1,60 +1,94 @@
 import {
-  faHandshake,
-  faHouse,
-  faUserGroup,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+  BadgeCheck,
+  Building2,
+  ContactRound,
+  Handshake,
+  LayoutDashboard,
+  MailPlus,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Aside({ isOpen = true }) {
-  const links = [
-    { to: "/AdminIndex", icon: faHouse, label: "Home" },
-    { to: "/users", icon: faUserGroup, label: "Users" },
-    { to: "/courtiers", icon: faHandshake, label: "Recent Courtiers" },
-  ];
+  const location = useLocation();
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
+
+  const links = [
+    {
+      to: "/tableau-de-bord-admin",
+      icon: <LayoutDashboard className="h-4" />,
+      label: "Tablear de Bord",
+    },
+    {
+      to: "/courtiers",
+      icon: <Handshake className="h-4" />,
+      label: "Tous les Courtiers",
+    },
+    {
+      to: "/agences",
+      icon: <Building2  className="h-4" />,
+      label: "les Agences",
+    },
+    {
+      to: "/Admins",
+      icon: <ShieldCheck   className="h-4" />,
+      label: "les Admins",
+    },
+    {
+      to: "/assistants-admin",
+      icon: <ContactRound  className="h-4" />,
+      label: "les Assistants",
+    },
+    {
+      to: "/all-users",
+      icon: <Users className="h-4" />,
+      label: "Utilisateurs",
+    },
+    {
+      to: "/recent-courtiers",
+      icon: <MailPlus className="h-4" />,
+      label: "Recent Courtiers",
+    },
+    {
+      to: "/activate-courtier",
+      icon: <BadgeCheck className="h-4" />,
+      label: "Activé Courtiers",
+    },
+  ];
+
   return (
-    <aside className="sticky h-screen  w-56 top-0 left-0 bg-[#d3d3d3]">
+    <aside className="sticky h-screen w-1/6 top-0 left-0 bg-[#161a1d] text-white">
       <div className="my-4 text-center">
-        <h1>Welcome Admin</h1>
+        <h1 className="text-lg font-semibold">Bienvenue Admin</h1>
       </div>
-      <div className="w-full text-sm  flex flex-col">
-        {links.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={`w-full px-4 py-2 flex items-center space-x-2 cursor-pointer ${
-              location.pathname === link.to
-                ? "bg-[#b1a7a6]"
-                : "hover:bg-[#b1a7a6]"
-            }`}
-            style={{ width: "100%" }}
-          >
-            {recentCourtiers && link.to === "/courtiers" ? (
-              <div className="flex space-x-2 items-center ">
-                <div className="flex space-x-2 items-center ">
-                  <FontAwesomeIcon
-                    icon={link.icon}
-                    className="text-[#0b090a]"
-                  />
-                  {isOpen && (
-                    <span className="text-[#0b090a]">{link.label}</span>
-                  )}
-                </div>
-                <div className="rounded-full px-1 text-xs text-[#f5f3f4] bg-[#ba181b]">
-                    {recentCourtiers.length}
-                </div>
+      <div className="w-full text-sm flex flex-col">
+        {links.map((link) => {
+          const isActive = location.pathname === link.to;
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`w-full px-4 py-2 flex items-center space-x-2 cursor-pointer transition-colors duration-150 ${
+                isActive
+                  ? "bg-white text-[#161a1d]"
+                  : "hover:bg-[#2b2b2b] text-white"
+              }`}
+            >
+              <div className="flex space-x-2 items-center">
+                {link.icon}
+                {isOpen && <span>{link.label}</span>}
               </div>
-            ) : (
-              <div className="flex space-x-2 items-center ">
-                <FontAwesomeIcon icon={link.icon} className="text-[#0b090a]" />
-                {isOpen && <span className="text-[#0b090a]">{link.label}</span>}
-              </div>
-            )}
-          </Link>
-        ))}
+              {link.to === "/recent-courtiers" && recentCourtiers?.length > 0 && (
+                <div className="rounded-full px-1 py-0.5 text-[10px] bg-red-600 text-white ml-auto">
+                  {recentCourtiers.length}
+                </div>
+              )}
+            </Link>
+          );
+        })}
       </div>
     </aside>
   );

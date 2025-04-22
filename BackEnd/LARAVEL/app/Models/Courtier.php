@@ -9,7 +9,7 @@ class Courtier extends Model
     protected $fillable = [
         'agence_id',
         'user_id',
-        'status'
+        'status_id'
     ];
 
     public function user()

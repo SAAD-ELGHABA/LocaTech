@@ -6,7 +6,7 @@ import { Outlet } from "react-router";
 function IndexCourtier() {
   return (
     <div className="relative">
-      <header className="sticky top-0 w-full bg-[#d3d3d3] py-4 z-50 text-[#0b090a]">
+      <header className="sticky top-0 w-full bg-[#161a1d] py-4 z-50 ">
         <NavBar />
       </header>
       <div className="flex">

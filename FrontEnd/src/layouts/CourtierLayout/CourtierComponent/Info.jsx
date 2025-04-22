@@ -147,8 +147,8 @@ function Info() {
             }}
           >
             <option value="">Sélectionner le type d'affaire</option>
-            <option value="Acheter">Acheter</option>
-            <option value="Louer">Louer</option>
+            <option value="acheter">Acheter</option>
+            <option value="louer">Louer</option>
           </select>
         </div>
       </div>

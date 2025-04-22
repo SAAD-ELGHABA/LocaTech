@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlusCircle, FaSearch, FaUserCircle } from "react-icons/fa";
-import logo from "../assets/Location.png";
 import { useDispatch, useSelector } from "react-redux";
 import logoUser from "../assets/logo-user.png";
 import Swal from "sweetalert2";
@@ -10,6 +9,7 @@ import Favoris from "./Favoris";
 import axios from "axios";
 import { toast } from "sonner";
 import { fetchInitialData } from "../functions/fetchInitialData";
+import Logo from "./Logo";
 
 const Navbar = () => {
   const MySwal = withReactContent(Swal);
@@ -38,6 +38,7 @@ const Navbar = () => {
     };
   }, []);
   const nav = useNavigate();
+
   const handleLogOut = () => {
     MySwal.fire({
       title: "Se déconnecter?",
@@ -78,6 +79,8 @@ const Navbar = () => {
         } finally {
           toast.dismiss(deconnecter);
         }
+      }else {
+        toast.dismiss(deconnecter);
       }
     });
   };
@@ -89,20 +92,11 @@ const Navbar = () => {
   return (
     <div className="relative">
       <nav
-        className="bg-white shadow-md py-4 px-4 md:px-6 fixed w-full top-0 left-0 z-50"
+        className="bg-white shadow-md px-4 md:px-6 fixed w-full top-0 left-0 z-50"
         style={{ zIndex: 1000 }}
       >
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div className="flex items-center gap-3 shrink-0">
-            <Link to="/">
-              <img src={logo} alt="Logo" className="h-12 w-10 object-contain" />
-            </Link>
-            <Link to="/">
-              <h1 className="text-xl font-bold whitespace-nowrap">
-                <span className="text-red-500">LocaTech</span>
-              </h1>
-            </Link>
-          </div>
+          <Logo />
 
           <div className="flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap">
             <Link to="/acheter" className="text-black">

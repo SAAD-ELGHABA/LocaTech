@@ -1,26 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import NavBar from "./AdminComponents/NavBar";
 import Aside from "./AdminComponents/Aside";
 import { Outlet } from "react-router";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+
 function IndexAdmin() {
   const dispatch = useDispatch();
   const LoadinfGlobal = useSelector((state) => state.loadingReducer);
 
   useEffect(() => {
-    const fetchRecentCourtiers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("/api/recentCourtiers");
-        if (response.status >= 200 && response.status <= 300) {
+        // Fetch users
+        const usersResponse = await axios.get("/api/get-users");
+        if (usersResponse.status >= 200 && usersResponse.status <= 300) {
+          dispatch({
+            type: "GET_USERS",
+            payload: usersResponse.data.users,
+          });
+        }
+
+        // Fetch recent courtiers
+        const recentResponse = await axios.get("/api/recentCourtiers");
+        if (recentResponse.status >= 200 && recentResponse.status <= 300) {
           dispatch({
             type: "GET_RECENT_COURTIERS",
-            payload: response.data,
+            payload: recentResponse.data,
+          });
+        }
+
+        const CourtiersResponse = await axios.get("/api/get-courtiers");
+        if (
+          CourtiersResponse.status >= 200 &&
+          CourtiersResponse.status <= 300
+        ) {
+          dispatch({
+            type: "GET_ALL_COURTIERS",
+            payload: CourtiersResponse.data.courtiers,
+          });
+        }
+
+        const agencesResponse = await axios.get("/api/get-agences");
+        if (agencesResponse.status >= 200 && agencesResponse.status <= 300) {
+          dispatch({
+            type: "GET_AGENCES",
+            payload: agencesResponse.data.agences,
+          });
+        }
+
+        const adminsResponse = await axios.get("/api/get-admins");
+        if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
+          dispatch({
+            type: "GET_ADMINS",
+            payload: adminsResponse.data.admins,
           });
         }
       } catch (error) {
         console.error("Error:", error);
+        toast.error("Erreur lors du chargement des données.");
       } finally {
         dispatch({
           type: "SET_LOADING",
@@ -31,19 +70,20 @@ function IndexAdmin() {
         }, 2000);
       }
     };
+    fetchData();
 
-    if (LoadinfGlobal) {
-      fetchRecentCourtiers();
-    }
-  }, [LoadinfGlobal, dispatch]);
+  }, []);
+
   return (
     <div>
-      <header className="sticky top-0 w-full bg-[#d3d3d3] py-4 z-50 text-[#0b090a]">
+      <header className="sticky top-0 w-full bg-[#161a1d] py-4 z-50 text-white">
         <NavBar />
       </header>
-      <div className="flex">
+      <div className="flex bg-white">
         <Aside />
-        <Outlet />
+        <div className="w-5/6 m-8">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

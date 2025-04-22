@@ -7,11 +7,13 @@ use App\Models\Agence;
 use App\Models\Courtier;
 use App\Models\User;
 use App\Mail\CourtierActivated; // Ensure this class exists in the App\Mail namespace and implements Mailable
+use App\Models\Status;
 use Illuminate\Validation\Rule;
 use Error;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -87,7 +89,7 @@ class CourtierController extends Controller
 
     public function recentCourtiers()
     {
-        $recentCourtiers = Courtier::where('status', 'pas activé')
+        $recentCourtiers = Courtier::where('status_id', 4)
             ->with(['user', 'agence'])
             ->get();
         return response()->json($recentCourtiers, 200);
@@ -97,7 +99,7 @@ class CourtierController extends Controller
     {
         try {
             $courtier_id = $request->input('idCourtie');
-            $status = $request->input('status');
+            $status_id = $request->input('status_id');
 
             $courtier = Courtier::find($courtier_id);
             if (!$courtier) {
@@ -106,19 +108,24 @@ class CourtierController extends Controller
                 ], 404);
             }
 
-            $courtier->status = $status;
+            $courtier->status_id = $status_id;
             $courtier->user->email_verified_at = now();
             $courtier->user->email_verified = true;
             $courtier->user->save();
             $courtier->save();
-            if ($status === 'activé') {
+            $status = Status::where('id', $status_id)->first();
+            if ($status && strtolower($status->nom) === 'activé') {
                 if ($courtier->user && $courtier->user->email) {
                     $token = $courtier->user->createToken('courtier-token')->plainTextToken;
-                    Mail::to($courtier->user->email)->send(new CourtierActivated($courtier, $token));
+                    try {
+                        Mail::to($courtier->user->email)->send(new CourtierActivated($courtier, $token));
+                    } catch (\Exception $e) {
+                        Log::error('Email sending failed: ' . $e->getMessage());
+                    }
                 }
             }
             return response()->json([
-                'message' => "Le statut du courtier a été mis à jour avec succès. avec le status $status"
+                'message' => "Le statut du courtier a été mis à jour avec succès."
             ], 200);
         } catch (Error $error) {
             return response()->json([

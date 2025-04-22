@@ -10,6 +10,7 @@ import logo from "../assets/Location.png";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/actions";
+import Logo from "../components/Logo";
 const LoginPage = () => {
   const [showpwtd, setShowPwt] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -58,15 +59,17 @@ const LoginPage = () => {
       <div className="w-full md:w-1/3  flex mt-32 justify-center  ">
         <div className="max-w-md w-4/6 space-y-2">
           <div className="text-center flex flex-col justify-center">
-            <div className="flex items-center justify-center">
+            {/* <div className="flex items-center justify-center">
               <Link to={'/'} className="flex items-center">
                 <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
                 <h1 className="text-3xl font-bold">
                   <span className="text-red-500">LocaTech</span>
                 </h1>
               </Link>
+            </div> */}
+            <div className="flex items-center justify-center">
+              <Logo />
             </div>
-
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>
           </div>
 

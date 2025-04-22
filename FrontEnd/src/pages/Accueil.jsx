@@ -1,9 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Bath, Bed, Heart, LandPlot, Sparkles } from "lucide-react";
 import { Quote } from "lucide-react";
-import { toast } from "sonner";
 import Navbar from "../components/Navbar";
-import logo from "../assets/Location.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
@@ -13,7 +10,6 @@ import infoCard1 from "../assets/infoCard1.png";
 import infoCard2 from "../assets/infoCard2.png";
 import infoCard3 from "../assets/infoCard3.png";
 import Témoignage from "../assets/Témoignage.png";
-import appartement from "../assets/appartement.png";
 import Rabat from "../assets/rabat.png";
 import Marrakech from "../assets/marrakech.png";
 import Tanger from "../assets/tanger.png";
@@ -22,176 +18,11 @@ import Essaouira from "../assets/essaouira.png";
 import Ifrane from "../assets/ifrane.png";
 import Casablanca from "../assets/casablanca.png";
 import Agadir from "../assets/agadir.png";
-import ChatAI from "../components/ChatAI/ChatAI";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { useSelector } from "react-redux";
 
 const HeroSection = () => {
-  const [showChatAI, setShowChatAI] = useState(false);
-  const handleGoToAI = () => {
-    setShowChatAI(true);
-  };
-
-  const villesMaroc = [
-    "Agadir",
-    "Aït Melloul",
-    "Al Hoceïma",
-    "Azrou",
-    "Beni Mellal",
-    "Ben Guerir",
-    "Berkane",
-    "Boujdour",
-    "Bouskoura",
-    "Casablanca",
-    "Chefchaouen",
-    "Dakhla",
-    "Dcheira El Jihadia",
-    "El Jadida",
-    "Errachidia",
-    "Essaouira",
-    "Fès",
-    "Fquih Ben Salah",
-    "Guelmim",
-    "Guercif",
-    "Ifrane",
-    "Inezgane",
-    "Jerada",
-    "Kénitra",
-    "Khémisset",
-    "Khénifra",
-    "Khouribga",
-    "Laâyoune",
-    "Larache",
-    "Marrakech",
-    "Martil",
-    "Meknès",
-    "Mohammédia",
-    "Nador",
-    "Ouarzazate",
-    "Oujda",
-    "Rabat",
-    "Safi",
-    "Salé",
-    "Settat",
-    "Sidi Bennour",
-    "Sidi Kacem",
-    "Sidi Slimane",
-    "Tanger",
-    "Tan-Tan",
-    "Taourirt",
-    "Taroudant",
-    "Taza",
-    "Témara",
-    "Tétouan",
-    "Tiflet",
-    "Tinghir",
-    "Tiznit",
-    "Zagora",
-  ];
-
-  const [ville, setVille] = useState("");
-  const [showVilleSuggestions, setShowVilleSuggestions] = useState(false);
-
-  const handleVilleChange = (e) => {
-    const value = e.target.value;
-    setVille(value);
-    setShowVilleSuggestions(true);
-  };
-
-  const handleVilleSelect = (selectedVille) => {
-    setVille(selectedVille);
-    setShowVilleSuggestions(false);
-  };
-
-  const searchBoxRef = useRef(null);
-  const villeRef = useRef(null);
-  const budgetRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        searchBoxRef.current &&
-        !searchBoxRef.current.contains(event.target)
-      ) {
-        setShowVilleSuggestions(false);
-        setShowSuggestions(false);
-      }
-    };
-
-    const handleScroll = () => {
-      setShowVilleSuggestions(false);
-      setShowSuggestions(false);
-    };
-
-    document.addEventListener("click", handleClickOutside);
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const navigate = useNavigate(); // Create navigate function
-
-  // const handleGoToAI = () => {
-  //   navigate("/chat-ai"); // Assure-toi que cette route existe
-  // };
-
-  const [selectedOption, setSelectedOption] = useState("");
-  const [selectedType, setSelectedType] = useState("");
-  const [budget, setBudget] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  // Predefined budget ranges
-  const budgetOptions = [
-    "0 à 100 000 MAD",
-    "100 000 à 200 000 MAD",
-    "200 000 à 300 000 MAD",
-    "300 000 à 400 000 MAD",
-    "400 000 à 500 000 MAD",
-    "500 000 à 600 000 MAD",
-    "600 000 à 700 000 MAD",
-    "700 000 à 800 000 MAD",
-    "800 000 à 900 000 MAD",
-    "900 000 à 1 000 000 MAD",
-    "1 000 000 à 2 000 000 MAD",
-    "2 000 000 à 3 000 000 MAD",
-    "3 000 000 à 4 000 000 MAD",
-    "4 000 000 à 5 000 000 MAD",
-    "5 000 000 MAD et +",
-  ];
-  const handleBudgetChange = (e) => {
-    const value = e.target.value;
-    setBudget(value);
-    setShowSuggestions(true);
-  };
-  const handleSuggestionClick = (suggestion) => {
-    setBudget(suggestion);
-    setShowSuggestions(false);
-  };
-
-  const handleSearch = () => {
-    if (selectedOption && ville && selectedType && budget) {
-      const action = selectedOption === "acheter" ? "Acheter" : "Louer";
-      const searchData = {
-        ville,
-        type: selectedType,
-        budget,
-        action,
-      };
-
-      if (selectedOption === "acheter") {
-        navigate("/acheter", { state: searchData });
-      } else if (selectedOption === "louer") {
-        navigate("/louer", { state: searchData });
-      }
-    } else {
-      toast.error("Merci de remplir tous les champs.");
-    }
-  };
-  const villes = useSelector((state) => state.VillesReducer);
 
   return (
     <div
