@@ -1,4 +1,3 @@
-// ChatAI.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { Link2, Sparkles } from "lucide-react";
 import { toast } from "sonner";

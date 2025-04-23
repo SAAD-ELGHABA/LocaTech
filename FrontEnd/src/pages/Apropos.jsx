@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Apropos1 from '../assets/Apropos1.png';
 import Apropos2 from '../assets/Apropos2.png';
 import {Globe,Building2,Users,House,CalendarDays,Phone,MapPin} from 'lucide-react';
+import { sendNotification } from '../components/sendNotifications/sendNotifications';
 
 
 const Apropos = () => {
@@ -13,6 +14,9 @@ const Apropos = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+
+
+    sendNotification("Votre message a bien été pris en compte par LocaTech !",);
 
     setTimeout(() => {
       setLoading(false);

@@ -13,6 +13,7 @@ import logoUser from "../assets/logo-user.png";
 import { fetchInitialData } from "../functions/fetchInitialData";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
+import { subscribe } from "../components/sendNotifications/sendNotifications";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,22 +33,42 @@ const Navbar = () => {
   const MySwal = withReactContent(Swal);
   const isHomepage = location.pathname === "/";
 
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
   useEffect(() => {
-    const unsubscribe = onSnapshot(
+    const mergeAndSortNotifications = (firebaseData = [], localData = []) => {
+      const all = [...firebaseData, ...localData];
+      return all.sort((a, b) => new Date(b.date) - new Date(a.date));
+    };
+
+    let firebaseData = [];
+    let localData = [];
+
+    const unsubscribeFirebase = onSnapshot(
       collection(db, "notifications"),
       (snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
+        firebaseData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          read: doc.data().read || false, // kaydkhl chi valeur par défaut f case read
         }));
-        setNotifications(data);
+        setNotifications(mergeAndSortNotifications(firebaseData, localData));
       }
     );
 
-    return () => unsubscribe();
+    const unsubscribeLocal = subscribe((newNotif) => {
+      localData = [...localData, newNotif];
+      setNotifications(mergeAndSortNotifications(firebaseData, localData));
+    });
+
+    return () => {
+      unsubscribeFirebase();
+      unsubscribeLocal();
+    };
   }, []);
 
-  // Gérer le scroll et le clic hors du dropdown
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 500);
     const handleClickOutside = (event) => {
@@ -200,11 +221,10 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Dropdown utilisateur */}
       {showDropdown && user && (
         <ul
           ref={dropdownRef}
-          className="fixed top-16 right-6 text-sm text-[#161a1d] bg-white border rounded shadow-lg w-48 z-[1000] flex flex-col space-y-1"
+          className="fixed top-16 right-6 text-sm text-[#161a1d] bg-white border border-gray-300 rounded shadow-lg w-48 z-[1000] flex flex-col space-y-1"
         >
           <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Profile
@@ -238,9 +258,9 @@ const Navbar = () => {
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
           >
             <span>Notifications</span>
-            {notifications.length > 0 && (
-              <span className="bg-red-500 text-white rounded-full px-1.5 text-xs ml-2">
-                {notifications.length}
+            {notifications.some((notif) => !notif.read) && (
+              <span className="bg-red-500 text-white rounded-full px-1 text-[10px] ml-2">
+                {notifications.filter((notif) => !notif.read).length}
               </span>
             )}
           </li>
@@ -262,7 +282,10 @@ const Navbar = () => {
       {/* Fenêtre des favoris */}
       {showFavoris && <Favoris setShowFavoris={setShowFavoris} />}
       {showNotifications && (
-        <Notifications onClose={() => setShowNotifications(false)} />
+        <Notifications
+          onClose={() => setShowNotifications(false)}
+          onClear={clearNotifications}
+        />
       )}
     </div>
   );

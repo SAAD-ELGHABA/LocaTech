@@ -30,7 +30,7 @@ function Favoris({ setShowFavoris }) {
         className="w-[90%] h-[90%] bg-white rounded shadow-3xl py-4 overflow-auto"
       >
         <div className="flex justify-between items-center mx-8 mb-4">
-          <h1 className="text-xl font-semibold">Mes Favoris ({favoriteBiens.length} )</h1>
+          <h1 className="text-xl font-semibold">Mes Favoris ({favoriteBiens.length})</h1>
           <X
             className="h-6 cursor-pointer"
             onClick={() => setShowFavoris(false)}
