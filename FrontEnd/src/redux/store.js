@@ -4,6 +4,7 @@ import { CourtierSignUpReducer } from './reducers';
 
 
 
+
 const reducers = combineReducers({
     userReducer,
     CourtierSignUpReducer,
@@ -24,7 +25,7 @@ const reducers = combineReducers({
     AllCourtiersReducer,
     AgencesReducer,
     AdminsReducer,
-    CommandesReducer
+    CommandesReducer,
 })
 
 export const store = legacy_createStore(reducers);

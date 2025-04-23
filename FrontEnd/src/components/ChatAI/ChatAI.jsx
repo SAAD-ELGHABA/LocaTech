@@ -1,4 +1,3 @@
-// ChatAI.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { Link2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -11,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { msgChatAi } from "../../redux/actions";
 import generatePrompt from "./prompt";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 
 const ChatAI = ({ onClose }) => {
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
@@ -20,7 +19,7 @@ const ChatAI = ({ onClose }) => {
   const dispatch = useDispatch();
   const conversationRef = useRef(null);
   const Biens = useSelector((state) => state.BienReducer);
-  const [isSending, setIsSending] = useState(false); // To prevent multiple rapid submissions
+  const [isSending, setIsSending] = useState(false); 
 
   
 
@@ -33,7 +32,7 @@ const ChatAI = ({ onClose }) => {
   const sendMessage = async () => {
     if (input.trim() === "" || isSending) return;
 
-    setIsSending(true); // Disable button during sending
+    setIsSending(true); 
     const userMessage = input.trim();
     dispatch(msgChatAi({ data: userMessage, role: "user" }));
     setInput("");
