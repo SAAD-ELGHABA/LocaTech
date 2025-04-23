@@ -29,6 +29,35 @@ export const fetchInitialData = async (dispatch, token) => {
       });
     }
 
+
+    const CourtiersResponse = await axios.get("/api/get-courtiers");
+    if (
+      CourtiersResponse.status >= 200 &&
+      CourtiersResponse.status <= 300
+    ) {
+      dispatch({
+        type: "GET_ALL_COURTIERS",
+        payload: CourtiersResponse.data.courtiers,
+      });
+    }
+
+    const agencesResponse = await axios.get("/api/get-agences");
+    if (agencesResponse.status >= 200 && agencesResponse.status <= 300) {
+      dispatch({
+        type: "GET_AGENCES",
+        payload: agencesResponse.data.agences,
+      });
+    }
+
+    const usersResponse = await axios.get("/api/get-users");
+    if (usersResponse.status >= 200 && usersResponse.status <= 300) {
+      dispatch({
+        type: "GET_USERS",
+        payload: usersResponse.data.users,
+      });
+    }
+
+
     const commandeResponse = await axios.get("/api/get-commandes");
     if (commandeResponse.status >= 200 && commandeResponse.status <= 300) {
       dispatch({

@@ -13,16 +13,6 @@ function IndexAdmin() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch users
-        const usersResponse = await axios.get("/api/get-users");
-        if (usersResponse.status >= 200 && usersResponse.status <= 300) {
-          dispatch({
-            type: "GET_USERS",
-            payload: usersResponse.data.users,
-          });
-        }
-
-        // Fetch recent courtiers
         const recentResponse = await axios.get("/api/recentCourtiers");
         if (recentResponse.status >= 200 && recentResponse.status <= 300) {
           dispatch({
@@ -31,24 +21,6 @@ function IndexAdmin() {
           });
         }
 
-        const CourtiersResponse = await axios.get("/api/get-courtiers");
-        if (
-          CourtiersResponse.status >= 200 &&
-          CourtiersResponse.status <= 300
-        ) {
-          dispatch({
-            type: "GET_ALL_COURTIERS",
-            payload: CourtiersResponse.data.courtiers,
-          });
-        }
-
-        const agencesResponse = await axios.get("/api/get-agences");
-        if (agencesResponse.status >= 200 && agencesResponse.status <= 300) {
-          dispatch({
-            type: "GET_AGENCES",
-            payload: agencesResponse.data.agences,
-          });
-        }
 
         const adminsResponse = await axios.get("/api/get-admins");
         if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
@@ -76,7 +48,7 @@ function IndexAdmin() {
 
   return (
     <div>
-      <header className="sticky top-0 w-full bg-[#161a1d] py-4 z-50 text-white">
+      <header className="sticky top-0 w-full bg-[#161a1d] z-50 text-white">
         <NavBar />
       </header>
       <div className="flex bg-white">

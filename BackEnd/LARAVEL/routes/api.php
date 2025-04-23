@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware(['auth:sanctum', 'verified']);
@@ -95,6 +96,7 @@ Route::get('/get-courtiers', function () {
             'courtiers.*',
             DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
             'users.email as user_email',
+            'users.image as courtier_image',
             'agences.agence as agence_nom',
         )
         ->get();

@@ -34,12 +34,12 @@ export const startChat = async (req, res) => {
           lastMessage: `Salut ! Nous, on est là pour t’aider à gérer ta conversation. Si tu as besoin d’infos, de poser une question ou de lancer la négo, on est là pour ça. On peut commencer quand tu veux !`,
           lastMessageDate: Date.now(),
         });
-        
+        const chats = [...req.chats,newConversation];
         await newConversation.save();
         return res.status(201).json({
           message: "New conversation created",
           conversation: newConversation,
-          chats:req.chats,
+          chats:chats,
         });
       }
   

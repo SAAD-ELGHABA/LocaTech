@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { msgChatAi } from "../../redux/actions";
 import generatePrompt from "./prompt";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 
 const ChatAI = ({ onClose }) => {
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
@@ -20,7 +20,16 @@ const ChatAI = ({ onClose }) => {
   const dispatch = useDispatch();
   const conversationRef = useRef(null);
   const Biens = useSelector((state) => state.BienReducer);
-  const [isSending, setIsSending] = useState(false); // To prevent multiple rapid submissions
+  const [isSending, setIsSending] = useState(false);
+
+  const [suggestionQst, setSuggestionQst] = useState([
+    "C'est quoi LocaTech ?",
+    "Comment ça marche ?",
+    "Comment je peux acheter un bien ?",
+    "Comment je peux louer un bien ?",
+    "Comment je peux vendre un bien ?",
+    "Comment je peux louer mon bien ?",
+  ]);
 
   useEffect(() => {
     if (conversationRef.current) {
@@ -28,16 +37,14 @@ const ChatAI = ({ onClose }) => {
     }
   }, [messagesChatAi]);
 
-  const sendMessage = async () => {
-    if (input.trim() === "" || isSending) return;
+  const sendMessage = async (suggestion = null) => {
+    const userMessage = suggestion || input.trim();
+    if (userMessage === "" || isSending) return;
 
-    setIsSending(true); // Disable button during sending
-    const userMessage = input.trim();
+    setIsSending(true);
     dispatch(msgChatAi({ data: userMessage, role: "user" }));
     setInput("");
     setThinking(true);
-
-    // ✅ Generate prompt dynamiquement
 
     const prompt = generatePrompt(userMessage, Biens);
 
@@ -59,10 +66,7 @@ const ChatAI = ({ onClose }) => {
       if (
         response.ok &&
         data.candidates &&
-        data.candidates[0] &&
-        data.candidates[0].content &&
-        data.candidates[0].content.parts &&
-        data.candidates[0].content.parts[0]
+        data.candidates[0]?.content?.parts?.[0]
       ) {
         dispatch(
           msgChatAi({
@@ -83,7 +87,7 @@ const ChatAI = ({ onClose }) => {
   };
 
   const handleSendMessageWithDelay = () => {
-    setTimeout(sendMessage, 500); 
+    setTimeout(sendMessage, 500);
   };
 
   return (
@@ -108,12 +112,26 @@ const ChatAI = ({ onClose }) => {
         </button>
       </div>
 
-      {/* Chat Conversation */}
       <div
         ref={conversationRef}
         className="p-4 overflow-y-auto flex-1 space-y-2"
         id="conversation"
       >
+        <div className="flex flex-wrap gap-2 my-4">
+          {suggestionQst.map((qst, index) => (
+            <div>
+              <button
+                key={index}
+                className="cursor-pointer bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm hover:bg-gray-200"
+                onClick={() => {
+                  sendMessage(qst);
+                }}
+              >
+                {qst}
+              </button>
+            </div>
+          ))}
+        </div>
         {messagesChatAi && messagesChatAi.length > 0 ? (
           messagesChatAi.map((msg, index) => (
             <div
@@ -159,7 +177,9 @@ const ChatAI = ({ onClose }) => {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">Start a conversation...</p>
+          <p className="text-gray-500 text-center">
+            Démarrer une conversation...
+          </p>
         )}
         {thinking && (
           <div className="flex justify-start">
@@ -173,7 +193,6 @@ const ChatAI = ({ onClose }) => {
         )}
       </div>
 
-      {/* Input Area */}
       <div className="p-3 border-t border-gray-200">
         <div className="flex items-center">
           <input

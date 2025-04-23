@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import BienContainer from "./BienContainer";
 
+
+
 function Favoris({ setShowFavoris }) {
   const Biens = useSelector((state) => state.BienReducer);
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
@@ -12,6 +14,8 @@ function Favoris({ setShowFavoris }) {
   const favoriteBiens = Biens.filter((bien) =>
     FavorisReducer.includes(bien.id)
   );
+  
+  
 
   return (
     <div

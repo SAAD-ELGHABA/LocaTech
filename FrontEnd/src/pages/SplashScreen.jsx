@@ -7,7 +7,7 @@ export default function SplashScreen() {
       <div className="logo-container">
         <div className="title-wrapper flex items-end h-screen">
           <img 
-            src={'LocaTech-icon-removebg-preview.png'}
+            src={'/LocaTech-icon-removebg-preview.png'}
             alt="Logo" 
             className="logo-image"
           />

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"; // Si vous utilisez React Router
 import { FaGoogle } from "react-icons/fa";
 import { BsPersonFill } from "react-icons/bs";
 import { BiBriefcase } from "react-icons/bi";
-import logo from "../assets/Location.png"; // Assurez-vous que le chemin est correct
+import Logo from "../components/Logo"; // Assurez-vous que le chemin est correct
 import asideimg from "../assets/login-signup-img.png"; // Assurez-vous que le chemin est correct
 import GoogleLanding from "../components/GoogleLanding"; // Assurez-vous que le chemin est correct
 function SignUp() {
@@ -14,10 +14,7 @@ function SignUp() {
           <div className="text-center">
             <div className="flex items-center justify-center">
               <Link to={'/'} className="flex items-center">
-                <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
-                <h1 className="text-3xl font-bold">
-                  <span className="text-red-500">LocaTech</span>
-                </h1>
+              <Logo/>
               </Link>
             </div>
             <p className="mt-2 text-lg font-semibold">Bienvenue</p>

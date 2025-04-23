@@ -20,27 +20,27 @@ function Aside({ isOpen = true }) {
     {
       to: "/tableau-de-bord-admin",
       icon: <LayoutDashboard className="h-4" />,
-      label: "Tablear de Bord",
+      label: "Tableau de bord",
     },
     {
       to: "/courtiers",
       icon: <Handshake className="h-4" />,
-      label: "Tous les Courtiers",
+      label: "Courtiers",
     },
     {
       to: "/agences",
       icon: <Building2  className="h-4" />,
-      label: "les Agences",
+      label: "Agences",
     },
     {
       to: "/Admins",
       icon: <ShieldCheck   className="h-4" />,
-      label: "les Admins",
+      label: "Admins",
     },
     {
       to: "/assistants-admin",
       icon: <ContactRound  className="h-4" />,
-      label: "les Assistants",
+      label: "Assistants",
     },
     {
       to: "/all-users",
@@ -50,12 +50,12 @@ function Aside({ isOpen = true }) {
     {
       to: "/recent-courtiers",
       icon: <MailPlus className="h-4" />,
-      label: "Recent Courtiers",
+      label: "Recent courtiers",
     },
     {
       to: "/activate-courtier",
       icon: <BadgeCheck className="h-4" />,
-      label: "Activé Courtiers",
+      label: "Activé courtiers",
     },
   ];
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/Location.png";
 import { useDispatch, useSelector } from "react-redux";
+import Logo from '../components/Logo';
 
 const BlockedPage = () => {
   const user = useSelector((state) => state.userReducer.userInfo);
@@ -21,10 +21,8 @@ const BlockedPage = () => {
       <div className="flex flex-col items-center space-y-2 ">
         <Link to="/">
           <div className="flex items-center space-x-2">
-            <img src={logo} alt="LocaTech Logo" className="w-12 h-20" />
-            <h1 className="text-4xl font-bold">
-              <span className="text-red-500">LocaTech</span>
-            </h1>
+            
+            <Logo className="w-12 h-20"/>
           </div>
         </Link>
       </div>

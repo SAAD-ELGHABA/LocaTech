@@ -1,8 +1,8 @@
 /* Add Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 @import "tailwindcss";
+/* @plugin "daisyui"; */
 @import 'leaflet/dist/leaflet.css';
-
 /* Dégradé background red to green */
 /* .splash-screen, .main-screen {
   height: 100vh;
@@ -1942,5 +1942,42 @@ footer .logo-container span {
   animation: loadingBar 4s ease-in-out forwards;
 }
 
+
+
+
+@layer utilities {
+  .animate-slideDown {
+    animation: slideDown 0.4s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #1f2937;
+  border-radius: 10px;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
 
 

@@ -137,15 +137,18 @@ function DetailsBien() {
         }
       );
       if (response.status >= 200 && response.status <= 300) {
-        console.log(response);
+        localStorage.setItem(
+          "currentConversationId",
+          response.data.conversation._id
+        );
         dispatch({
-          type:"SET_CURRENT_CONVERSATION",
+          type: "SET_CURRENT_CONVERSATION",
           payload: response.data.conversation,
-        })
+        });
         dispatch({
-          type:"SET_CONVERSATIONS",
+          type: "SET_CONVERSATIONS",
           payload: response.data.chats,
-        })
+        });
         toast.success("Négociation démarrée avec succès !");
         nav("/chat/conversation", { state: { BienDetails } });
       }

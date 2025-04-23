@@ -237,7 +237,10 @@ export const filtredBiensReducer = (state=filtredBiens,action)=>{
 
 
 const messages = [
-    
+    {
+        role: "ai",
+        data: "Bonjour, comment puis-je vous aider aujourd'hui 😊?",
+    },
 ]
 
 export const ChatAiReducer = (state=messages,action)=>{
@@ -312,7 +315,7 @@ export const conversationsReducer = (state=conversations,action)=>{
         case "SET_CONVERSATIONS":
             return action.payload;
         case "REMOVE_CONVERSATION":
-            return state.filter((conversation)=>conversation.id !== action.payload.id)
+            return state.filter((conversation)=>conversation._id !== action.payload.id)
         default:
             return state;
     }

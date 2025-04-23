@@ -5,6 +5,7 @@ import Apropos1 from '../assets/Apropos1.png';
 import Apropos2 from '../assets/Apropos2.png';
 import {Globe,Building2,Users,House,CalendarDays,Phone,MapPin} from 'lucide-react';
 
+
 const Apropos = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

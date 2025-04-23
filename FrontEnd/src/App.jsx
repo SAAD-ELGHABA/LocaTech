@@ -7,11 +7,23 @@ import { toast, Toaster } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInitialData } from "./functions/fetchInitialData"; // ✅ IMPORT
 
+
+
+
+
+
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const token = useSelector((state) => state.userReducer.token);
   const dispatch = useDispatch();
   const LoadingGlobal = useSelector((state) => state.loadingReducer);
+
+
+  
+  
+  
+
 
   useEffect(() => {
     const init = async () => {
@@ -24,6 +36,8 @@ export default function App() {
 
     init();
   }, [LoadingGlobal, dispatch, token]);
+
+  
 
   return (
     <div className="app">

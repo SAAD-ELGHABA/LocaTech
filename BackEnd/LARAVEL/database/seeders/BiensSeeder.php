@@ -21,7 +21,11 @@ class BiensSeeder extends Seeder
         $unsplashApiKey = 'ImFD6SXKkYd1isb7FW9uA5dgMTi1Gq5ZFVOqiUgJckA';
         $unsplashUrl = 'https://api.unsplash.com/photos/random';
 
+<<<<<<< HEAD
+        for ($i = 0; $i < 500; $i++) {
+=======
         for ($i = 0; $i < 10; $i++) {
+>>>>>>> daa75e2324029a3211f698f0dbc43a3bfeaf8059
             $images = [];
 
             $ville = $faker->randomElement($villes);

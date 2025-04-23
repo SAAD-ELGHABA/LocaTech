@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import router from '../routes/auth.route.js';
+import chatRouter from '../routes/chatRouter.js';
 
 dotenv.config({ path: './config/.env' });
 
@@ -14,6 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', router);
+app.use('/api/chat', chatRouter);
+app.use('/api/get-conversations', chatRouter);
+
 
 app.listen(PORT, () => {
     console.log('server is running on port ' + PORT);

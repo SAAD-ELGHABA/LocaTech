@@ -17,7 +17,7 @@ function NavBar() {
             </Link>
           </div>
         </div>
-        <div className="text-red-500 flex items-end space-x-3">
+        <div className="text-white flex items-end space-x-3">
           <Bell className="w-5" />
           <div className="flex items-center space-x-1">
             <ContactRound className="h-5" />

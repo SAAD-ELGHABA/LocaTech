@@ -11,8 +11,8 @@ export default function StraightAnglePieChart() {
   const BienLouer = biens.filter((bien) => bien.typeAffaire === "louer" || bien.typeAffaire === "Louer").length;
 
   const data = [
-    { name: "Acheter", value: BienAcheter },
-    { name: "Louer", value: BienLouer },
+    { name: "Acheter", value: BienAcheter ,fill: "#ef4444"},
+    { name: "Louer", value: BienLouer ,fill: "#3b82f6"},
   ];
 
   const renderCustomLabel = ({ percent, name }) =>
@@ -31,7 +31,7 @@ export default function StraightAnglePieChart() {
           cx="50%"
           cy="50%"
           outerRadius={80}
-          fill="#ef4444"
+          // fill="#ef4444"
           labelLine={false}
           label={renderCustomLabel}
         />

@@ -6,10 +6,12 @@ import GoogleLanding from "../components/GoogleLanding";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Logo from "../components/Logo";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/actions";
-import Logo from "../components/Logo";
+
+
 const LoginPage = () => {
   const [showpwtd, setShowPwt] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -36,6 +38,8 @@ const LoginPage = () => {
         console.log(response.data.user);
         dispatch(login(response.data.token, response.data.user));
         localStorage.setItem("token", response.data.token);
+
+
 
         setTimeout(() => {
           if (response.data.user.role === "user") {

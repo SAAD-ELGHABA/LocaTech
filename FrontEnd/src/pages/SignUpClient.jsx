@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import logo from "../assets/Location.png";
+import Logo from "../components/Logo";
 
 const SignUpClient = () => {
   const [loading, setLoading] = useState(false);
@@ -76,10 +76,7 @@ const SignUpClient = () => {
         <div className="text-center">
           <div className="flex items-center justify-center">
             <Link to={"/"} className="flex items-center">
-              <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
-              <h1 className="text-3xl font-bold">
-                <span className="text-red-500">LocaTech</span>
-              </h1>
+            <Logo/>
             </Link>
           </div>
           <p className="mt-2 text-lg font-semibold">Bienvenue</p>
