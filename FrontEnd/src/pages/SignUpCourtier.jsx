@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import SignUpProcess from "../components/SignUpProcess";
 import Step1 from "./signup_courtier/Step1";
 import Step2 from "./signup_courtier/Step2";
-import logo from "../assets/Location.png";
+import Logo from "../components/Logo";
 
 const SignUpCourtier = () => {
   const [step, setStep] = useState(1);
@@ -18,10 +18,7 @@ const SignUpCourtier = () => {
         <div className="text-center">
           <div className="flex items-center justify-center">
             <Link to={"/"} className="flex items-center">
-              <img src={logo} alt="LocaTech Logo" className="w-10 h-18" />
-              <h1 className="text-3xl font-bold">
-                <span className="text-red-500">LocaTech</span>
-              </h1>
+              <Logo/>
             </Link>
           </div>
           <p className="mt-2 text-lg font-semibold">Bienvenue Courtier</p>

@@ -30,6 +30,18 @@ export const userReducer = (state = user, action) => {
 };
 
 
+const users = []
+export const usersReducer = (state=users,action)=>{
+    switch (action.type){
+        case "GET_USERS":
+            return action.payload;
+        case "RESET_USERS":
+            return users;
+        default:
+            return state;
+    }
+}
+
 
 const CourtierSignUp = {
     step1:{
@@ -249,5 +261,46 @@ export const FavorisReducer = (state=Favoris,action)=>{
             return Favoris;
         default :
         return state;
+    }
+}
+
+
+const AllCourtiers = []
+export const AllCourtiersReducer = (state=AllCourtiers,action)=>{
+    switch (action.type){
+        case "GET_ALL_COURTIERS":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+const Agences = []
+export const AgencesReducer = (state=Agences,action)=>{
+    switch (action.type){
+        case "GET_AGENCES":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+const Admins = []
+export const AdminsReducer = (state=Admins,action)=>{
+    switch (action.type){
+        case "GET_ADMINS":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+const Commandes = []
+export const CommandesReducer = (state=Commandes,action)=>{
+    switch (action.type){
+        case "GET_COMMANDES":
+            return action.payload;
+        default:
+            return state;
     }
 }

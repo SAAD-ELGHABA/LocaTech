@@ -26,6 +26,7 @@ const ContactUs = () => {
     setTouchedFields({ ...touchedFields, [name]: true });  // ولات تعمر كل مرة تلمس فيها الشامب
   };
   
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,6 +51,9 @@ const ContactUs = () => {
         .then(() => {
           alert("✅ Votre demande a été envoyée à LocaTech avec succès !");
           localStorage.setItem('submissionMessage', 'Votre demande a été envoyée à LocaTech. Nous reviendrons vers vous dans les plus brefs délais !');
+
+          
+
           setTimeout(() => {
             navigate('/');
           }, 1000);

@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import BienContainer from "./BienContainer";
 import { handleAddFavoris } from "../functions/handleAddFavoris";
+import ImageZoomViewer from "./ImageZoomViewer";
 function DetailsBien() {
   const { id } = useParams();
   useEffect(() => {
@@ -129,21 +130,25 @@ function DetailsBien() {
             `}
           onClick={(e) => handleHeartClick(e, BienDetails.id)}
         >
-          <Heart className={`h-4 
-            ${FavorisReducer.includes(BienDetails.id) ? "fill-red-500 text-red-500":""}
-            `} />
+          <Heart
+            className={`h-4 
+            ${
+              FavorisReducer.includes(BienDetails.id)
+                ? "fill-red-500 text-red-500"
+                : ""
+            }
+            `}
+          />
           <span>
-            {FavorisReducer.includes(BienDetails.id) ? "Retirer des favoris":"Ajouter aux favoris"}
+            {FavorisReducer.includes(BienDetails.id)
+              ? "Retirer des favoris"
+              : "Ajouter aux favoris"}
           </span>
         </div>
       </div>
       <div className={`flex items-start justify-between mx-8`}>
-        <div className="flex-1 flex justify-center items-center max-h-[550px] overflow-hidden">
-          <img
-            src={BienDetails.images[selectedIndex]}
-            alt="indice-image"
-            className="h-full rounded object-contain"
-          />
+        <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden">
+          <ImageZoomViewer imageUrl={BienDetails.images[selectedIndex]} />
         </div>
 
         <div className="overflow-y-auto flex flex-col space-y-2 max-h-[550px] p-2">

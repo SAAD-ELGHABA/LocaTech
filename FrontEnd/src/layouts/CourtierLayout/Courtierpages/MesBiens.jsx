@@ -4,6 +4,8 @@ import {
   faImages,
   faInfo,
   faPen,
+  faPlay,
+  faPowerOff,
   faScroll,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -47,6 +49,30 @@ function MesBiens() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const handleBrouillerBien = (id) => {
+    toast("Êtes-vous sûr de vouloir brouiller ce bien ?", {
+      action: {
+        label: "Confirmer",
+        onClick: async () => {
+          try {
+            const response = await axios.post(`/api/brouiller-Bien/${id}`);
+            toast.success("Bien a été ajouté aux brouillants avec succès");
+            dispatch({
+              type: "SET_LOADING",
+              payload: true,
+            });
+            console.log(response);
+          } catch (error) {
+            toast.error("Erreur lors de la brouillant");
+            console.error(error);
+          }
+        },
+      },
+      cancel: {
+        label: "Annuler",
+      },
+    });
+  };
 
   const handleDeleteBien = (id) => {
     toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
@@ -72,13 +98,51 @@ function MesBiens() {
       },
     });
   };
+
+  const handleActiverBien = (id) => {
+    toast("Êtes-vous sûr de vouloir activer ce bien ?", {
+      action: {
+        label: "Confirmer",
+        onClick: async () => {
+          try {
+            const response = await axios.post(`/api/activer-Bien/${id}`);
+            toast.success("Bien activé avec succès");
+            dispatch({
+              type: "SET_LOADING",
+              payload: true,
+            });
+            console.log(response);
+          } catch (error) {
+            toast.error("Erreur lors de l'activation");
+            console.error(error);
+          }
+        },
+      },
+      cancel: {
+        label: "Annuler",
+      },
+    });
+  }
+
+
   const statusReducer = useSelector((state) => state.statusReducer);
 
   return (
     <div>
       <div className="flex justify-between mx-8 mt-3">
-        <h1 className="text-lg font-semibold">
-          Mes Biens <FontAwesomeIcon icon={faScroll} />
+        <h1 className="text-lg font-semibold flex items-center space-x-2">
+          <span>
+            Mes Biens (
+            {
+              MesBiens.filter(
+                (bien) =>
+                  bien.courtier_id === ActuelCourtierReducer.id &&
+                  bien.status !== 2
+              ).length
+            }
+            )
+          </span>
+          <FontAwesomeIcon icon={faScroll} />
         </h1>
         <button
           className="flex space-x-2 items-center cursor-pointer "
@@ -96,9 +160,10 @@ function MesBiens() {
       </div>
       <div>
         {MesBiens.filter(
-          (bien) => bien.courtier_id === ActuelCourtierReducer.id
+          (bien) =>
+            bien.courtier_id === ActuelCourtierReducer.id && bien.status !== 2
         )
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Sort descending by date
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .map((bien, index) => (
             <div
               key={index}
@@ -149,6 +214,22 @@ function MesBiens() {
                           <span>Modifier</span>
                         </li>
                         <li
+                          className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                          onClick={() => handleBrouillerBien(bien.id)}
+                        >
+                          <FontAwesomeIcon icon={faPowerOff} />
+                          <span>brouiller</span>
+                        </li>
+                        {bien.status === 6 && (
+                          <li
+                            className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                            onClick={() => handleActiverBien(bien.id)}
+                          >
+                            <FontAwesomeIcon icon={faPlay} />
+                            <span>Activer</span>
+                          </li>
+                        )}
+                        <li
                           className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer text-red-500 flex space-x-4 items-center"
                           onClick={() => handleDeleteBien(bien.id)}
                         >
@@ -197,7 +278,6 @@ function MesBiens() {
                   <div className="flex flex-col space-y-4">
                     <div className="flex justify-between">
                       <div className="flex space-x-2 items-center font-semibold">
-                        {/* <FontAwesomeIcon icon={faLocationDot} /> */}
                         <img
                           src={brocheDeLocalisation}
                           alt=""
@@ -211,7 +291,14 @@ function MesBiens() {
                           {bien.superficier} m²
                         </span>
                       </div>
-                      <div className="font-semibold">${bien.budget}.00</div>
+                      <div className="font-semibold">
+                        $
+                        {new Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(bien.budget)}
+                        .00
+                      </div>
                     </div>
                     <div className="flex  items-center justify-between">
                       <div className="flex space-x-4 text-sm">

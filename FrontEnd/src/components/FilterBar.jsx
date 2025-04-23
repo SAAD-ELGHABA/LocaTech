@@ -23,6 +23,8 @@ function FilterBar() {
   const villes = useSelector((state) => state.VillesReducer);
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
   const nav = useNavigate();
+
+  
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
@@ -243,15 +245,12 @@ function FilterBar() {
 
           {/* Chat AI Popup */}
           {showChatAI && (
-            <>
-              {/* overlay blur */}
-              <div className="fixed inset-0 bg-white/10 backdrop-blur-sm z-40"></div>
-
-              {/* Chat centered */}
-              <div className="absolute inset-0 z-50 flex items-center justify-center">
-                <ChatAI onClose={handleCloseAI} />
-              </div>
-            </>
+            <div
+              className="fixed inset-0 bg-[#161a1d93] h-screen w-full flex items-center justify-center"
+              style={{ zIndex: 9999 }}
+            >
+              <ChatAI onClose={handleCloseAI} />
+            </div>
           )}
         </div>
       </div>

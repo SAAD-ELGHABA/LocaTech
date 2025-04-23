@@ -1,0 +1,40 @@
+import { Handshake, HousePlus, ShieldUser, UsersRound } from "lucide-react";
+import React, { use } from "react";
+import { useSelector } from "react-redux";
+
+function Statistiques() {
+  const CourtierTotal = useSelector(
+    (state) => state.AllCourtiersReducer
+  ).length;
+  const UsersTotal = useSelector((state) => state.usersReducer).filter(
+    (user) => user.role === "user"
+  ).length;
+  const BiensTotal = useSelector((state) => state.BienReducer).length;
+
+  return (
+    <div className="grid grid-cols-4 gap-4 my-4">
+      <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+        <ShieldUser />
+        <h1 className="text-sm text-gray-600 ">Total des Courtiers</h1>
+        <span className="text-2xl font-bold">{CourtierTotal}</span>
+      </div>
+      <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+        <UsersRound />
+        <h1 className="text-sm text-gray-600 ">Total des Utilisateurs</h1>
+        <span className="text-2xl font-bold">{UsersTotal}</span>
+      </div>
+      <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+        <HousePlus />
+        <h1 className="text-sm text-gray-600 ">Total des Biens</h1>
+        <span className="text-2xl font-bold">{BiensTotal}</span>
+      </div>
+      <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
+        <Handshake />
+        <h1 className="text-sm text-gray-600 ">Total des Accords</h1>
+        <span className="text-2xl font-bold">{0}</span>
+      </div>
+    </div>
+  );
+}
+
+export default Statistiques;

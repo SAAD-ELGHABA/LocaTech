@@ -148,6 +148,44 @@ class BienController extends Controller
         //
     }
 
+    public function brouiller(Bien $bien, $id)
+    {
+        try {
+            $bien = Bien::findOrFail($id);
+            $bien->status = 6;
+            $bien->save();
+
+            return response()->json([
+                'message' => 'Ce Bien a été brouillé avec succée !',
+                'data' => $bien,
+            ], 200);
+        } catch (Error $error) {
+            return response()->json([
+                'message' => 'erreur quand la brouillage de cette bien !!',
+                'error' => $error,
+            ], 400);
+        }
+    }
+
+
+    public function activer(Bien $bien, $id)
+    {
+        try {
+            $bien = Bien::findOrFail($id);
+            $bien->status = 5;
+            $bien->save();
+
+            return response()->json([
+                'message' => 'Ce Bien a été activé avec succée !',
+                'data' => $bien,
+            ], 200);
+        } catch (Error $error) {
+            return response()->json([
+                'message' => 'erreur quand la activation de cette bien !!',
+                'error' => $error,
+            ], 400);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      */
@@ -155,7 +193,7 @@ class BienController extends Controller
     {
         try {
             $bien = Bien::findOrFail($id);
-            $bien->status = 'supprimé';
+            $bien->status = 2;
             $bien->save();
 
             return response()->json([

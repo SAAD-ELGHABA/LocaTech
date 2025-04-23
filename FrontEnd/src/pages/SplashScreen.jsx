@@ -5,13 +5,13 @@ export default function SplashScreen() {
   return (
     <div className="splash-screen">
       <div className="logo-container">
-        <div className="title-wrapper">
+        <div className="title-wrapper flex items-end h-screen">
           <img 
-            src={logo}
+            src={'LocaTech-icon-removebg-preview.png'}
             alt="Logo" 
             className="logo-image"
           />
-          <h1 className="animated-title">
+          <h1 className="animated-title ">
             {title.split("").map((char, index) => (
               <span
                 key={index}

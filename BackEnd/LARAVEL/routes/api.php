@@ -4,13 +4,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\FavoriController;
-use App\Http\Controllers\VilleController; 
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\VilleController;
+use App\Models\Admin;
+use App\Models\Agence;
 use App\Models\Status;
+use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Ville;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +67,8 @@ Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien')
 Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
 Route::post('/delete-Bien/{id}', [BienController::class, 'delete'])->name('deleteBien');
+Route::post('/brouiller-Bien/{id}', [BienController::class, 'brouiller'])->name('brouillerBien');
+Route::post('/activer-Bien/{id}', [BienController::class, 'activer'])->name('activerBien');
 
 Route::get('/status', function () {
     return Status::all();
@@ -76,10 +81,65 @@ Route::post('/add-favoris', [FavoriController::class, 'add_to_favoris'])->name('
 Route::get('get-user-favoris', [FavoriController::class, 'getUserFavoris'])->name('get-user-favoris')->middleware('auth:sanctum');
 
 
+Route::get('/get-users', function () {
+    $users = User::where('role', 'user')->get();
+    return response()->json([
+        'users' => $users
+    ]);
+});
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/notifications', [NotificationController::class, 'index']);
-    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
-    Route::post('/notifications', [NotificationController::class, 'store']);
-    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+Route::get('/get-courtiers', function () {
+    $courtiers = DB::table('courtiers')
+        ->join('users', 'courtiers.user_id', '=', 'users.id')
+        ->join('agences', 'courtiers.agence_id', '=', 'agences.id')
+        ->select(
+            'courtiers.*',
+            DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
+            'users.email as user_email',
+            'agences.agence as agence_nom',
+        )
+        ->get();
+    return response()->json([
+        'courtiers' => $courtiers
+    ]);
+});
+
+
+Route::get('/get-agences', function () {
+    $agences = Agence::all();
+    return response()->json([
+        'agences' => $agences
+    ]);
+});
+
+Route::get('/get-admins', function () {
+    $admins = DB::table('admins')
+        ->join('users', 'admins.user_id', '=', 'users.id')
+        ->select(
+            'admins.*',
+            DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
+            'users.email as user_email'
+        )
+        ->get();
+    return response()->json([
+        'admins' => $admins
+    ]);
+});
+
+
+
+Route::get('/get-commandes', function () {
+    $commandes = DB::table('commandes')
+        ->join('users', 'commandes.user_id', '=', 'users.id')
+        ->join('biens', 'commandes.bien_id', '=', 'biens.id')
+        ->select(
+            'commandes.*',
+            DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
+            'users.email as user_email',
+            'biens.title as bien_titre'
+        )
+        ->get();
+    return response()->json([
+        'commandes' => $commandes
+    ]);
 });

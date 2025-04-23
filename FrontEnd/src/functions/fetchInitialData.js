@@ -29,6 +29,14 @@ export const fetchInitialData = async (dispatch, token) => {
       });
     }
 
+    const commandeResponse = await axios.get("/api/get-commandes");
+    if (commandeResponse.status >= 200 && commandeResponse.status <= 300) {
+      dispatch({
+        type: "GET_COMMANDES",
+        payload: commandeResponse.data.commandes,
+      });
+    }
+
     if (token) {
       const userResponse = await axios.get("/api/user", {
         headers: {
@@ -38,7 +46,10 @@ export const fetchInitialData = async (dispatch, token) => {
 
       if (userResponse.status >= 200 && userResponse.status < 300) {
         const userData = userResponse.data;
-
+        dispatch({
+          type: "LOGIN",
+          payload: userData,
+        });
         const FavorisResponse = await axios.get("/api/get-user-favoris", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -51,10 +62,7 @@ export const fetchInitialData = async (dispatch, token) => {
           });
         }
 
-        dispatch({
-          type: "LOGIN",
-          payload: userData,
-        });
+
 
         if (userData.role === "courtier") {
           try {
@@ -83,5 +91,11 @@ export const fetchInitialData = async (dispatch, token) => {
     }
   } catch (error) {
     console.error("Erreur lors du chargement initial :", error);
+  }finally {
+    dispatch({
+      type: "SET_LOADING",
+      payload: false,
+    });
   }
+  toast.dismiss();
 };

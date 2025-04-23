@@ -2,19 +2,23 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('Admin')->insert([
+        // You can also loop over multiple users or select specific ones
+        $user = User::inRandomOrder()->first(); // pick a random user
 
-        ]);
+        if ($user) {
+            Admin::create([
+                'user_id' => $user->id,
+                'password_admin' => Hash::make('adminpassword123'), // encrypt password
+            ]);
+        }
     }
 }

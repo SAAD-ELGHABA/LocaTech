@@ -28,6 +28,14 @@ import DashboardIndexCourtier from "../layouts/CourtierLayout/Courtierpages/Dash
 import MesBiens from "../layouts/CourtierLayout/Courtierpages/MesBiens";
 import DetailsBien from "../components/DetailsBien";
 import ConsulterBiens from "../pages/ConsulterBiens";
+import Users from "../layouts/AdminLayout/adminPages/Users";
+import ActivateCourtiers from "../layouts/AdminLayout/adminPages/ActivateCourtiers";
+import RecentCourtiers from "../layouts/AdminLayout/adminPages/RecentCourtiers";
+import Assistants from "../layouts/AdminLayout/adminPages/Assistants";
+import Agences from "../layouts/AdminLayout/adminPages/Agences";
+import Admins from "../layouts/AdminLayout/adminPages/Admins";
+import AssistantIndex from "../layouts/AssistantLayout/AssistantIndex";
+import DashboardAssistant from "../layouts/AssistantLayout/AssistantPages/DashboardAssistant";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -41,17 +49,26 @@ const COURTIE = "/courtier";
 const VERIFY_EMAIL = "/verify-email/:id/:hash";
 const RESEND_EMAIL_VERIFICATION_PATH = "/resend_verification_email";
 const GOOGLELANDING = "/google-langing";
-const COURTIERS = "/courtiers";
+const RECENT_COURTIERS = "/recent-courtiers";
 
 const COURTIE_INDEX = "/courtier-index";
 const MESBIENS = "/MesBiens";
 
 const CONSULTER_BIENS = "/consulter-bien";
+const TABLEA_DE_BORD_ADMIN = "/tableau-de-bord-admin";
+const ASSISTANTS_ADMIN = "/assistants-admin";
 
 const DETAILS_BIEN = "/details-bien/:id";
 const DETAILS_BIEN_CLIENT = "/details-bien-client/:id";
 
+const GET_USERS = "/all-users";
+const COURTIERS = "/courtiers";
+const GET_COURTIER = "/activate-courtier";
+
 const ADMIN_INDEX = "/admin-index";
+
+const ASSISTANT_INDEX = "/assistant-index";
+
 const HOME = "/";
 const Router = createBrowserRouter([
   {
@@ -157,10 +174,6 @@ const Router = createBrowserRouter([
         path: MESBIENS,
         element: <MesBiens />,
       },
-      // {
-      //   path: DETAILS_BIEN,
-      //   element: <DetailsBien />,
-      // },
     ],
   },
   {
@@ -172,8 +185,46 @@ const Router = createBrowserRouter([
         element: <DashboardIndex />,
       },
       {
+        path: RECENT_COURTIERS,
+        element: <RecentCourtiers />,
+      },
+      {
+        path: GET_USERS,
+        element: <Users />,
+      },
+      {
+        path: GET_COURTIER,
+        element: <ActivateCourtiers />,
+      },
+      {
         path: COURTIERS,
         element: <Courtiers />,
+      },
+      {
+        path: TABLEA_DE_BORD_ADMIN,
+        element: <DashboardIndex />,
+      },
+      {
+        path: ASSISTANTS_ADMIN,
+        element: <Assistants />,
+      },
+      {
+        path: "/agences",
+        element: <Agences />,
+      },
+      {
+        path: "/admins",
+        element: <Admins />,
+      },
+    ],
+  },
+  {
+    element: <AssistantIndex />,
+    children: [
+      {
+        index: true,
+        path: ASSISTANT_INDEX,
+        element: <DashboardAssistant />,
       },
     ],
   },

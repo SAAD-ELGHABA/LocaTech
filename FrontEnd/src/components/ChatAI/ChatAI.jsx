@@ -91,8 +91,8 @@ const ChatAI = ({ onClose }) => {
 
   return (
     <div
-      className="fixed top-86 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
-      style={{ zIndex: 1000 }}
+      className="absolute top-28 bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
+      style={{ zIndex: 1003 }}
     >
       {/* Header */}
       <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
@@ -127,9 +127,9 @@ const ChatAI = ({ onClose }) => {
               <div
                 className={`rounded-lg p-3 text-sm break-words ${
                   msg.role === "ai"
-                    ? "bg-gray-100 text-gray-800"
+                    ? " text-gray-800"
                     : "bg-red-100 text-black"
-                } w-2/3`}
+                } w-4/5`}
               >
                 {msg.role === "ai" && (
                   <Sparkles className="text-gray-400 inline-block mr-1 align-text-bottom h-4" />
@@ -156,7 +156,7 @@ const ChatAI = ({ onClose }) => {
                   })}
                 {msg.role === "user" && (
                   <div className="text-red-600 font-semibold text-xs text-right mt-1">
-                    You
+                    Vous
                   </div>
                 )}
               </div>

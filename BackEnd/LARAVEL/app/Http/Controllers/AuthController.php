@@ -79,7 +79,7 @@ class AuthController extends Controller
                     ]);
                 } else if ($user->role === 'courtier') {
                     $courtier = Courtier::where('user_id', $user->id)->first();
-                    if ($courtier->status === 'activé') {
+                    if ($courtier->status_id === 5) {
                         $token = $user->createToken('authToken')->plainTextToken;
                         return response()->json([
                             'message' => 'connexion succée !',
