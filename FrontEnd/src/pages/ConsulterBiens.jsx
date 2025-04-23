@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
 import FilterBar from "../components/FilterBar";
 import {
   ArrowDownWideNarrow,
   Ban,
-  Bath,
-  Bed,
-  BedDouble,
-  LandPlot,
 } from "lucide-react";
 import BienContainer from "../components/BienContainer";
 
@@ -19,11 +13,9 @@ function ConsulterBiens() {
   const Biens = useSelector((state) => state.BienReducer);
   const filtredBiensReducer = useSelector((state) => state.filtredBiensReducer);
 
-  // Use filtered biens if available, otherwise use all biens
-  const biensToRender =
+  const biensToRender = 
     filtredBiensReducer.length > 0 ? filtredBiensReducer : Biens;
 
-  // Sort the chosen list
   const sortedBiensToRender = [...biensToRender].sort((a, b) => {
     switch (sortOption) {
       case "title-asc":

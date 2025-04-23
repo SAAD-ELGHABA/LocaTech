@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Bien extends Model
 {
@@ -24,7 +25,8 @@ class Bien extends Model
         'chambres',
         'salles_de_bain',
         'etage',
-        'meuble'
+        'meuble',
+        'slag',
     ];
     protected $casts = [
         'images' => 'array',
@@ -32,5 +34,24 @@ class Bien extends Model
     public function courtier()
     {
         return $this->belongsTo(Courtier::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($bien) {
+            if (empty($bien->slag)) {
+                $slug = Str::slug($bien->title);
+                $slug = $slug . '-' . Str::random(5);
+
+                $existingSlug = Bien::where('slag', $slug)->exists();
+                if ($existingSlug) {
+                    $slug = $slug . '-' . Str::random(5);
+                }
+
+                $bien->slag = $slug;
+            }
+        });
     }
 }

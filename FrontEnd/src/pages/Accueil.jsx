@@ -52,9 +52,11 @@ const HeroSection = () => {
 
         <Link
           to={"/consulter-bien"}
-          className="flex items-center mx-auto bg-red-500 w-28 px-4 py-2 rounded-3xl space-x-2 text-sm text-white hover:scale-105"
+          className="flex items-center mx-auto bg-red-500 w-48 justify-center py-2 rounded-3xl space-x-2 text-sm text-white hover:scale-105"
         >
-          <div>Consulter</div>
+          <div>
+            Trouver votre bien
+          </div>
           <FontAwesomeIcon icon={faChevronRight} />
         </Link>
       </div>

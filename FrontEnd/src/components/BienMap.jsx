@@ -67,7 +67,7 @@ const BienMap = ({ ville, quartier }) => {
       <h1 className="my-4 text-xl font-semibold">Où se situe le logement</h1>
       <MapContainer
         center={center}
-        zoom={quartier ? 13 : 10}
+        zoom={quartier ? 15 : 10}
         style={{ width: "100%", height: "500px" }}
         zoomControl={false}
         attributionControl={false} // Disable attribution control
@@ -79,7 +79,7 @@ const BienMap = ({ ville, quartier }) => {
         <ZoomToCenter center={center} />
         <Circle
           center={center}
-          radius={2000}
+          radius={500} // Smaller radius, takes up a smaller area
           pathOptions={{
             color: "#f44336",
             fillColor: "red",

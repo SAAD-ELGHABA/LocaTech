@@ -8,11 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  // resolve: {
-  //   alias: {
-  //     '@': path.resolve(__dirname, 'src'),
-  //   },
-  // },
   server: {
     proxy: {
       '/api': {
@@ -22,7 +17,7 @@ export default defineConfig({
       }
     },
     '/node': {
-      target: 'http://127.0.0.1:5000', 
+      target: 'http://localhost:5000', 
       changeOrigin: true,
       secure: false,
       rewrite: (path) => path.replace(/^\/node/, '')

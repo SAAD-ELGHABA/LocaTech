@@ -36,6 +36,9 @@ import Agences from "../layouts/AdminLayout/adminPages/Agences";
 import Admins from "../layouts/AdminLayout/adminPages/Admins";
 import AssistantIndex from "../layouts/AssistantLayout/AssistantIndex";
 import DashboardAssistant from "../layouts/AssistantLayout/AssistantPages/DashboardAssistant";
+import ChatRealTimePage from "../pages/ChatRealTime/ChatRealTimePage";
+import IndexPage from "../pages/ChatRealTime/ChatPages/IndexPage";
+import Conversation from "../pages/ChatRealTime/ChatPages/Conversation";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -58,8 +61,8 @@ const CONSULTER_BIENS = "/consulter-bien";
 const TABLEA_DE_BORD_ADMIN = "/tableau-de-bord-admin";
 const ASSISTANTS_ADMIN = "/assistants-admin";
 
-const DETAILS_BIEN = "/details-bien/:id";
-const DETAILS_BIEN_CLIENT = "/details-bien-client/:id";
+// const DETAILS_BIEN = "/bien/:ville/:slag";
+const DETAILS_BIEN_CLIENT = "/bien/:ville/:slag";
 
 const GET_USERS = "/all-users";
 const COURTIERS = "/courtiers";
@@ -155,6 +158,19 @@ const Router = createBrowserRouter([
       {
         path: CONSULTER_BIENS,
         element: <ConsulterBiens />,
+      },
+    ],
+  },
+  {
+    element: <ChatRealTimePage />,
+    children: [
+      {
+        path: "/chat/negocier",
+        element: <IndexPage />,
+      },
+      {
+        path: "/chat/conversation",
+        element: <Conversation />,
       },
     ],
   },

@@ -24,7 +24,6 @@ function FilterBar() {
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
   const nav = useNavigate();
 
-  
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
@@ -75,10 +74,14 @@ function FilterBar() {
     try {
       const response = await axios.post("/api/filterBiens", filterBiensReducer);
       if (response.status >= 200 && response.status <= 300) {
-        dispatch({
-          type: "GET_FILTRED_BIENS",
-          payload: response.data.biens,
-        });
+        if (response.data.biens.length === 0) {
+          toast.error("Aucun bien trouvé avec ces critères.");
+        } else {
+          dispatch({
+            type: "GET_FILTRED_BIENS",
+            payload: response.data.biens,
+          });
+        }
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Erreur lors du filtrage.");
@@ -92,7 +95,7 @@ function FilterBar() {
   };
   const handleCloseAI = () => setShowChatAI(false);
   return (
-    <div className="sticky top-24 z-[999] transition-all duration-300">
+    <div className=" transition-all duration-300">
       <div
         ref={searchBoxRef}
         className={`w-5/6 mx-auto px-4 flex justify-center items-center mb-5 text-sm hover:bg-[#f5f3f4] rounded ${
@@ -122,7 +125,6 @@ function FilterBar() {
             <option value="villa">Villa</option>
           </select>
 
-          {/* Ville */}
           <select
             className="px-4 py-2 focus:outline-none border-l border-gray-400 w-full md:w-[150px]"
             value={filterBiensReducer.ville}
@@ -136,34 +138,35 @@ function FilterBar() {
               });
             }}
           >
-            <option value="">Sélectionner une ville</option>
+            <option value="">Ville</option>
             {villes.map((v) => (
               <option key={v.nom} value={v.nom}>
                 {v.nom}
               </option>
             ))}
           </select>
+          {location.pathname.startsWith("/acheter") ||
+            location.pathname.startsWith("/louer") ||
+            (location.pathname.startsWith("/") && (
+              <select
+                className="border-l border-gray-400 px-4 py-2 focus:outline-none w-full md:w-[150px]"
+                value={filterBiensReducer.typeAffaire}
+                onChange={(e) => {
+                  dispatch({
+                    type: "SET_FILTER",
+                    payload: {
+                      ...filterBiensReducer,
+                      typeAffaire: e.target.value,
+                    },
+                  });
+                }}
+              >
+                <option value="">Type d'affaire</option>
+                <option value="acheter">Achat</option>
+                <option value="louer">Location</option>
+              </select>
+            ))}
 
-          {/* Type d'affaire */}
-          <select
-            className="border-l border-gray-400 px-4 py-2 focus:outline-none w-full md:w-[150px]"
-            value={filterBiensReducer.typeAffaire}
-            onChange={(e) => {
-              dispatch({
-                type: "SET_FILTER",
-                payload: {
-                  ...filterBiensReducer,
-                  typeAffaire: e.target.value, // ✅ correctly updates typeAffaire
-                },
-              });
-            }}
-          >
-            <option value="">Type d'affaire</option>
-            <option value="acheter">Acheter</option>
-            <option value="louer">Louer</option>
-          </select>
-
-          {/* Budget */}
           <select
             className="border-l border-gray-400 px-4 py-2 focus:outline-none w-full md:w-[150px]"
             value={
@@ -184,7 +187,7 @@ function FilterBar() {
               });
             }}
           >
-            <option value="">Le budget</option>
+            <option value="">Budget (MAD)</option>
             {budgetOptions.map((b, i) => (
               <option
                 key={i}
@@ -217,22 +220,22 @@ function FilterBar() {
           >
             <RouteOff className="h-4" />
           </button>
-          {/* Filtrer */}
           <button
             onClick={handleSearch}
-            className="border-[#F44336] border hover:bg-red-500 flex items-center space-x-2 text-[#F44336] px-4 py-1.5 cursor-pointer rounded-md w-full md:w-auto hover:text-white"
+            className="border-[#F44336] border hover:bg-red-500 flex items-center space-x-2 text-[#F44336] px-4 py-2 cursor-pointer rounded-md w-full justify-center md:w-[100px] hover:text-white"
           >
             {isloading ? (
-              <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+              <div className="flex items-center space-x-1">
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+              </div>
             ) : (
-              <div className="flex items-center space-x-2">
-                <Funnel className="w-4" />
+              <div className="flex items-center space-x-1">
+                <Funnel className="h-4" />
                 <span>Filtrer</span>
               </div>
             )}
           </button>
 
-          {/* AI Reco */}
           <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto">
             <button
               onClick={handleGoToAI}
@@ -243,11 +246,11 @@ function FilterBar() {
             </button>
           </div>
 
-          {/* Chat AI Popup */}
           {showChatAI && (
             <div
               className="fixed inset-0 bg-[#161a1d93] h-screen w-full flex items-center justify-center"
               style={{ zIndex: 9999 }}
+              onClick={() => setShowChatAI(false)}
             >
               <ChatAI onClose={handleCloseAI} />
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
-import { Bath, Bed, LandPlot, Heart } from "lucide-react";
+import { Bath, Bed, LandPlot, Heart, MapPinCheckInside } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleAddFavoris } from "../functions/handleAddFavoris";
 import { toast } from "sonner";
@@ -41,9 +41,9 @@ function BienContainer({ bien, isRecent }) {
 
   return (
     <Link
-      to={`/details-bien-client/${bien.id}`}
+      to={`/bien/${bien.ville}/${bien.slag}`}
       key={bien.id}
-      className="relative bg-white rounded shadow overflow-hidden transition-transform duration-300 hover:scale-105"
+      className="relative bg-white rounded-xl shadow overflow-hidden transition-transform duration-300 hover:scale-105"
     >
       {isRecent && (
         <span className="absolute top-2 start-2 bg-green-500 text-white text-xs px-2 py-1 rounded z-10">
@@ -55,7 +55,7 @@ function BienContainer({ bien, isRecent }) {
         className={`absolute top-2 right-2 w-5 z-5 cursor-pointer transition-colors duration-200 ${
           isHovered || FavorisReducer.includes(bien.id)
             ? "text-red-500 fill-red-500"
-            : "text-gray-500"
+            : "text-red-500"
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -71,19 +71,13 @@ function BienContainer({ bien, isRecent }) {
       <div className="p-3 space-y-1 text-sm">
         <h2 className="text-lg font-semibold text-left text-gray-800">
           {bien.title.length > 25 ? (
-            <div>{bien.title.substring(0, 25)}+...</div>
+            <div>{bien.title.substring(0, 25)}..</div>
           ) : (
             bien.title
           )}
         </h2>
-        <p className="text-gray-600 text-left flex items-center space-x-2">
-          <strong>
-            <img
-              src={brocheDeLocalisation}
-              alt="localisation"
-              className="h-5"
-            />
-          </strong>
+        <p className="text-gray-600 text-left flex items-center">
+          <MapPinCheckInside className="h-4" />
           <span>{bien.ville}</span>
         </p>
         <div className="text-gray-600 flex text-sm items-center justify-between">

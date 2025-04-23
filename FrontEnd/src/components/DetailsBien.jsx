@@ -29,11 +29,12 @@ import {
 import BienContainer from "./BienContainer";
 import { handleAddFavoris } from "../functions/handleAddFavoris";
 import ImageZoomViewer from "./ImageZoomViewer";
+import ToastWithLink from "./ToastWithLink";
 function DetailsBien() {
-  const { id } = useParams();
+  const { slag } = useParams();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [id]);
+  }, [slag]);
   const Biens = useSelector((state) => state.BienReducer);
   const user = useSelector(
     (state) =>
@@ -41,7 +42,8 @@ function DetailsBien() {
       state.userReducer.userInfo
   );
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
-  const BienDetails = Biens.find((b) => b.id == id);
+
+  const BienDetails = Biens.find((b) => b.slag == slag);
 
   const filteredBiens = Biens.filter(
     (bien) =>
@@ -108,6 +110,52 @@ function DetailsBien() {
     }
   };
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
+  const handleNegocier = async () => {
+    if (!user) {
+      toast.custom(() => (
+        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+      ));
+      return;
+    }
+    const toastLoading = toast.loading("Chargement...");
+    if (user.role === "courtier") {
+      toast.error("Vous ne pouvez pas négocier en tant que courtier.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/start",
+        {
+          BienId: BienDetails.id,
+          userId: user.id,
+          courtierId: BienDetails.courtier_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status <= 300) {
+        console.log(response);
+        dispatch({
+          type:"SET_CURRENT_CONVERSATION",
+          payload: response.data.conversation,
+        })
+        dispatch({
+          type:"SET_CONVERSATIONS",
+          payload: response.data.chats,
+        })
+        toast.success("Négociation démarrée avec succès !");
+        nav("/chat/conversation", { state: { BienDetails } });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Erreur lors de la négociation");
+    } finally {
+      toast.dismiss(toastLoading);
+    }
+  };
 
   if (!BienDetails)
     return <div className="text-center mt-10">Aucun bien trouvé</div>;
@@ -276,7 +324,10 @@ function DetailsBien() {
               </div>
             ) : (
               <div className="w-full">
-                <button className="w-full flex space-x-2 items-center bg-red-500 text-white rounded-2xl px-4 py-2 cursor-pointer hover:bg-red-600">
+                <button
+                  className="w-full flex space-x-2 items-center bg-red-500 text-white rounded-2xl px-4 py-2 cursor-pointer hover:bg-red-600"
+                  onClick={handleNegocier}
+                >
                   <FontAwesomeIcon icon={faComments} />
                   <span>commencer à négocier </span>
                 </button>
@@ -292,23 +343,23 @@ function DetailsBien() {
         <MesBiens />
       ) : (
         filteredBiens.length > 0 && (
-          <div className="mx-24 flex flex-col items-start justify-between mt-5">
+          <div className="mx-24 flex flex-col space-y-4 items-start justify-between mt-5">
             <h1 className="text-xl font-semibold flex items-center space-x-3">
               <span>Recommendations</span>
               <Paperclip className="h-5" />
             </h1>
-            <div className="items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8 w-full mx-auto">
+            <div className="items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full mx-auto">
               {filteredBiens.slice(0, 5).map((bien) => (
                 <BienContainer bien={bien} />
               ))}
-              <Link
-                className="w-48 text-center flex items-end hover:underline space-x-2"
-                to={"/consulter-bien"}
-              >
-                <span>voir tous les biens</span>
-                <MoveRight />
-              </Link>
             </div>
+            <Link
+              className="mx-auto bg-red-500 rounded-2xl py-2 px-4 text-white text-sm  w-48 text-center flex items-end hover:underline space-x-2 justify-center"
+              to={"/consulter-bien"}
+            >
+              <span>voir tous les biens</span>
+              <MoveRight className="h-4" />
+            </Link>
           </div>
         )
       )}

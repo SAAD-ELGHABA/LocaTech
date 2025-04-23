@@ -304,3 +304,26 @@ export const CommandesReducer = (state=Commandes,action)=>{
             return state;
     }
 }
+
+const conversations = [];
+
+export const conversationsReducer = (state=conversations,action)=>{
+    switch (action.type){
+        case "SET_CONVERSATIONS":
+            return action.payload;
+        case "REMOVE_CONVERSATION":
+            return state.filter((conversation)=>conversation.id !== action.payload.id)
+        default:
+            return state;
+    }
+}
+
+const currentConversation = {};
+export const currentConversationReducer = (state=currentConversation,action)=>{
+    switch (action.type){
+        case "SET_CURRENT_CONVERSATION":
+            return action.payload;
+        default:
+            return state;
+    }
+}

@@ -12,8 +12,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../assets/Location.png";
-import "../index.css"; // katsayb styles dial .main-footer etc.
-
+import "../index.css"; 
 const Footer = () => {
   return (
     <footer className="main-footer px-6 py-10 text-sm">
@@ -45,13 +44,10 @@ const Footer = () => {
             <a href="#"><FaInstagram  /></a>
             <a href="#"><FaLinkedin  /></a>
             <a href="#"><FaPhoneAlt  /></a>
-            <a href="#"><FaCcPaypal  /></a>
-            <a href="#"><FaRegCreditCard  /></a>
           </div>
         </div>
       </div>
 
-      {/* Bottom */}
       <div className="footer-bottom mt-10 border-t  pt-6 flex flex-col md:flex-row items-center justify-between">
         <div className="logo-container flex items-center gap-2">
           <Link to="/">

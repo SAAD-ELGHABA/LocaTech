@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
 import { Bath, Bed, LandPlot } from "lucide-react";
 import BienContainer from "../components/BienContainer";
+import FilterBar from "../components/FilterBar";
 
 const getRandomPrice = (budgetString) => {
   const budget = String(budgetString).trim();
@@ -116,58 +117,9 @@ const Acheter = () => {
 
   return (
     <div className="acheter-page pt-12 px-4 md:px-8 mt-25 bg-gray-50 min-h-screen">
-      {ville && type && action && (
-        <h1 className="text-2xl font-semibold mb-8 text-center">
-          {action} <span className="text-[#F44336]">{type}</span> à {ville}
-        </h1>
-      )}
+      <FilterBar />
 
-      {ville && type && budget ? (
-        <>
-          {/* Pagination Top */}
-          <Pagination />
-
-          {/* Annonces */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
-            {currentAnnonces.map((annonce) => (
-              <div
-                key={annonce.id}
-                className="bg-white rounded shadow overflow-hidden transition-transform duration-300 hover:scale-105"
-              >
-                <img
-                  src={annonce.image}
-                  alt={type}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-3 space-y-1">
-                  <h2 className="text-xl font-semibold text-left text-gray-800">
-                    {annonce.title}
-                  </h2>
-                  <p className="text-gray-600 text-left">
-                    <strong>Ville :</strong> {ville}
-                  </p>
-                  <p className="text-gray-600 text-left">
-                    <strong>Surface :</strong> {annonce.surface} m²
-                  </p>
-                  <p className="text-gray-600 text-left">
-                    <strong>Budget :</strong>
-                    <span className="text-[#f56565] font-bold text-sm">
-                      {" "}
-                      {annonce.price.toLocaleString()} MAD / mois
-                    </span>
-                  </p>
-                  <button className="mt-3 text-sm w-full py-2 px-4 rounded cursor-pointer border border-red-500 text-red-500 bg-white hover:bg-red-50 hover:shadow-md hover:scale-105 transition-all duration-300">
-                    VOIR LE BIEN
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination Bottom */}
-          <Pagination />
-        </>
-      ) : Biens.length > 0 ? (
+      {Biens.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
           {Biens.filter(
             (b) => b.typeAffaire === "Louer" || b.typeAffaire === "louer"

@@ -105,11 +105,11 @@ const Navbar = () => {
             <Link to="/louer" className="text-black">
               Louer
             </Link>
-            <Link to="/blog" className="text-black">
-              Blog
-            </Link>
             <Link to="/Apropos" className="text-black">
               A propos
+            </Link>
+            <Link to="/blog" className="text-black">
+              Blog
             </Link>
             <Link to="/contactUs" className="text-black">
               Contactez-nous
@@ -214,9 +214,9 @@ const Navbar = () => {
               "Favoris"
             )}
           </li>
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
+          <Link to={'/chat/negocier'} className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Messages
-          </li>
+          </Link>
           <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Notifications
           </li>

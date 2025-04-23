@@ -78,19 +78,19 @@ const ChatAI = ({ onClose }) => {
       toast.error("Error communicating with AI.");
     } finally {
       setThinking(false);
-      setIsSending(false); // Re-enable button
+      setIsSending(false);
     }
   };
 
   const handleSendMessageWithDelay = () => {
-    // Simple delay to prevent rapid calls
-    setTimeout(sendMessage, 500); // Wait 500 milliseconds before sending
+    setTimeout(sendMessage, 500); 
   };
 
   return (
     <div
-      className="absolute top-28 bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
+      className="absolute bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
       style={{ zIndex: 1003 }}
+      onClick={(e) => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
@@ -124,9 +124,7 @@ const ChatAI = ({ onClose }) => {
             >
               <div
                 className={`rounded-lg p-3 text-sm break-words ${
-                  msg.role === "ai"
-                    ? " text-gray-800"
-                    : "bg-red-100 text-black"
+                  msg.role === "ai" ? " text-gray-800" : "bg-red-100 text-black"
                 } w-4/5`}
               >
                 {msg.role === "ai" && (

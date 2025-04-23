@@ -13,7 +13,7 @@ const Acheter = () => {
   const Biens = useSelector((state) => state.BienReducer);
 
   return (
-    <div className=" mt-25 bg-gray-50 min-h-screen">
+    <div className=" mt-25 pt-12 bg-gray-50 min-h-screen">
       <FilterBar />
       {Biens.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
