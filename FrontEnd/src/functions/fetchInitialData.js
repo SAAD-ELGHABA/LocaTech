@@ -66,7 +66,7 @@ export const fetchInitialData = async (dispatch, token) => {
       });
     }
 
-    if (token) {
+    if (token || localStorage.getItem('token')) {
       const userResponse = await axios.get("/api/user", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -91,10 +91,9 @@ export const fetchInitialData = async (dispatch, token) => {
           });
         }
 
-
-
         if (userData.role === "courtier") {
           try {
+            
             const courtierResponse = await axios.post("/api/ActuelCourtier", {
               user_id: userData.id,
             });
@@ -111,9 +110,18 @@ export const fetchInitialData = async (dispatch, token) => {
           } catch (error) {
             console.error("Erreur lors de la récupération du courtier :", error);
           }
+        }else if(userData.role === "assistant"){
+          const biensResponseAssistant = await axios.get("/api/Biens-assistant");
+          if (biensResponseAssistant.status >= 200 && biensResponseAssistant.status <= 300) {
+            dispatch({
+              type: "ALLBIENS_ASSISTANT",
+              payload: biensResponseAssistant.data.Biens,
+            });
+          }
         }
       }
     }else{
+      
         dispatch({
             type:"RESET_FAVORIS"
         })

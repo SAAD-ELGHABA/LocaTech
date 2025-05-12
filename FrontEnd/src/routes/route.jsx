@@ -39,6 +39,13 @@ import DashboardAssistant from "../layouts/AssistantLayout/AssistantPages/Dashbo
 import ChatRealTimePage from "../pages/ChatRealTime/ChatRealTimePage";
 import IndexPage from "../pages/ChatRealTime/ChatPages/IndexPage";
 import Conversation from "../pages/ChatRealTime/ChatPages/Conversation";
+import AccessRouteAssistant from "./accessRoute.jsx/AccessRouteAssistant";
+import Conversations from "../layouts/AssistantLayout/AssistantPages/Conversations";
+import Profile from "../layouts/UserLayout/userPages/Profile";
+import CentreAide from "../layouts/UserLayout/userPages/CentreAide";
+import Evaluations from "../layouts/AdminLayout/adminPages/Evaluations";
+import ProfileCourtier from "../layouts/CourtierLayout/Courtierpages/ProfileCourtier";
+import Control from "../layouts/AssistantLayout/AssistantPages/Control";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -159,6 +166,18 @@ const Router = createBrowserRouter([
         path: CONSULTER_BIENS,
         element: <ConsulterBiens />,
       },
+      {
+        path: "/profile-client",
+        element: <Profile />,
+      },
+      {
+        path: "/parametre-client",
+        element: <></>,
+      },
+      {
+        path: "/centre-aide",
+        element: <CentreAide />,
+      },
     ],
   },
   {
@@ -189,6 +208,10 @@ const Router = createBrowserRouter([
       {
         path: MESBIENS,
         element: <MesBiens />,
+      },
+      {
+        path: "/profile-courtier",
+        element: <ProfileCourtier />,
       },
     ],
   },
@@ -232,15 +255,35 @@ const Router = createBrowserRouter([
         path: "/admins",
         element: <Admins />,
       },
+      {
+        path: "/evaluations",
+        element: <Evaluations />,
+      },
     ],
   },
   {
-    element: <AssistantIndex />,
+    element: (
+      <AccessRouteAssistant>
+        <AssistantIndex />
+      </AccessRouteAssistant>
+    ),
     children: [
       {
         index: true,
         path: ASSISTANT_INDEX,
         element: <DashboardAssistant />,
+      },
+      {
+        path: "/tableau-de-bord-assistant",
+        element: <DashboardAssistant />,
+      },
+      {
+        path: "/all-conversations",
+        element: <Conversations />,
+      },
+      {
+        path: "/control-courtiers",
+        element: <Control />,
       },
     ],
   },

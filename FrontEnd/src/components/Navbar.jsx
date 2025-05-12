@@ -14,6 +14,8 @@ import { fetchInitialData } from "../functions/fetchInitialData";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../components/firebase/firebase";
 import { subscribe } from "../components/sendNotifications/sendNotifications";
+import { socketListener } from "../functions/socketListener";
+import { fetchConversations } from "../functions/fetchConversations";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -22,12 +24,42 @@ const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const [notifications, setNotifications] = useState([]);
+  const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
+  const conversations = useSelector((state) => state.conversationsReducer);
+  const user = useSelector((state) => state.userReducer.userInfo);
 
+  const userId =
+    user?.role === "user"
+      ? user?.id
+      : user?.role === "courtier"
+      ? currentCourtier?.id
+      : 0;
+  const unreadConversations =
+    conversations?.length > 0 &&
+    conversations?.filter(
+      (cnv) =>
+        cnv.isRead === false &&
+        Number(cnv.messages?.slice(-1)[0]?.senderId) !== userId
+    );
+  useEffect(() => {
+    const getConversations = async () => {
+      await fetchConversations(userId, dispatch);
+    };
+
+    getConversations();
+  }, []);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!userId) return;
+    const unsubscribe = socketListener(dispatch, null, userId);
+    return () => {
+      unsubscribe();
+    };
+  }, [userId]);
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
-  const user = useSelector((state) => state.userReducer.userInfo);
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
 
   const MySwal = withReactContent(Swal);
@@ -137,12 +169,15 @@ const Navbar = () => {
   return (
     <div className="relative">
       {/* Navbar */}
-      <nav className="bg-white shadow-md px-4 md:px-6 fixed w-full top-0 left-0 z-50">
+      <nav
+        className="bg-white shadow-md px-4 md:px-6 fixed w-full top-0 left-0 z-50"
+        style={{ zIndex: 1000 }}
+      >
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <Logo />
 
           {/* Navigation links */}
-          <div className="flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap">
+          <div className="lg:flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap hidden">
             <Link to="/acheter" className="text-black">
               Acheter
             </Link>
@@ -226,12 +261,25 @@ const Navbar = () => {
           ref={dropdownRef}
           className="fixed top-16 right-6 text-sm text-[#161a1d] bg-white border border-gray-300 rounded shadow-lg w-48 z-[1000] flex flex-col space-y-1"
         >
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-            Profile
-          </li>
-          <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
+          <Link
+            to={
+              user?.role === "assistant"
+                ? "/assistant-index"
+                : user.role === "courtier"
+                ? "/courtier-index"
+                : "/profile-client"
+            }
+            className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+          >
+            {user.role === "courtier" || user.role === "assistant" ? (
+              "Mon espace"
+            ) : (
+              <Link to={"/profile-client"}>Profile</Link>
+            )}
+          </Link>
+          {/* <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
             Paramètres
-          </li>
+          </li> */}
           <li
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
             onClick={() => setShowFavoris(true)}
@@ -247,29 +295,43 @@ const Navbar = () => {
               "Favoris"
             )}
           </li>
-          <Link
-            to={"/chat/negocier"}
-            className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
-          >
-            Messages
-          </Link>
-          <li
-            onClick={() => setShowNotifications(true)}
-            className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-          >
-            <span>Notifications</span>
-            {notifications.some((notif) => !notif.read) && (
-              <span className="bg-red-500 text-white rounded-full px-1 text-[10px] ml-2">
-                {notifications.filter((notif) => !notif.read).length}
-              </span>
-            )}
-          </li>
-
-          <Link to="/contactUs">
-            <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-              Centre d'aide
-            </li>
-          </Link>
+          {user?.role === "user" ||
+            (user?.role === "courtier" && (
+              <Link
+                to={"/chat/negocier"}
+                className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+              >
+                <div className="flex justify-between items-center">
+                  <span>Messages</span>
+                  <span className="bg-red-500 text-white rounded-full px-1 text-[10px]">
+                    {unreadConversations.length > 0 &&
+                      unreadConversations.length}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          {user?.role === "user" ||
+            (user?.role === "courtier" && (
+              <li
+                onClick={() => setShowNotifications(true)}
+                className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+              >
+                <span>Notifications</span>
+                {notifications.some((notif) => !notif.read) && (
+                  <span className="bg-red-500 text-white rounded-full px-1 text-[10px] ml-2">
+                    {notifications.filter((notif) => !notif.read).length}
+                  </span>
+                )}
+              </li>
+            ))}
+          {user?.role === "user" ||
+            (user?.role === "courtier" && (
+              <Link to="/contactUs">
+                <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
+                  Centre d'aide
+                </li>
+              </Link>
+            ))}
           <li
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
             onClick={handleLogOut}
@@ -279,7 +341,6 @@ const Navbar = () => {
         </ul>
       )}
 
-      {/* Fenêtre des favoris */}
       {showFavoris && <Favoris setShowFavoris={setShowFavoris} />}
       {showNotifications && (
         <Notifications

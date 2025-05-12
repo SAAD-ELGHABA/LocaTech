@@ -17,7 +17,7 @@ function Info() {
             name="titre"
             placeholder="Veuillez entrer le titre d'annonce"
             value={createBien.title || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -36,7 +36,7 @@ function Info() {
             rows={12}
             placeholder="Veuillez entrer la description d'annonce"
             value={createBien.description || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -56,7 +56,7 @@ function Info() {
             name="budget"
             placeholder="Veuillez entrer le budget d'annonce"
             value={createBien.budget || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -74,7 +74,7 @@ function Info() {
             name="superficier"
             placeholder="Veuillez entrer la superficier d'annonce"
             value={createBien.superficier || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -91,7 +91,7 @@ function Info() {
             name=""
             id=""
             value={createBien.ville || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -116,7 +116,7 @@ function Info() {
             name=""
             id=""
             value={createBien.type || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -138,7 +138,7 @@ function Info() {
             name=""
             id=""
             value={createBien.typeAffaire || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -162,7 +162,7 @@ function Info() {
             name="chambres"
             placeholder="Veuillez entrer le Nombre de chambres"
             value={createBien.chambres || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -180,7 +180,7 @@ function Info() {
             name="salles_de_bain"
             placeholder="Veuillez entrer le Nombre de salles de bain"
             value={createBien.salles_de_bain || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -198,7 +198,7 @@ function Info() {
             name="etage"
             placeholder="Veuillez entrer le Nombre d'Étage"
             value={createBien.etage || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -214,7 +214,7 @@ function Info() {
             name="Quartier"
             placeholder="Veuillez entrer la Quartier de bien"
             value={createBien.quartier || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",

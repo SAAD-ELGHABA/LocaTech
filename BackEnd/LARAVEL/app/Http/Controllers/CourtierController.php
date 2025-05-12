@@ -12,6 +12,8 @@ use Illuminate\Validation\Rule;
 use Error;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -70,7 +72,7 @@ class CourtierController extends Controller
             $Courtier = Courtier::create([
                 'agence_id' => $Agence->id,
                 'user_id' => $user->id,
-                'status' => 'pas activé'
+                'status_id' => 4
             ]);
             if (!$Courtier) {
                 return response()->json([
@@ -122,6 +124,10 @@ class CourtierController extends Controller
                     } catch (\Exception $e) {
                         Log::error('Email sending failed: ' . $e->getMessage());
                     }
+                } else {
+                    return response()->json([
+                        'message' => 'Email non trouvé pour le courtier.'
+                    ], 404);
                 }
             }
             return response()->json([
@@ -137,8 +143,9 @@ class CourtierController extends Controller
     {
         try {
             $userId = $request->input('user_id');
-
-            $courtier = Courtier::where('user_id', $userId)->first();
+            $courtier = Courtier::where('user_id', $userId)
+                ->with(['agence.evaluation', 'user', 'biens.status'])
+                ->first();
 
             if (!$courtier) {
                 return response()->json([
@@ -153,6 +160,89 @@ class CourtierController extends Controller
             return response()->json([
                 'message' => 'Erreur lors de la récupération du courtier.',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function updateProfileCourtier(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $validated = $request->validate([
+                'nom' => 'sometimes|string|max:255',
+                'prenom' => 'sometimes|string|max:255',
+                'email' => 'sometimes|email|unique:users,email,' . $user->id,
+                'telephone' => 'sometimes|string|max:15',
+                'image' => 'sometimes|url',
+
+                'Licence_professionnelle' => 'sometimes|file|mimes:pdf,jpg,jpeg,png|max:2048',
+
+                'Brève_présentation' => 'sometimes|string|nullable',
+                'Zone_activité' => 'sometimes|string|nullable',
+                'SEO' => 'sometimes|string|nullable',
+                'Années_expérience' => 'sometimes|integer|nullable',
+                'Type_activité' => 'sometimes|string|nullable',
+            ]);
+
+            $user->update($request->only(['nom', 'prenom', 'email', 'telephone', 'image']));
+
+            $courtierData = $request->only([
+                'Brève_présentation',
+                'Zone_activité',
+                'SEO',
+                'Années_expérience',
+                'Type_activité'
+            ]);
+
+            if ($request->hasFile('Licence_professionnelle')) {
+                $file = $request->file('Licence_professionnelle');
+                $path = $file->store('licences', 'public');
+                $courtierData['Licence_professionnelle'] = $path;
+            }
+
+            $courtier = $user->courtier;
+
+            if ($courtier) {
+                $data = $request->all();
+
+                if (isset($data['Brève_présentation'])) {
+                    $courtier->{'Brève_présentation'} = $data['Brève_présentation'];
+                }
+
+                if (isset($data['Zone_activité'])) {
+                    $courtier->{'Zone_activité'} = $data['Zone_activité'];
+                }
+
+                if (isset($data['SEO'])) {
+                    $courtier->{'SEO'} = $data['SEO'];
+                }
+
+                if (isset($data['Années_expérience'])) {
+                    $courtier->{'Années_expérience'} = $data['Années_expérience'];
+                }
+
+                if (isset($data['Type_activité'])) {
+                    $courtier->{'Type_activité'} = $data['Type_activité'];
+                }
+
+                if ($request->hasFile('Licence_professionnelle')) {
+                    $file = $request->file('Licence_professionnelle');
+                    $path = $file->store('licences', 'public');
+                    $courtier->{'Licence_professionnelle'} = $path;
+                }
+
+                $courtier->save();
+            }
+
+
+            return response()->json([
+                'message' => 'Profil mis à jour avec succès.',
+                'user' => User::find($user->id),
+                'currentCourtier' => $user->courtier()->first()
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Erreur lors de la modification du profil.',
+                'error' => $th->getMessage()
             ], 500);
         }
     }

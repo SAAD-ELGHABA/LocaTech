@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import MapFromUrl from "./MapFormUrl";
+import {handleNegocier} from '../functions/handleNegocier.js'
 import {
   faCalendar,
   faChevronLeft,
@@ -30,6 +31,7 @@ import BienContainer from "./BienContainer";
 import { handleAddFavoris } from "../functions/handleAddFavoris";
 import ImageZoomViewer from "./ImageZoomViewer";
 import ToastWithLink from "./ToastWithLink";
+import socketConfig from "../functions/socketConfig.js";
 function DetailsBien() {
   const { slag } = useParams();
   useEffect(() => {
@@ -41,42 +43,45 @@ function DetailsBien() {
       (state.userReducer.userInfo && state.userReducer.userInfo.user) ||
       state.userReducer.userInfo
   );
+  const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
-
+  const AllCourtiersReducer = useSelector((state) => state.AllCourtiersReducer);
   const BienDetails = Biens.find((b) => b.slag == slag);
+  const owner = AllCourtiersReducer.find(
+    (courtier) => courtier.id === BienDetails.courtier_id
+  );
 
+  const users = useSelector((state) => state.usersReducer);
   const filteredBiens = Biens.filter(
     (bien) =>
-      bien.id !== BienDetails.id &&
-      bien.type === BienDetails.type &&
+      (bien.id !== BienDetails.id && bien.type === BienDetails.type) ||
       bien.ville === BienDetails.ville
   );
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const handleDeleteBien = (id) => {
-    toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
-      action: {
-        label: "Confirmer",
-        onClick: async () => {
-          try {
-            const response = await axios.post(`/api/delete-Bien/${id}`);
-            toast.success("Bien supprimé avec succès");
-            dispatch({
-              type: "SET_LOADING",
-              payload: true,
-            });
-            console.log(response);
-          } catch (error) {
-            toast.error("Erreur lors de la suppression");
-            console.error(error);
-          }
-        },
-      },
-      cancel: {
-        label: "Annuler",
-      },
-    });
-  };
+  //   toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
+  //     action: {
+  //       label: "Confirmer",
+  //       onClick: async () => {
+  //         try {
+  //           const response = await axios.post(`/api/delete-Bien/${id}`);
+  //           toast.success("Bien supprimé avec succès");
+  //           dispatch({
+  //             type: "SET_LOADING",
+  //             payload: true,
+  //           });
+  //           console.log(response);
+  //         } catch (error) {
+  //           toast.error("Erreur lors de la suppression");
+  //           console.error(error);
+  //         }
+  //       },
+  //     },
+  //     cancel: {
+  //       label: "Annuler",
+  //     },
+  //   });
+  // };
   const formattedBudget = new Intl.NumberFormat("de-DE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -110,55 +115,61 @@ function DetailsBien() {
     }
   };
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
-  const handleNegocier = async () => {
-    if (!user) {
-      toast.custom(() => (
-        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
-      ));
-      return;
-    }
-    const toastLoading = toast.loading("Chargement...");
-    if (user.role === "courtier") {
-      toast.error("Vous ne pouvez pas négocier en tant que courtier.");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/start",
-        {
-          BienId: BienDetails.id,
-          userId: user.id,
-          courtierId: BienDetails.courtier_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response.status >= 200 && response.status <= 300) {
-        localStorage.setItem(
-          "currentConversationId",
-          response.data.conversation._id
-        );
-        dispatch({
-          type: "SET_CURRENT_CONVERSATION",
-          payload: response.data.conversation,
-        });
-        dispatch({
-          type: "SET_CONVERSATIONS",
-          payload: response.data.chats,
-        });
-        toast.success("Négociation démarrée avec succès !");
-        nav("/chat/conversation", { state: { BienDetails } });
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Erreur lors de la négociation");
-    } finally {
-      toast.dismiss(toastLoading);
-    }
-  };
+  // const handleNegocier = async () => {
+  //   if (!user) {
+  //     toast.custom(() => (
+  //       <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+  //     ));
+  //     return;
+  //   }
+  //   const toastLoading = toast.loading("Chargement...");
+  //   if (user.role === "courtier") {
+  //     toast.error("Vous ne pouvez pas négocier en tant que courtier.");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:5000/api/auth/start",
+  //       {
+  //         BienId: BienDetails.id,
+  //         userId: user.id,
+  //         courtierId: BienDetails.courtier_id,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     if (response.status >= 200 && response.status <= 300) {
+  //       socketConfig.emit("userConnected", {
+  //         userId: user.id,
+  //         conversationId: 1,
+  //         username: user.name,
+  //       });
+
+  //       localStorage.setItem(
+  //         "currentConversationId",
+  //         response.data.conversation._id
+  //       );
+  //       dispatch({
+  //         type: "SET_CURRENT_CONVERSATION",
+  //         payload: response.data.conversation,
+  //       });
+  //       dispatch({
+  //         type: "SET_CONVERSATIONS",
+  //         payload: response.data.chats,
+  //       });
+  //       toast.success("Négociation démarrée avec succès !");
+  //       nav("/chat/conversation", { state: { BienDetails } });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Erreur lors de la négociation");
+  //   } finally {
+  //     toast.dismiss(toastLoading);
+  //   }
+  // };
 
   if (!BienDetails)
     return <div className="text-center mt-10">Aucun bien trouvé</div>;
@@ -247,6 +258,31 @@ function DetailsBien() {
               </div>
             </div>
           )}
+          <div>
+            {owner ? (
+              <div className="border-t border-b border-gray-300 py-4 flex space-x-2 space-y-1 justify-start items-center  h-full ">
+                <div>
+                  <img
+                    src={owner?.user?.image}
+                    alt=""
+                    className="w-10 h-10 rounded-full"
+                  />
+                </div>
+                <div>
+                  <p className="text-[17px] font-semibold">
+                    {owner?.user?.nom+" "+owner?.user?.prenom}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {owner.Brève_présentation
+                      ? owner.Brève_présentation
+                      : "sans expérience"}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              "Courtier introuvable"
+            )}
+          </div>
         </div>
         <div className=" w-1/4 rounded border border-gray-300 p-4 shadow flex flex-col space-y-6">
           <div className="font-bold my-5 flex flex-col space-y-2">
@@ -283,14 +319,16 @@ function DetailsBien() {
               <span>Nombre d'étage :</span>
               <div className="flex items-center space-x-1.5">
                 <span className="font-semibold">
-                  {BienDetails.salles_de_bain}{" "}
+                  {BienDetails.etage}{" "}
                 </span>
                 <Layers className=" w-4" />
               </div>
             </div>
           </div>
           <div className={` flex justify-between text-sm`}>
-            {user && user.role === "courtier" ? (
+            {user &&
+            user.role === "courtier" &&
+            BienDetails.courtier_id === currentCourtier.id ? (
               <div className="flex flex-col items-center justify-start space-y-2">
                 <div className="flex items-center text-start justify-start w-full">
                   <p>Action :</p>
@@ -326,15 +364,26 @@ function DetailsBien() {
                 </div>
               </div>
             ) : (
-              <div className="w-full">
-                <button
-                  className="w-full flex space-x-2 items-center bg-red-500 text-white rounded-2xl px-4 py-2 cursor-pointer hover:bg-red-600"
-                  onClick={handleNegocier}
-                >
-                  <FontAwesomeIcon icon={faComments} />
-                  <span>commencer à négocier </span>
-                </button>
-              </div>
+              !user ||
+              (user.role === "user" && (
+                <div className="w-full">
+                  <button
+                    className="w-full flex space-x-2 items-center bg-red-500 text-white rounded-2xl px-4 py-2 cursor-pointer hover:bg-red-600"
+                    onClick={async ()=>{
+                      if (!user) {
+                          toast.custom(() => (
+                            <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+                          ));
+                          return;
+                        }
+                      await handleNegocier(user,toast,dispatch,BienDetails,nav)
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faComments} />
+                    <span>commencer à négocier </span>
+                  </button>
+                </div>
+              ))
             )}
           </div>
         </div>

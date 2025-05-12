@@ -18,7 +18,6 @@ function Images() {
 
   const allImages = [...(createBien.images || []), ...files];
   const [selectedImage, setSelectedImage] = useState(null);
-  console.log(allImages);
   
   const onDrop = useCallback(
     (acceptedFiles) => {

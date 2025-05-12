@@ -69,7 +69,7 @@ function CreateBien() {
       });
 
       if (response.status >= 200 && response.status <= 300) {
-        toast.success("Annonce validée avec succès !");
+        toast.success(response?.data?.message);
         console.log(response);
         nav("/courtier-index");
         dispatch({

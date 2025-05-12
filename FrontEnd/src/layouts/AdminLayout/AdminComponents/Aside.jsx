@@ -7,14 +7,18 @@ import {
   MailPlus,
   ShieldCheck,
   Users,
+  ChevronDown,
+  ChevronRight,
+  Star,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 function Aside({ isOpen = true }) {
   const location = useLocation();
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
+  const [isCourtierOpen, setIsCourtierOpen] = useState(false);
 
   const links = [
     {
@@ -23,23 +27,38 @@ function Aside({ isOpen = true }) {
       label: "Tableau de bord",
     },
     {
-      to: "/courtiers",
-      icon: <Handshake className="h-4" />,
       label: "Courtiers",
+      icon: <Handshake className="h-4" />,
+      isDropdown: true,
+      subLinks: [
+        {
+          to: "/courtiers",
+          label: "Tous les courtiers",
+        },
+        {
+          to: "/recent-courtiers",
+          label: "Courtiers récents",
+          badge: recentCourtiers?.length,
+        },
+        {
+          to: "/activate-courtier",
+          label: "Courtiers activés",
+        },
+      ],
     },
     {
       to: "/agences",
-      icon: <Building2  className="h-4" />,
+      icon: <Building2 className="h-4" />,
       label: "Agences",
     },
     {
       to: "/Admins",
-      icon: <ShieldCheck   className="h-4" />,
+      icon: <ShieldCheck className="h-4" />,
       label: "Admins",
     },
     {
       to: "/assistants-admin",
-      icon: <ContactRound  className="h-4" />,
+      icon: <ContactRound className="h-4" />,
       label: "Assistants",
     },
     {
@@ -48,25 +67,72 @@ function Aside({ isOpen = true }) {
       label: "Utilisateurs",
     },
     {
-      to: "/recent-courtiers",
-      icon: <MailPlus className="h-4" />,
-      label: "Recent courtiers",
-    },
-    {
-      to: "/activate-courtier",
-      icon: <BadgeCheck className="h-4" />,
-      label: "Activé courtiers",
+      to: "/evaluations",
+      icon: <Star className="h-4" />,
+      label: "Evaluation",
     },
   ];
 
   return (
-    <aside className="sticky h-screen w-1/6 top-0 left-0 bg-[#161a1d] text-white">
+    <aside className="sticky h-screen w-1/6 top-20 left-0 bg-[#161a1d] text-white">
       <div className="my-4 text-center">
         <h1 className="text-lg font-semibold">Bienvenue Admin</h1>
       </div>
       <div className="w-full text-sm flex flex-col">
         {links.map((link) => {
           const isActive = location.pathname === link.to;
+
+          if (link.isDropdown) {
+            return (
+              <div key={link.label} className="w-full">
+                <div
+                  onClick={() => setIsCourtierOpen(!isCourtierOpen)}
+                  className={`w-full px-4 py-2 flex justify-between items-center cursor-pointer transition-colors duration-150 ${
+                    isCourtierOpen
+                      ? "bg-[#2b2b2b] text-white"
+                      : "hover:bg-[#2b2b2b] text-white"
+                  }`}
+                >
+                  <div className="flex space-x-2 items-center">
+                    {link.icon}
+                    {isOpen && <span>{link.label}</span>}
+                  </div>
+                  {isOpen &&
+                    (isCourtierOpen ? (
+                      <ChevronDown className="h-4" />
+                    ) : (
+                      <ChevronRight className="h-4" />
+                    ))}
+                </div>
+                {isCourtierOpen && (
+                  <div className="ml-6 flex flex-col space-y-1 mt-1">
+                    {link.subLinks.map((sub) => {
+                      const isSubActive = location.pathname === sub.to;
+                      return (
+                        <Link
+                          key={sub.to}
+                          to={sub.to}
+                          className={`flex justify-between items-center px-4 py-1.5 text-sm rounded transition-colors ${
+                            isSubActive
+                              ? "bg-white text-[#161a1d]"
+                              : "text-white hover:bg-[#2b2b2b]"
+                          }`}
+                        >
+                          <span>{sub.label}</span>
+                          {sub.badge > 0 && (
+                            <span className="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full ml-2">
+                              {sub.badge}
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
           return (
             <Link
               key={link.to}
@@ -81,11 +147,6 @@ function Aside({ isOpen = true }) {
                 {link.icon}
                 {isOpen && <span>{link.label}</span>}
               </div>
-              {link.to === "/recent-courtiers" && recentCourtiers?.length > 0 && (
-                <div className="rounded-full px-1 py-0.5 text-[10px] bg-red-600 text-white ml-auto">
-                  {recentCourtiers.length}
-                </div>
-              )}
             </Link>
           );
         })}

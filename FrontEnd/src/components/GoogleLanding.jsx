@@ -45,11 +45,12 @@ function GoogleLanding() {
           } else if (response.data.user.role === "courtier") {
             nav("/courtier-index");
           }
-        }, 2000);
+        }, 100);
       } else {
         toast.error("Login Failed");
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
     }
   };

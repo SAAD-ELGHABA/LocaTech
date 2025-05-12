@@ -13,12 +13,17 @@ function Aside({ isOpen = true }) {
   ];
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
   const location = useLocation();
+  const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
 
   return (
     <aside className="sticky h-screen w-1/6 top-12 left-0 bg-[#d3d3d3]">
       <div className="my-4 text-center">
-        <h1>
-          Bienvenue <span className="text-[#ba181b]">Courtier</span>
+        <h1 className="text-sm font-medium">
+          Bienvenue <span className="text-red-500">
+            {
+              currentCourtier?.user?.nom+" "+currentCourtier?.user?.prenom
+            }
+          </span>
         </h1>
       </div>
       <div className="w-full text-sm flex flex-col">
@@ -28,8 +33,8 @@ function Aside({ isOpen = true }) {
             to={link.to}
             className={`w-full px-4 py-2 flex items-center space-x-2 cursor-pointer ${
               location.pathname === link.to
-                ? "bg-[#b1a7a6] text-white"
-                : "hover:bg-[#b1a7a6]"
+                ? "bg-white text-white"
+                : "hover:bg-[#ffffff6b]"
             }`}
             style={{ width: "100%" }}
           >

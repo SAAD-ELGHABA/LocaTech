@@ -1,19 +1,24 @@
+/* styles/CustomMapControls.css */
+
 .leaflet-control-zoom {
-    border-radius: 0.75rem; /* rounded-xl */
-    border: 1px solid #d1d5db; /* border-gray-300 */
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .leaflet-control-zoom-in,
-  .leaflet-control-zoom-out {
-    font-size: 1.2rem;
-    background-color: white;
-    color: #1f2937;
-    border-bottom: 1px solid #d1d5db;
-  }
-  
-  .leaflet-control-zoom-out {
-    border-bottom: none;
-  }
-  
+  position: absolute;
+  z-index: 0 !important;
+  border-radius: 0.75rem; /* rounded-xl */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  position: relative;
+  font-size: 1.2rem;
+  background-color: white;
+  color: #1f2937; /* text-gray-800 */
+  border-bottom: 1px solid #d1d5db;
+  z-index: 0 !important;
+}
+
+.leaflet-control-zoom-out {
+  border-bottom: none;
+}

@@ -15,7 +15,7 @@
             <p style="color: #6B7280; font-size: 12px;">Pour compléter votre inscription, veuillez vérifier votre adresse e-mail en cliquant sur le lien ci-dessous. Cela nous aide à garantir la sécurité de votre compte. Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer ce message.</p>
         </div>
         <div style="display: block; text-align: center; margin: 10px 0;">
-            <a href="{{$url}}" style="display: inline-block; background-color: green; color: white; border-radius: 5px; padding: 10px 20px; width: 50%; text-decoration: none; font-size: 12px;">Vérifier l'Email</a>
+            <a href="{{$url}}" style="display: inline-block; background-color: green; color: white; border-radius: 5px; padding: 12px 25px; width: 50%; text-decoration: none; font-size: 15px;">Vérifier l'Email</a>
         </div>
         <div style="display: block; text-align: center; margin: 10px 0;">
             <p style="font-size: 10px;">Merci, L'Équipe</p>

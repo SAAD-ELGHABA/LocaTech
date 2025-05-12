@@ -11,8 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { msgChatAi } from "../../redux/actions";
 import generatePrompt from "./prompt";
 import { Link } from "react-router-dom";
-
+import { GoogleGenAI } from "@google/genai";
 const ChatAI = ({ onClose }) => {
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
   const [thinking, setThinking] = useState(false);
   const [input, setInput] = useState("");
@@ -56,26 +57,40 @@ const ChatAI = ({ onClose }) => {
     };
 
     try {
-      const response = await fetch(
-        import.meta.env.VITE_OPENAI_API_URL,
-        options
-      );
-      const data = await response.json();
-
-      if (
-        response.ok &&
-        data.candidates &&
-        data.candidates[0]?.content?.parts?.[0]
-      ) {
+      async function main() {
+        const response = await ai.models.generateContent({
+          model: "gemini-2.0-flash",
+          contents: prompt,
+        });
         dispatch(
           msgChatAi({
-            data: data.candidates[0].content.parts[0].text,
+            data: response.text,
             role: "ai",
           })
         );
-      } else {
-        toast.error("Un erreur quand parler avec l'assistant ai.");
       }
+
+      await main();
+      // const response = await fetch(
+      //   import.meta.env.VITE_OPENAI_API_URL,
+      //   options
+      // );
+      // const data = await response.json();
+
+      // if (
+      //   response.ok &&
+      //   data.candidates &&
+      //   data.candidates[0]?.content?.parts?.[0]
+      // ) {
+      //   dispatch(
+      //     msgChatAi({
+      //       data: data.candidates[0].content.parts[0].text,
+      //       role: "ai",
+      //     })
+      //   );
+      // } else {
+      //   toast.error("Un erreur quand parler avec l'assistant ai.");
+      // }
     } catch (error) {
       console.error("Error fetching AI response:", error);
       toast.error("Error communicating with AI.");

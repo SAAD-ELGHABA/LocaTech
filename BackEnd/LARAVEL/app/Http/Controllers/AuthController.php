@@ -31,7 +31,7 @@ class AuthController extends Controller
             ]);
             $credentials = $request->only('email', 'password');
             if ($validation && Auth::attempt($credentials)) {
-                $user = Auth::user();
+                $user = User::find(Auth::id());
                 $token = $user->createToken('authToken')->plainTextToken;
                 if ($request->input('remember')) {
                     return response()->json([
@@ -61,11 +61,8 @@ class AuthController extends Controller
         try {
             $googleData = $request->all();
 
-            // Check if the user already exists
             $user = User::where('email', $googleData['email'])->first();
-
             if ($user) {
-                // User exists, log them in
                 if (!$user->image) {
                     $user->image = $googleData['picture'];
                     $user->save();
@@ -78,8 +75,10 @@ class AuthController extends Controller
                         'token' => $token
                     ]);
                 } else if ($user->role === 'courtier') {
-                    $courtier = Courtier::where('user_id', $user->id)->first();
-                    if ($courtier->status_id === 5) {
+                    $courtier = Courtier::where('user_id', $user->id)
+                        ->with(['agence.evaluation', 'user', 'biens.status'])
+                        ->first();
+                    if ($courtier && $courtier->status_id === 5) {
                         $token = $user->createToken('authToken')->plainTextToken;
                         return response()->json([
                             'message' => 'connexion succée !',
@@ -89,7 +88,7 @@ class AuthController extends Controller
                         ]);
                     } else {
                         return response()->json([
-                            'message' => "votre compte n'est pas activé !!"
+                            'message' => "votre compte n'est pas activé ou bien n'est pas trouvé !!"
                         ]);
                     }
                 }
@@ -151,16 +150,16 @@ class AuthController extends Controller
                 "nom" => $request->input('nom'),
                 "prenom" => $request->input('prenom'),
                 "email" => $request->input('email'),
-                'ville' => $googleData['city'] ?? 'LocaTech', // Assuming city is optional
-                "password" => Hash::make(Str::random(16)),
-                "telephone" => $request->input('telephone'),
-                "adresse" => $request->input('adresse'),
-                'age' => $googleData['age'] ?? 18, // Assuming age is optional
-                'CIN' => $googleData['CIN'] ?? 'cin', // Assuming CIN is optional
-                'role' => 'user', // Default role
-                'sexe' => $googleData['gender'] ?? 'male', // Assuming gender is optional
-                'adresse' => $googleData['address'] ?? 'LocaTech', // Assuming address is optional
-                'code_postal' => $googleData['postal_code'] ?? 'LocaTech code_postal',
+                'ville' => $request->input('ville') ?? 'LocaTech',
+                "password" => $request->input('password') ?? Hash::make(Str::random(16)),
+                "telephone" => $request->input('telephone') ?? $request->input('telephone'),
+                "adresse" => $request->input('adresse') ?? 'locatech',
+                'age' => $request->input('age') ?? 18,
+                'CIN' => $request->input('CIN') ?? 'cin',
+                'role' => $request->input('role') ?? 'user',
+                'sexe' => $request->input('sexe') ?? 'male',
+                'adresse' => $request->input('adresse') ?? 'LocaTech',
+                'code_postal' => $request->input('code_postal') ?? 'LocaTech code_postal',
             ]);
             event(new Registered($user));
             if (!$user) {
@@ -182,9 +181,49 @@ class AuthController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function updateProfile(Request $request)
     {
-        //
+        try {
+            $user = Auth::user();
+
+            $request->validate([
+                'nom' => 'sometimes|string|max:255',
+                'prenom' => 'sometimes|string|max:255',
+                'email' => 'sometimes|email|unique:users,email,' . $user->id,
+                'telephone' => 'sometimes|string|max:15',
+                'adresse' => 'sometimes|string|max:255',
+                'code_postal' => 'sometimes',
+                'ville' => 'sometimes|string|max:255',
+                'CIN' => 'sometimes',
+                'age' => 'sometimes|integer|min:1',
+                'image' => 'sometimes|url',
+            ]);
+
+            $data = $request->only([
+                'nom',
+                'prenom',
+                'email',
+                'telephone',
+                'adresse',
+                'code_postal',
+                'ville',
+                'CIN',
+                'age',
+                'image'
+            ]);
+
+            $user->update($data);
+
+            return response()->json([
+                'message' => 'Profil mis à jour avec succès.',
+                'user' => $user
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la mise à jour du profil.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**

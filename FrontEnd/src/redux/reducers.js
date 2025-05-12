@@ -170,17 +170,30 @@ export const CreateBienToggleReducer = (state = CreateBienToggle, action) => {
     }
   };
 
-const biens = [
+  
+  const biens = [
+  
+  ]
+  export const BienReducer = (state=biens,action)=>{
+      switch (action.type){
+          case "ALLBIENS":
+              return action.payload;
+          default :
+          return state;
+      }
+  }
+  const biensAssistant = [
+  
+  ]
+  export const BiensAssistantReducer = (state=biensAssistant,action)=>{
+      switch (action.type){
+          case "ALLBIENS_ASSISTANT":
+              return action.payload;
+          default :
+          return state;
+      }
+  }
 
-]
-export const BienReducer = (state=biens,action)=>{
-    switch (action.type){
-        case "ALLBIENS":
-            return action.payload;
-        default :
-        return state;
-    }
-}
 
 const villes = []
 
@@ -326,7 +339,42 @@ export const currentConversationReducer = (state=currentConversation,action)=>{
     switch (action.type){
         case "SET_CURRENT_CONVERSATION":
             return action.payload;
+        case "ADD_MESSAGE_TO_CURRENT_CONVERSATION":
+            return {
+                ...state,
+                messages: [...state.messages, action.payload],
+            };
         default:
+            return state;
+    }
+}
+
+const assistants = []
+export const assistantsReducer = (state=assistants,action)=>{
+    switch(action.type){
+        case "GET_ASSISTANTS":
+            return action.payload;
+        default :
+            return state;
+    }
+}
+
+const allConversations = []
+export const allConversationsReducer = (state=allConversations,action)=>{
+    switch(action.type){
+        case "GET_CONVERSATION_ASSISTANT":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+const statusConversations = [];
+export const statusConversationsReducer = (state=statusConversations,action)=>{
+    switch(action.type){
+        case "GET_STATUS_CONVERSATIONS":
+            return action.payload;
+        default :
             return state;
     }
 }

@@ -7,7 +7,7 @@ import StraightAnglePieChart from "../charts/StraightAnglePieChart.jsx";
 import SimpleRadialBarChart from "../charts/SimpleRadialBarChart.jsx";
 function DashboardIndex() {
   return (
-    <div className="flex flex-col space-y-4 ">
+    <div className="flex flex-col space-y-1 ">
       <div>
         <h1 className="text-xl font-semibold">Tableau de bord</h1>
       </div>
@@ -27,6 +27,10 @@ function DashboardIndex() {
       </div>
       <div className="h-80 my-12 flex gap-2 ">
         <SimpleRadialBarChart />
+      </div>
+      <hr className="border border-gray-300"/>
+      <div className="h-80 my-12">
+        <BarChartComponent />
       </div>
     </div>
   );

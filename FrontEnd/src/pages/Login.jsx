@@ -12,8 +12,6 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/actions";
 import { sendNotification } from "../components/sendNotifications/sendNotifications";
 
-
-
 const LoginPage = () => {
   const [showpwtd, setShowPwt] = useState(false);
   const [isloading, setIsLoading] = useState(false);
@@ -41,16 +39,19 @@ const LoginPage = () => {
         dispatch(login(response.data.token, response.data.user));
         localStorage.setItem("token", response.data.token);
 
-
-        sendNotification(`✅ ${response.data.user.name || "Utilisateur"} s'est connecté avec succès.`);
-
-
+        sendNotification(
+          `✅ ${
+            response.data.user.name || "Utilisateur"
+          } s'est connecté avec succès.`
+        );
 
         setTimeout(() => {
           if (response.data.user.role === "user") {
             nav("/");
           } else if (response.data.user.role === "courtier") {
             nav("/courtier-index");
+          } else if (response.data.user.role === "assistant") {
+            nav("/assistant-index");
           }
         }, 1000);
       }

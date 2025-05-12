@@ -1,7 +1,7 @@
 import { Bell, ContactRound, ShieldCheck } from "lucide-react";
 import React from "react";
-import logo from "../../../assets/Location.png";
-import { Link } from "react-router-dom";
+import Logo from "../../../components/Logo";
+import NotificationBell from "../../../components/NotificationBell";
 
 function NavBar() {
   return (
@@ -9,17 +9,12 @@ function NavBar() {
       <div className="flex justify-between items-center">
         <div>
           <div className="flex items-center justify-center">
-            <Link to={"/"} className="flex items-center">
-              <img src={logo} alt="LocaTech Logo" className="w-6 h-11" />
-              <h1 className="text-xl font-bold">
-                <span className="text-red-500">LocaTech</span>
-              </h1>
-            </Link>
+            <Logo />
           </div>
         </div>
-        <div className="text-white flex items-end space-x-3">
-          <Bell className="w-5" />
-          <div className="flex items-center space-x-1">
+        <div className=" flex items-center space-x-3">
+          <NotificationBell/>
+          <div className="flex items-center space-x-1 p-1 text-white">
             <ContactRound className="h-5" />
             <span>Assistant</span>
           </div>

@@ -61,8 +61,17 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+    public function assistant()
+    {
+        return $this->hasOne(Assistant::class);
+    }
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailCustom());
+    }
+
+    public function courtier()
+    {
+        return $this->hasOne(Courtier::class, 'user_id');
     }
 }

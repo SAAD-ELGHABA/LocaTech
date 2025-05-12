@@ -10,7 +10,6 @@ function AccessRouteCourtier({ children, role = "courtier", path = "/" }) {
       state.userReducer.userInfo
   );
   const userRole = user ? user.role : null;
-console.log(user);
 
   return user && user.email_verified_at && userRole === role ? (
     children

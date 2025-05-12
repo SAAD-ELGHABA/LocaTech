@@ -9,7 +9,13 @@ class Courtier extends Model
     protected $fillable = [
         'agence_id',
         'user_id',
-        'status_id'
+        'status_id',
+        'breve_presentation',
+        'zone_activite',
+        'seo',
+        'annees_experience',
+        'type_activite',
+        'licence_professionnelle'
     ];
 
     public function user()
@@ -20,5 +26,9 @@ class Courtier extends Model
     public function agence()
     {
         return $this->belongsTo(Agence::class);
+    }
+    public function biens()
+    {
+        return $this->hasMany(Bien::class);
     }
 }

@@ -15,7 +15,7 @@
             <p style="color: #6B7280; font-size: 12px;">Nous avons reçu une demande de réinitialisation de votre mot de passe. Si c'est vous, veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe. Si vous n'avez pas demandé cette action, veuillez ignorer ce message.</p>
         </div>
         <div style="display: block; text-align: center; margin: 10px 0;">
-            <a href="{{$url}}" style="display: inline-block; background-color: green; color: white; border-radius: 5px; padding: 10px 20px; width: 50%; text-decoration: none; font-size: 12px;">Réinitialiser le Mot de Passe</a>
+            <a href="{{$url}}" style="display: inline-block; background-color: green; color: white; border-radius: 5px; padding: 12px 25px; width: 50%; text-decoration: none; font-size: 15px;">Réinitialiser le Mot de Passe</a>
         </div>
         <div style="display: block; text-align: center; margin: 10px 0;">
             <p style="font-size: 10px;">Merci, L'Équipe</p>

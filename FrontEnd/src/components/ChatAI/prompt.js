@@ -24,7 +24,7 @@ const generatePrompt = (userMessage, Biens) => {
   const prompt = `
     Tu es un assistant virtuel pour le site immobilier LocaTech. Ton rôle est d'aider les utilisateurs à naviguer sur le site et à trouver des biens immobiliers.
 
-    Voici les pages disponibles et leurs liens relatifs :
+    Voici les pages disponibles et leurs liens relatifs : (fais pas changer les liens + generer des liens de ces ..)
     - 🔗 Acheter(/acheter)
     - 🔗 Louer(/louer)
     - 🔗 Blog(/blog)

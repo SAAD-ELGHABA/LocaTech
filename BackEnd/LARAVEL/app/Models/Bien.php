@@ -21,7 +21,7 @@ class Bien extends Model
         'images',
         'typeAffaire',
         'courtier_id',
-        'status',
+        'status_id',
         'chambres',
         'salles_de_bain',
         'etage',
@@ -34,6 +34,11 @@ class Bien extends Model
     public function courtier()
     {
         return $this->belongsTo(Courtier::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 
     protected static function boot()

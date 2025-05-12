@@ -143,150 +143,27 @@ const ImageCarousel = () => {
   );
 };
 
-function ActualitesImmobilieres() {
-  const villes = [
-    {
-      nom: "RABAT",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_rabat.jpg",
-    },
-    {
-      nom: "MARRAKECH",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_marrakech.jpg",
-    },
-    {
-      nom: "TANGER",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_tanger.jpg",
-    },
-    {
-      nom: "AGADIR",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_agadir.jpg",
-    },
-    {
-      nom: "ESSAOUIRA",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_essaouira.jpg",
-    },
-    {
-      nom: "IFRANE",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_ifrane.jpg",
-    },
-    {
-      nom: "CASABLANCA",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_casablanca.jpg",
-    },
-    {
-      nom: "MEKNES",
-      description:
-        "Un moment clé ! Trouvez le quartier idéal avec toutes les statistiques, photos et détails pour une installation sereine.",
-      image: "./assets/ville_meknes.jpg",
-    },
-  ];
 
-  return (
-    <div className="actualites-section">
-      <h2 className="actualites-title">Actualités immobilières</h2>
-      <div className="underline"></div>
-      <div className="cards-grid">
-        <div className="actualite-card">
-          <img src={Rabat} alt="Rabat" />
-          <p>
-            <b>Rabat,</b> capitale du Maroc, offre un mélange unique d’histoire
-            et de modernité avec ses jardins, ses plages et ses monuments
-            historiques.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Marrakech} alt="Marrakech" />
-          <p>
-            <b> Marrakech,</b> est connue pour son architecture fascinante, ses
-            souks animés et son ambiance chaleureuse qui attire les
-            investisseurs et les visiteurs.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Tanger} alt="Tanger" />
-          <p>
-            <b>Tanger,</b> port stratégique entre l’Europe et l’Afrique, séduit
-            par son mélange de cultures et son emplacement unique en bord de
-            mer.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Meknes} alt="Meknes" />
-          <p>
-            <b>Meknes,</b> une ancienne capitale impériale, est célèbre pour ses
-            monuments historiques et son ambiance calme, idéale pour les
-            résidents à la recherche de tranquillité.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Essaouira} alt="Essaouira" />
-          <p>
-            <b>Essaouira,</b> ville côtière, séduit par ses plages, ses ruelles
-            pittoresques et sa médina classée au patrimoine mondial de l’UNESCO.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Ifrane} alt="Ifrane" />
-          <p>
-            <b>Ifrane,</b> surnommée la "Suisse du Maroc", offre un cadre
-            naturel avec ses forêts, ses lacs et son climat frais, idéale pour
-            les amoureux de la nature.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Casablanca} alt="Casablanca" />
-          <p>
-            <b>Casablanca,</b> la plus grande ville du Maroc, est un centre
-            économique dynamique avec ses plages, ses commerces et ses
-            restaurants de qualité.
-          </p>
-        </div>
-        <div className="actualite-card">
-          <img src={Agadir} alt="Agadir" />
-          <p>
-            <b>Agadir,</b> station balnéaire par excellence, offre un climat
-            agréable toute l'année, des plages magnifiques et des
-            infrastructures modernes.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Accueil() {
   const [submissionMessage, setSubmissionMessage] = useState("");
 
   useEffect(() => {
-    // جلب الرسالة من localStorage
+    
     const message = localStorage.getItem("submissionMessage");
     if (message) {
       setSubmissionMessage(message);
-      localStorage.removeItem("submissionMessage"); // باش تبان غير مرة وحدة
+      localStorage.removeItem("submissionMessage"); 
     }
   }, []);
 
   useEffect(() => {
     if (submissionMessage) {
       const timer = setTimeout(() => {
-        setSubmissionMessage(""); // يختفي بعد 1 ثانية
-      }, 1000); // 1 ثانية (1000 مللي ثانية)
+        setSubmissionMessage(""); 
+      }, 1000); 
 
-      return () => clearTimeout(timer); // تنظيف التايمر إذا تغيرت الرسالة
+      return () => clearTimeout(timer);
     }
   }, [submissionMessage]);
 

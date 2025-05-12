@@ -8,7 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "leaflet/dist/leaflet.css";
-import "./styles/CustomMapControls.css"; // Custom styles for zoom buttons
+import "./styles/CustomMapControls.css";
+import { Hourglass } from "lucide-react";
 
 const VITE_OPENCAGEDATA_KEY = import.meta.env.VITE_OPENCAGEDATA_KEY;
 
@@ -67,19 +68,19 @@ const BienMap = ({ ville, quartier }) => {
       <h1 className="my-4 text-xl font-semibold">Où se situe le logement</h1>
       <MapContainer
         center={center}
-        zoom={quartier ? 15 : 10}
+        zoom={quartier ? 18 : 10}
         style={{ width: "100%", height: "500px" }}
         zoomControl={false}
-        attributionControl={false} // Disable attribution control
+        attributionControl={false}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          noWrap={true} // Prevent wrapping
+          noWrap={true}
         />
         <ZoomToCenter center={center} />
         <Circle
           center={center}
-          radius={500} // Smaller radius, takes up a smaller area
+          radius={100}
           pathOptions={{
             color: "#f44336",
             fillColor: "red",
@@ -90,7 +91,10 @@ const BienMap = ({ ville, quartier }) => {
       </MapContainer>
     </div>
   ) : (
-    <p>Chargement de la carte...</p>
+    <div className="flex flex-col items-center justify-center w-full h-96  gap-4">
+      <Hourglass className="h-20 w-20 animate-spin" />
+      <p>Chargement de la carte...</p>
+    </div>
   );
 };
 

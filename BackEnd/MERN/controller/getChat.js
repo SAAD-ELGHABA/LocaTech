@@ -3,11 +3,11 @@ import Conversation from "../models/conversation.js";
 export const getChats = async (req, res,next) => {
   try {
     const { userId } = req.params;
-    const chats = await Conversation.find({
-      users: { $in: [userId] },
+    const conversations = await Conversation.find({
+      $or: [{ clientId: String(userId) }, { courtierId: String(userId) }],
       messages: { $exists: true, $not: { $size: 0 } }
     });
-    req.chats = chats;
+    req.chats = conversations;
     next();
   } catch (error) {
     console.error("Error fetching chats:", error);

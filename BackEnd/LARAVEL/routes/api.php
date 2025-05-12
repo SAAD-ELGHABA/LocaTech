@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AgenceController;
+use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
@@ -7,6 +9,8 @@ use App\Http\Controllers\FavoriController;
 use App\Http\Controllers\VilleController;
 use App\Models\Admin;
 use App\Models\Agence;
+use App\Models\Assistant;
+use App\Models\Courtier;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -24,6 +28,7 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post("/login", [AuthController::class, "login"])->name("login");
+
 Route::post("/register", [AuthController::class, "register"])->name("register");
 
 Route::post('/courtier', [CourtierController::class, 'store'])->name('courtier.store');
@@ -65,6 +70,7 @@ Route::post('/StatusCourtiers', [CourtierController::class, 'StatusCourtiers'])-
 
 Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien');
 Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
+Route::get('/Biens-assistant', [BienController::class, 'getBienAssistant'])->name('getBienAssistant');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
 Route::post('/delete-Bien/{id}', [BienController::class, 'delete'])->name('deleteBien');
 Route::post('/brouiller-Bien/{id}', [BienController::class, 'brouiller'])->name('brouillerBien');
@@ -89,25 +95,16 @@ Route::get('/get-users', function () {
 });
 
 Route::get('/get-courtiers', function () {
-    $courtiers = DB::table('courtiers')
-        ->join('users', 'courtiers.user_id', '=', 'users.id')
-        ->join('agences', 'courtiers.agence_id', '=', 'agences.id')
-        ->select(
-            'courtiers.*',
-            DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
-            'users.email as user_email',
-            'users.image as courtier_image',
-            'agences.agence as agence_nom',
-        )
-        ->get();
+    $courtiers = Courtier::with(['agence.evaluation', 'user'])->get();
     return response()->json([
         'courtiers' => $courtiers
     ]);
 });
 
+Route::post('/updateProfileCourtier', [CourtierController::class, 'updateProfileCourtier'])->name('updateProfileCourtier')->middleware(['auth:sanctum']);
 
 Route::get('/get-agences', function () {
-    $agences = Agence::all();
+    $agences = Agence::with(['courtier.user'])->get();
     return response()->json([
         'agences' => $agences
     ]);
@@ -127,6 +124,7 @@ Route::get('/get-admins', function () {
     ]);
 });
 
+Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->name('updateProfile')->middleware(['auth:sanctum']);
 
 
 Route::get('/get-commandes', function () {
@@ -144,3 +142,16 @@ Route::get('/get-commandes', function () {
         'commandes' => $commandes
     ]);
 });
+
+Route::get('/get-assistants', function () {
+    $assistants = Assistant::with(['user', 'status'])->get();
+    return response()->json([
+        'assistants' => $assistants
+    ]);
+});
+
+Route::post('/store-assistant', [AssistantController::class, 'storeAssistant'])->name('storeAssistant');
+
+Route::post('/agences/{id}/evaluation', [AgenceController::class, 'evaluation'])->name('evaluation');
+
+Route::post('/status-bien/{id}',[BienController::class,'statusBien'])->name('status.bien');

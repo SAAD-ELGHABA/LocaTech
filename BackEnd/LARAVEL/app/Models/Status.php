@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Status extends Model
 {
     protected $table = 'status';
+    public function bien()
+    {
+        return $this->hasMany(Bien::class);
+    }
 }

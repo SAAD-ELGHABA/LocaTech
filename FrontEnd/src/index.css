@@ -3,15 +3,6 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
 @import 'leaflet/dist/leaflet.css';
-/* Dégradé background red to green */
-/* .splash-screen, .main-screen {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, red, green);
-} */
 html {
   scroll-behavior: smooth;
 }
@@ -1980,4 +1971,34 @@ footer .logo-container span {
   scrollbar-color: transparent transparent;
 }
 
+.custom-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.swiper-pagination-bullet {
+  background-color: #ccc;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 4px;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: red !important;
+}
+
+/* in your CSS file */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.custom-swiper .swiper-button-prev,
+.custom-swiper .swiper-button-next {
+  color: red;
+}

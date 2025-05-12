@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Bien;
 use App\Http\Controllers\Controller;
+use App\Models\Courtier;
+use App\Models\Status;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,13 +17,31 @@ class BienController extends Controller
      */
     public function index()
     {
-        $Biens = Bien::with('courtier')->where('status', '!=', 'supprimé')->get();
+        $Biens = Bien::with('courtier')
+            ->whereIn('status_id', [1, 5, 7])
+            ->with(['status', 'courtier'])
+            ->take(10)
+            ->get();
 
         return response()->json([
             'Biens' => $Biens
         ], 200);
     }
+    public function getBienAssistant()
+    {
 
+        $Biens = Bien::with(['status', 'courtier.agence.evaluation', 'courtier.user'])
+            ->join('status', 'biens.status_id', '=', 'status.id')
+            ->orderByRaw("FIELD(status.nom, 'brouillé', 'désactivé', 'activé')")
+            ->select('biens.*')
+            ->take(10)
+            ->get();
+
+
+        return response()->json([
+            'Biens' => $Biens
+        ], 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -36,6 +56,12 @@ class BienController extends Controller
     public function store(Request $request)
     {
         try {
+            $courtier = Courtier::where('id', $request->input('courtier_id'))->with('agence.evaluation')->first();
+            if (!$courtier) {
+                return response()->json([
+                    'message' => 'aucune courtier trouvé !'
+                ]);
+            }
             $validatedData = $request->validate([
                 'id' => 'nullable|exists:biens,id',
                 'title' => 'required|string|max:255',
@@ -48,14 +74,17 @@ class BienController extends Controller
                 'typeAffaire' => 'required|string|max:255',
                 'images' => 'required|array',
                 'courtier_id' => 'required|exists:courtiers,id',
-                'status' => 'nullable|boolean',
                 'chambres' => 'nullable|integer|min:0',
                 'salles_de_bain' => 'nullable|integer|min:0',
                 'etage' => 'nullable|integer|min:0',
                 'meuble' => 'nullable|boolean',
                 'video_url' => 'nullable|url',
             ]);
-
+            if ($courtier->agence->evaluation->id === 1) {
+                $validatedData['status_id'] = 8;
+            } elseif ($courtier->agence->evaluation->id === 2) {
+                $validatedData['status_id'] = 1;
+            }
             $bien = Bien::find($validatedData['id'] ?? null);
 
             if ($bien) {
@@ -67,7 +96,7 @@ class BienController extends Controller
             } else {
                 $bien = Bien::create($validatedData);
                 return response()->json([
-                    'message' => 'Bien a été créé avec succès !',
+                    'message' => $courtier->agence->evaluation->id === 1 ? "votre annonce sera acceptée par l'assistant dans environ 24h" : "Bien a été créé avec succès !",
                     'data' => $bien,
                 ], 201);
             }
@@ -205,6 +234,39 @@ class BienController extends Controller
                 'message' => 'erreur quand la supprition de cette bien !!',
                 'error' => $error,
             ], 400);
+        }
+    }
+
+    public function statusBien(Request $request, $id)
+    {
+        try {
+            $bien = Bien::with(['status', 'courtier.agence.evaluation', 'courtier.user'])->findOrFail($id);
+
+            $status = Status::where('nom', $request->status)->first();
+
+            if (!$status) {
+                return response()->json([
+                    'message' => 'Statut non trouvé.',
+                ], 404);
+            }
+
+            $bien->status_id = $status->id;
+            $bien->save();
+            $Biens = Bien::with(['status', 'courtier.agence.evaluation', 'courtier.user'])
+                ->join('status', 'biens.status_id', '=', 'status.id')
+                ->orderByRaw("FIELD(status.nom, 'brouillé', 'désactivé', 'activé')")
+                ->select('biens.*')
+                ->get();
+            return response()->json([
+                'message' => "Le statut de ce bien a changé en {$status->nom} avec succès.",
+                'bienUpdated' => $bien,
+                'Biens' => $Biens
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Erreur lors de la mise à jour du statut.',
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
 }

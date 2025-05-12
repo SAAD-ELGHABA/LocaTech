@@ -3,8 +3,10 @@ import logoUser from "../../../assets/logo-user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { FaPlusCircle } from "react-icons/fa";
 import CreateBien from "./CreateBien";
-import logo from "../../../assets/Location.png";
+import Logo from "../../../components/Logo";
 import { Link } from "react-router-dom";
+import { Bell } from "lucide-react";
+import NotificationBell from "../../../components/NotificationBell";
 function NavBar() {
   const user = useSelector(
     (state) =>
@@ -15,17 +17,13 @@ function NavBar() {
   const CreateBienToggleReducer = useSelector(
     (state) => state.CreateBienToggleReducer
   );
+  const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
 
   return (
     <nav className="container mx-auto">
       <div className="flex justify-between items-center">
         <div className="flex items-center justify-center">
-          <Link to={"/"} className="flex items-center space-x-2">
-            <img src={logo} alt="LocaTech Logo" className="w-6 h-10" />
-            <h1 className="text-xl font-bold">
-              <span className="text-red-500">LocaTech</span>
-            </h1>
-          </Link>
+          <Logo />
         </div>
         <div className="text-[#ba181b] flex items-center space-x-4">
           <div>
@@ -43,8 +41,23 @@ function NavBar() {
               <span>Déposer une annonce</span>
             </button>
           </div>
+          <NotificationBell />
+
           {user.image ? (
-            <img src={user.image || logoUser} alt="image courtier" className="h-8 w-8 rounded-full"/>
+            <Link
+              to={"/profile-courtier"}
+              className="relative bg-white rounded-full"
+            >
+              <img
+                src={user.image || logoUser}
+                alt="image courtier"
+                className="h-7 w-7 rounded-full"
+              />
+              {!currentCourtier?.courtier?.Brève_présentation ||
+                (!currentCourtier?.courtier?.Licence_professionnelle && (
+                  <div className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0"></div>
+                ))}
+            </Link>
           ) : (
             <img
               src={logoUser}

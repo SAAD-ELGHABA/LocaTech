@@ -20,8 +20,6 @@ function IndexAdmin() {
             payload: recentResponse.data,
           });
         }
-
-
         const adminsResponse = await axios.get("/api/get-admins");
         if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
           dispatch({
@@ -29,6 +27,14 @@ function IndexAdmin() {
             payload: adminsResponse.data.admins,
           });
         }
+        const AssistantsResponse = await axios.get("/api/get-assistants");
+        if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
+          dispatch({
+            type: "GET_ASSISTANTS",
+            payload: AssistantsResponse.data.assistants,
+          });
+        }
+
       } catch (error) {
         console.error("Error:", error);
         toast.error("Erreur lors du chargement des données.");

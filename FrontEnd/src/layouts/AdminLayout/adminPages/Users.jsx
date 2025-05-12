@@ -20,7 +20,6 @@ function Users() {
     }
   };
 
-  // Get pagination range (3 pages max)
   const getPaginationRange = () => {
     const maxVisiblePages = 3;
     let start = Math.max(currentPage - 1, 1);
@@ -39,13 +38,10 @@ function Users() {
 
   return (
     <div className="p-4">
-      {/* Header */}
       <div className="flex justify-between items-center text-xl font-bold mb-4">
         <h1>Tous les utilisateurs</h1>
-        <UserPlus className="h-6 w-6 text-green-600 cursor-pointer" />
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-center border-collapse">
           <thead>
