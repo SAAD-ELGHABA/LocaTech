@@ -64,13 +64,13 @@ function Courtiers() {
                     {courtier.id}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.Nom_complet}
+                    {courtier?.user?.nom+" "+courtier?.user?.prenom}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.user_email}
+                    {courtier?.user?.email}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.agence_nom}
+                    {courtier?.agence?.agence}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
                     {new Date(courtier.created_at).toLocaleString()}

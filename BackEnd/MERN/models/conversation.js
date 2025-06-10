@@ -48,7 +48,7 @@ const conversationSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ["activé", "brouillant","blocké","supprimé","désactivé"],
-        default: "en cours..",
+        default: "activé",
     },
 },{ timestamps: true });
 

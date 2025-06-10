@@ -378,3 +378,28 @@ export const statusConversationsReducer = (state=statusConversations,action)=>{
             return state;
     }
 }
+
+const notifications = []
+export const notificationsReducer = (state=notifications,action)=>{
+    switch(action.type){
+        case "GET_NOTIFICATIONS":
+        return action.payload
+        case "ADD_NOTIFICATION":
+            return [action.payload, ...state];
+        default :
+        return state
+    }
+}
+
+
+const BienCommentaire = []
+export const BienCommentaireReducer = (state=BienCommentaire,action)=>{
+    switch(action.type){
+        case "GET_BIEN_COMMENTAIRES":
+            return action.payload
+        case "ADD_COMMENTAIRE":
+            return [...state, action.payload];
+        default :
+            return state
+    }
+}

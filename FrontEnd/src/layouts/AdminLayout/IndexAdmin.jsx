@@ -59,7 +59,7 @@ function IndexAdmin() {
       </header>
       <div className="flex bg-white">
         <Aside />
-        <div className="w-5/6 m-8">
+        <div className="w-5/6 ms-[18%] m-2 p-4">
           <Outlet />
         </div>
       </div>

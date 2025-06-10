@@ -96,13 +96,24 @@ function CreateBien() {
   };
 
   return (
-    <div className="absolute inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-50">
+    <div
+      className="absolute inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-50"
+      onClick={() =>
+        dispatch({
+          type: "SHOW_CREATEBIENTOGGLE",
+          payload: false,
+        })
+      }
+    >
       <motion.section
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -100, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-[90%] h-[90%] bg-white rounded shadow-3xl"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         <div className="flex justify-between mx-8 mt-4">
           <div>
@@ -157,16 +168,6 @@ function CreateBien() {
         <div className="flex justify-end mt-4 mx-8 text-sm">
           <div className="flex space-x-4 text-white">
             <button
-              className="bg-[#a4161a] px-4 py-2 rounded cursor-pointer"
-              onClick={handleValidBien}
-            >
-              {isLoading ? (
-                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-              ) : (
-                "Valider"
-              )}
-            </button>
-            <button
               onClick={() => {
                 toast.info("réinitialiser toutes les champs");
                 dispatch({
@@ -179,6 +180,16 @@ function CreateBien() {
               className="bg-[#f5f3f4] text-gray-700 px-4 py-2 rounded cursor-pointer border border-gray-700"
             >
               réinitialiser
+            </button>
+            <button
+              className="bg-[#a4161a] px-4 py-2 rounded cursor-pointer"
+              onClick={handleValidBien}
+            >
+              {isLoading ? (
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+              ) : (
+                "Valider"
+              )}
             </button>
           </div>
         </div>

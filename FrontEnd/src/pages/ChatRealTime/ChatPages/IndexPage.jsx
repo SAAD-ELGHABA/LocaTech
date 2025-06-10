@@ -21,11 +21,12 @@ function IndexPage() {
   const swiperRef = useRef(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-
+  console.log(FavorisReducer);
+  
   return (
     <div className="w-full px-4 flex justify-center items-center h-screen">
       {user.role === "user" ? (
-        favoriteBiens.length > 0 && (
+        FavorisReducer.length > 0 && (
           <div className="w-full max-w-7xl px-4 h-100">
             <h1 className="my-4 font-semibold text-xl">
               Discuter pour mes favoris
@@ -58,7 +59,7 @@ function IndexPage() {
               }}
               className="pb-14 h-75"
             >
-              {favoriteBiens.map((bien) => (
+              {FavorisReducer.map((bien) => (
                 <SwiperSlide key={bien.id} className="flex justify-center">
                   <BienContainer bien={bien} chatMode={true} />
                 </SwiperSlide>

@@ -1,5 +1,6 @@
+import axios from "axios";
 import { Handshake, HousePlus, ShieldUser, UsersRound } from "lucide-react";
-import React, { use } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function Statistiques() {
@@ -10,7 +11,24 @@ function Statistiques() {
     (user) => user.role === "user"
   ).length;
   const BiensTotal = useSelector((state) => state.BienReducer).length;
+  const [accords, setAccords] = useState([]);
 
+  useEffect(() => {
+    const AccordRes = async () => {
+      try {
+        const res = await axios.get("/api/get-mes-accords", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setAccords(res.data.accords);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    AccordRes();
+  }, []);
   return (
     <div className="grid grid-cols-4 gap-4 my-4">
       <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
@@ -31,7 +49,7 @@ function Statistiques() {
       <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
         <Handshake />
         <h1 className="text-sm text-gray-600 ">Total des Accords</h1>
-        <span className="text-2xl font-bold">{0}</span>
+        <span className="text-2xl font-bold">{accords?.length}</span>
       </div>
     </div>
   );

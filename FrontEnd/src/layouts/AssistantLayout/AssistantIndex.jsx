@@ -23,7 +23,7 @@ function AssistantIndex() {
       </header>
       <div className="flex bg-white">
         <Aside />
-        <div className="w-5/6 m-8">
+        <div className="ms-[18%] w-5/6 m-8">
           <Outlet />
         </div>
       </div>

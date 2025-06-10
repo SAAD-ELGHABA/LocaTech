@@ -46,6 +46,7 @@ import CentreAide from "../layouts/UserLayout/userPages/CentreAide";
 import Evaluations from "../layouts/AdminLayout/adminPages/Evaluations";
 import ProfileCourtier from "../layouts/CourtierLayout/Courtierpages/ProfileCourtier";
 import Control from "../layouts/AssistantLayout/AssistantPages/Control";
+import ControlAccord from "../layouts/AssistantLayout/AssistantPages/ControlAccord";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -219,7 +220,7 @@ const Router = createBrowserRouter([
     element: <IndexAdmin />,
     children: [
       {
-        path: ADMIN_INDEX,
+        path: TABLEA_DE_BORD_ADMIN,
         index: true,
         element: <DashboardIndex />,
       },
@@ -285,6 +286,10 @@ const Router = createBrowserRouter([
         path: "/control-courtiers",
         element: <Control />,
       },
+      {
+        path:'/control-accord',
+        element:<ControlAccord/>
+      }
     ],
   },
 ]);

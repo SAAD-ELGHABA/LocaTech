@@ -5,7 +5,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import CreateBien from "./CreateBien";
 import Logo from "../../../components/Logo";
 import { Link } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { Bell, MessageSquareText } from "lucide-react";
 import NotificationBell from "../../../components/NotificationBell";
 function NavBar() {
   const user = useSelector(
@@ -18,7 +18,15 @@ function NavBar() {
     (state) => state.CreateBienToggleReducer
   );
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
+  const conversations = useSelector((state) => state.conversationsReducer);
 
+  const unreadConversations =
+    conversations?.length > 0 &&
+    conversations?.filter(
+      (cnv) =>
+        cnv.isRead === false &&
+        Number(cnv.messages?.slice(-1)[0]?.senderId) !== user?.id
+    );
   return (
     <nav className="container mx-auto">
       <div className="flex justify-between items-center">
@@ -42,7 +50,15 @@ function NavBar() {
             </button>
           </div>
           <NotificationBell />
-
+          <Link
+            to={"/chat/negocier"}
+            className="cursor-pointer flex justify-between items-center   hover:bg-gray-800 p-2.5 relative rounded-full"
+          >
+            <MessageSquareText className="text-white h-5 w-5" />
+            <span className="bg-red-500 text-white rounded-full px-1 text-[8px] absolute top-1 right-1">
+              {unreadConversations.length > 0 && unreadConversations.length}
+            </span>
+          </Link>
           {user.image ? (
             <Link
               to={"/profile-courtier"}

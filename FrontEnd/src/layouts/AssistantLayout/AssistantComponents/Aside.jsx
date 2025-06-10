@@ -41,7 +41,7 @@ function Aside({ isOpen = true }) {
   ];
 
   return (
-    <aside className="sticky h-screen w-1/6 top-20 left-0 bg-[#161a1d] text-white">
+    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed text-white">
       <div className="my-4 text-center">
         <h1 className="text-xs font-semibold mx-1"><span className="font-light">Bienvenue</span> {user.nom+" "+user.prenom}</h1>
       </div>

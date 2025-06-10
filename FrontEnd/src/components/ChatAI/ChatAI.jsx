@@ -47,53 +47,46 @@ const ChatAI = ({ onClose }) => {
     setThinking(true);
 
     const prompt = generatePrompt(userMessage, Biens);
-
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
-    };
+    console.log("Prompt:", prompt); // Debug
 
     try {
-      async function main() {
-        const response = await ai.models.generateContent({
-          model: "gemini-2.0-flash",
-          contents: prompt,
-        });
-        dispatch(
-          msgChatAi({
-            data: response.text,
-            role: "ai",
-          })
-        );
-      }
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_KEY}`,
+            "HTTP-Referer": "http://localhost:3000/",
+            "X-Title": "LocaTech",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-3.5-turbo",
+            messages: [
+              ...messagesChatAi.map((msg) => ({
+                role: msg.role === "ai" ? "assistant" : msg.role, 
+                content: msg.data,
+              })),
+              { role: "user", content: prompt },
+            ],
+            max_tokens: 100,
+          }),
+        }
+      );
 
-      await main();
-      // const response = await fetch(
-      //   import.meta.env.VITE_OPENAI_API_URL,
-      //   options
-      // );
-      // const data = await response.json();
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error?.message || "Failed to fetch");
 
-      // if (
-      //   response.ok &&
-      //   data.candidates &&
-      //   data.candidates[0]?.content?.parts?.[0]
-      // ) {
-      //   dispatch(
-      //     msgChatAi({
-      //       data: data.candidates[0].content.parts[0].text,
-      //       role: "ai",
-      //     })
-      //   );
-      // } else {
-      //   toast.error("Un erreur quand parler avec l'assistant ai.");
-      // }
+      dispatch(
+        msgChatAi({
+          data: data.choices[0]?.message?.content || "No response",
+          role: "ai",
+        })
+      );
     } catch (error) {
-      console.error("Error fetching AI response:", error);
-      toast.error("Error communicating with AI.");
+      console.error("API Error:", error);
+      toast.error(error.message);
     } finally {
       setThinking(false);
       setIsSending(false);

@@ -21,15 +21,6 @@ export const fetchInitialData = async (dispatch, token) => {
       });
     }
 
-    const biensResponse = await axios.get("/api/Biens");
-    if (biensResponse.status >= 200 && biensResponse.status <= 300) {
-      dispatch({
-        type: "ALLBIENS",
-        payload: biensResponse.data.Biens,
-      });
-    }
-
-
     const CourtiersResponse = await axios.get("/api/get-courtiers");
     if (
       CourtiersResponse.status >= 200 &&
@@ -87,7 +78,7 @@ export const fetchInitialData = async (dispatch, token) => {
         if (FavorisResponse.status >= 200 && FavorisResponse.status < 300) {
           dispatch({
             type: "ADD_TO_FAVORIS",
-            payload: FavorisResponse.data.bien_ids,
+            payload: FavorisResponse.data.biens,
           });
         }
 

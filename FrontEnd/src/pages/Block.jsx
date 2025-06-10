@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Logo from '../components/Logo';
-import { sendNotification } from "../components/sendNotifications/sendNotifications";
-
+import Logo from "../components/Logo";
 
 const BlockedPage = () => {
   const user = useSelector((state) => state.userReducer.userInfo);
@@ -23,8 +21,7 @@ const BlockedPage = () => {
       <div className="flex flex-col items-center space-y-2 ">
         <Link to="/">
           <div className="flex items-center space-x-2">
-            
-            <Logo className="w-12 h-20"/>
+            <Logo className="w-12 h-20" />
           </div>
         </Link>
       </div>
@@ -36,12 +33,11 @@ const BlockedPage = () => {
 
           {/* Lien Créer un compte (Azbi) */}
           <Link
-  to="/register"
-  onClick={() => sendNotification("Veuillez s'inscrire")}
-  className="text-xs font-semibold hover:underline mt-6"
->
-  Créer un compte
-</Link>
+            to="/register"
+            className="text-xs font-semibold hover:underline mt-6"
+          >
+            Créer un compte
+          </Link>
         </div>
       ) : (
         <div>

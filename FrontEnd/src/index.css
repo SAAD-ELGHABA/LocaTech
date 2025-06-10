@@ -3,7 +3,7 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
 @import 'leaflet/dist/leaflet.css';
-html {
+* {
   scroll-behavior: smooth;
 }
 
@@ -1016,11 +1016,11 @@ body {
   padding: 40px 60px;
   align-items: center;
   flex-wrap: wrap;
-  background-color: white;
+  margin-top: 20px;
 }
 
 .section:nth-child(even) {
-  background-color: white;
+  /* background-color: white; */
 }
 
 .section-image img {
@@ -1035,7 +1035,6 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  margin: 4rem 0;
   flex-wrap: wrap;
 }
 

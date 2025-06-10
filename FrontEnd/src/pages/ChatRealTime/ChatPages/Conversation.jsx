@@ -18,6 +18,7 @@ import { useNavigate } from "react-router";
 import socketConfig from "../../../functions/socketConfig.js";
 import { socketListener } from "../../../functions/socketListener.js";
 import ChatInput from "../component/ChatInput.jsx";
+import CourtierDropdown from "../../../components/CourtierDropdown.jsx";
 
 function Conversation({ isAssistant = false }) {
   const dispatch = useDispatch();
@@ -57,14 +58,11 @@ function Conversation({ isAssistant = false }) {
 
   useEffect(() => {
     console.log(userId);
-
-    if (!userId) return;
-
-    const unsubscribe = socketListener(dispatch, currentConversation, userId);
+    const unsubscribe = socketListener(dispatch, userId, currentConversation);
     return () => {
       unsubscribe();
     };
-  }, [userId]);
+  }, [currentConversation, dispatch, userId]);
 
   useEffect(() => {
     if (!currentConversation && Object.keys(currentConversation).length === 0) {
@@ -135,7 +133,13 @@ function Conversation({ isAssistant = false }) {
                 }
               })}
           </div>
-
+          {user?.role === "courtier" &&
+            currentConversation?.status === "activé" && (
+              <CourtierDropdown
+                bienId={Number(currentConversation.BienId)}
+                user_id={currentConversation?.clientId}
+              />
+            )}
           <div className="flex items-center gap-2">
             {biens.map((bien) => {
               if (bien.id === Number(currentConversation.BienId)) {
@@ -161,43 +165,43 @@ function Conversation({ isAssistant = false }) {
           </div>
         </div>
       )}
-      {(currentConversation?.status &&
-        currentConversation?.status !== "activé") && (
-        <div
-          className={`text-sm sticky top-0 mt-1 font-medium rounded shadow min-w-1/3 mx-auto px-4 py-4 text-white flex items-center gap-2`}
-          style={{
-            backgroundColor:
-              currentConversation.status === "supprimé"
-                ? "#dc2626"
-                : currentConversation.status === "brouillant"
-                ? "#fbbf24"
-                : currentConversation.status === "blocké"
-                ? "#4b5563"
-                : currentConversation.status === "désactivé"
-                ? "#9ca3af"
-                : "#34d399",
-          }}
-        >
-          {/* Icon */}
-          {currentConversation.status === "supprimé" && (
-            <Trash className="h-5 w-5" />
-          )}
-          {currentConversation.status === "brouillant" && (
-            <ClockAlert className="h-5 w-5" />
-          )}
-          {currentConversation.status === "blocké" && (
-            <Vault className="h-5 w-5" />
-          )}
-          {currentConversation.status === "désactivé" && (
-            <MouseOff className="h-5 w-5" />
-          )}
-          <span>
-            Cette conversation est{" "}
-            <span className="font-bold">{currentConversation.status} </span>
-            par l'assistant
-          </span>
-        </div>
-      )}
+      {currentConversation?.status &&
+        currentConversation?.status !== "activé" && (
+          <div
+            className={`text-sm sticky top-0 mt-1 font-medium rounded shadow min-w-1/3 mx-auto px-4 py-4 text-white flex items-center gap-2`}
+            style={{
+              backgroundColor:
+                currentConversation.status === "supprimé"
+                  ? "#dc2626"
+                  : currentConversation.status === "brouillant"
+                  ? "#fbbf24"
+                  : currentConversation.status === "blocké"
+                  ? "#4b5563"
+                  : currentConversation.status === "désactivé"
+                  ? "#9ca3af"
+                  : "#34d399",
+            }}
+          >
+            {/* Icon */}
+            {currentConversation.status === "supprimé" && (
+              <Trash className="h-5 w-5" />
+            )}
+            {currentConversation.status === "brouillant" && (
+              <ClockAlert className="h-5 w-5" />
+            )}
+            {currentConversation.status === "blocké" && (
+              <Vault className="h-5 w-5" />
+            )}
+            {currentConversation.status === "désactivé" && (
+              <MouseOff className="h-5 w-5" />
+            )}
+            <span>
+              Cette conversation est{" "}
+              <span className="font-bold">{currentConversation.status} </span>
+              par l'assistant
+            </span>
+          </div>
+        )}
 
       <div className="flex-1 overflow-y-auto mt-4 px-4 space-y-4 custom-scrollbar py-4">
         <div className="flex w-5/6 text-center bg-red-100 text-red-500  rounded-lg p-4 text-sm mx-auto">

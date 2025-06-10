@@ -13,11 +13,11 @@ function Aside() {
       to: "/profile-client",
       label: "Profile",
     },
-    {
-      icon: <Settings className="w-5 h-5" />,
-      to: "/parametre-client",
-      label: "Parametre",
-    },
+    // {
+    //   icon: <Settings className="w-5 h-5" />,
+    //   to: "/parametre-client",
+    //   label: "Parametre",
+    // },
     {
       icon: <HelpCircle className="w-5 h-5" />,
       to: "/centre-aide",

@@ -45,14 +45,14 @@ function BarChartComponent() {
                 <tr>
                   <td className="py-2 flex items-center justify-center">
                     <img
-                      src={c.courtier_image}
+                      src={c?.user?.image}
                       alt="image"
                       className="h-6 w-6 rounded-full"
                     />
                   </td>
                   <td>{c.id}</td>
-                  <td>{c.Nom_complet}</td>
-                  <td>{c.user_email}</td>
+                  <td>{c?.user?.nom+" "+c?.user?.prenom}</td>
+                  <td>{c?.user?.email}</td>
                   <td>
                     {
                       statusReducer.find((s)=>

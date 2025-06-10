@@ -21,6 +21,7 @@ import { socketListener } from "../../../functions/socketListener";
 import axios from "axios";
 import { toast } from "sonner";
 import { handleSendMessage } from "../../../functions/handleSendMsg";
+import { sendNotification } from "../../../functions/NotificationSender";
 function Conversations() {
   const allConversationsReducer = useSelector(
     (state) => state.allConversationsReducer
@@ -37,12 +38,24 @@ function Conversations() {
   const userId = 0;
 
   useEffect(() => {
-    if (!userId) return;
-    const unsubscribe = socketListener(dispatch, null, userId);
+    const unsubscribe = socketListener(dispatch, 0);
     return () => {
       unsubscribe();
     };
   }, [userId]);
+
+  // useEffect(() => {
+  //   console.log(userId);
+
+  //   if (!userId) return;
+
+  //   const unsubscribe = socketListener(dispatch, currentConversation, userId);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, [userId]);
+
+  const user = useSelector((state) => state.userReducer.userInfo);
 
   const handleCheckboxChange = (conversationId) => {
     setSelectedConversation((prev) =>
@@ -56,6 +69,9 @@ function Conversations() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleConversationAction = async (actionType) => {
+    const choosedconversation = allConversationsReducer.find(
+      (cnv) => cnv?._id === selectedConversation
+    );
     const loading = toast.loading("Chargement..");
     try {
       const response = await axios.post(
@@ -70,13 +86,29 @@ function Conversations() {
         }
       );
       if (response.status >= 200 && response.status <= 300) {
-        await handleSendMessage(
-          dispatch,
-          null,
-          userId,
-          `Le statut de la conversation ${selectedConversation} est maintenant ${actionType}`,
-          null
+        await sendNotification(
+          user?.id,
+          Number(
+            courtiers.find(
+              (crt) => crt.id === Number(choosedconversation?.courtierId)
+            )?.user_id
+          ),
+          "Changement de status",
+          `Le status de votre conversation devient ${actionType} par l'assistant !`,
+          {
+            link: "/chat/conversation",
+          }
         );
+        await sendNotification(
+          user?.id,
+          Number(choosedconversation?.clientId),
+          "Changement de status",
+          `Le status de votre conversation devient ${actionType} par l'assistant !`,
+          {
+            link: "/chat/conversation",
+          }
+        );
+
         toast.success(response.data.message);
         dispatch({
           type: "GET_CONVERSATION_ASSISTANT",

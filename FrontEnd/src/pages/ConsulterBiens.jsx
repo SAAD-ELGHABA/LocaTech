@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FilterBar from "../components/FilterBar";
-import {
-  ArrowDownWideNarrow,
-  Ban,
-} from "lucide-react";
 import BienContainer from "../components/BienContainer";
+import SortSelect from "../components/SortSelect";
+import { LoaderCircle } from "lucide-react";
 
 function ConsulterBiens() {
   const [sortOption, setSortOption] = useState("date");
+  const [visibleCount, setVisibleCount] = useState(10); // show 10 initially
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const Biens = useSelector((state) => state.BienReducer);
   const filtredBiensReducer = useSelector((state) => state.filtredBiensReducer);
-
-  const biensToRender = 
+  const biensToRender =
     filtredBiensReducer.length > 0 ? filtredBiensReducer : Biens;
 
   const sortedBiensToRender = [...biensToRender].sort((a, b) => {
@@ -34,6 +33,28 @@ function ConsulterBiens() {
 
   const recentBienIds = sortedBiensToRender.slice(0, 10).map((b) => b.id);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 500
+      ) {
+        if (!isLoadingMore && visibleCount < sortedBiensToRender.length) {
+          setIsLoadingMore(true);
+          setTimeout(() => {
+            setVisibleCount((prev) => prev + 10);
+            setIsLoadingMore(false);
+          }, 1000); // simulate loading delay
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoadingMore, visibleCount, sortedBiensToRender.length]);
+
+  const visibleBiens = sortedBiensToRender.slice(0, visibleCount);
+
   return (
     <div className="my-32">
       <FilterBar />
@@ -41,46 +62,29 @@ function ConsulterBiens() {
         <h1 className="text-xl">
           Biens : <span className="font-semibold">{biensToRender.length}</span>
         </h1>
-        <div className="flex items-end space-x-2 border-l border-r border-gray-600 px-2">
-          <ArrowDownWideNarrow className="cursor-pointer h-5" />
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="text-sm border-none focus:outline-none px-2 py-1 bg-transparent"
-          >
-            <option className="px-2 py-1" value="date">
-              Par Date
-            </option>
-            <option className="px-2 py-1" value="title-asc">
-              Par titre (A-Z)
-            </option>
-            <option className="px-2 py-1" value="title-desc">
-              Par titre (Z-A)
-            </option>
-            <option className="px-2 py-1" value="price-asc">
-              Par prix (croissant)
-            </option>
-            <option className="px-2 py-1" value="price-desc">
-              Par prix (décroissant)
-            </option>
-          </select>
-        </div>
+        <SortSelect sortOption={sortOption} setSortOption={setSortOption} />
       </div>
 
-      {sortedBiensToRender.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
-          {sortedBiensToRender.map((bien) => (
-            <BienContainer
-              key={bien.id}
-              bien={bien}
-              isRecent={recentBienIds.includes(bien.id)}
-            />
-          ))}
-        </div>
+      {visibleBiens.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
+            {visibleBiens.map((bien) => (
+              <BienContainer
+                key={bien.id}
+                bien={bien}
+                isRecent={recentBienIds.includes(bien.id)}
+              />
+            ))}
+          </div>
+          {isLoadingMore && (
+            <div className="flex justify-center mb-12">
+              <LoaderCircle className="h-10 w-10 text-red-500 animate-spin" />
+            </div>
+          )}
+        </>
       ) : (
         <div className="h-96 flex flex-col space-y-2 items-center justify-center w-[100%] mx-auto">
-          <Ban />
-          <span>Aucun bien trouvé</span>
+          <LoaderCircle className="h-10 w-10 text-red-500 animate-spin" />
         </div>
       )}
     </div>

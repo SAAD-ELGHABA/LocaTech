@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import MapFromUrl from "./MapFormUrl";
-import {handleNegocier} from '../functions/handleNegocier.js'
+import { handleNegocier } from "../functions/handleNegocier.js";
 import {
   faCalendar,
   faChevronLeft,
@@ -20,10 +20,12 @@ import BienMap from "./BienMap";
 import {
   Bath,
   CircleCheckBig,
+  Flag,
   Heart,
   LandPlot,
   Layers,
   LayoutGrid,
+  LoaderCircle,
   MoveRight,
   Paperclip,
 } from "lucide-react";
@@ -32,6 +34,9 @@ import { handleAddFavoris } from "../functions/handleAddFavoris";
 import ImageZoomViewer from "./ImageZoomViewer";
 import ToastWithLink from "./ToastWithLink";
 import socketConfig from "../functions/socketConfig.js";
+import CommentaireSection from "./CommentaireSection.jsx";
+import Signal from "./Signal.jsx";
+import BienViewTracker from "./PostViewTracker.jsx";
 function DetailsBien() {
   const { slag } = useParams();
   useEffect(() => {
@@ -46,19 +51,51 @@ function DetailsBien() {
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
   const AllCourtiersReducer = useSelector((state) => state.AllCourtiersReducer);
+  const users = useSelector((state) => state.usersReducer);
   const BienDetails = Biens.find((b) => b.slag == slag);
+  const dispatch = useDispatch();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const nav = useNavigate();
+  const navigate = useNavigate();
+  const FavorisReducer = useSelector((state) => state.FavorisReducer);
+  const conversations = useSelector((state) => state.conversationsReducer);
+  const [toggleSignalBien, setToggleSignalBien] = useState(false);
+
+  if (!BienDetails) {
+    return (
+      <div className="my-24 flex flex-col items-center space-y-4 animate-pulse">
+        <div className="flex justify-end w-full mx-auto container">
+          <div className="bg-gray-200 w-1/6 h-6 rounded"></div>
+        </div>
+        <div className="flex space-x-4 w-[90%]">
+          <div className="flex-1 h-[400px] bg-gray-200 rounded"></div>
+          <div className="w-[200px] space-y-2">
+            <div className="h-[150px] bg-gray-200 rounded"></div>
+            <div className="h-[150px] bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        <div className="flex items-start w-[90%] space-x-4">
+          <div className="w-3/4 space-y-4">
+            <div className="h-52 bg-gray-200 w-full rounded"></div>
+            <div className="h-12 bg-gray-200 w-full rounded"></div>
+            <div className="h-12 bg-gray-200 w-1/2 rounded"></div>
+          </div>
+          <div className="w-1/4 h-72 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
   const owner = AllCourtiersReducer.find(
     (courtier) => courtier.id === BienDetails.courtier_id
   );
 
-  const users = useSelector((state) => state.usersReducer);
   const filteredBiens = Biens.filter(
     (bien) =>
       (bien.id !== BienDetails.id && bien.type === BienDetails.type) ||
       bien.ville === BienDetails.ville
   );
-  const dispatch = useDispatch();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+
   //   toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
   //     action: {
   //       label: "Confirmer",
@@ -86,8 +123,6 @@ function DetailsBien() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(BienDetails.budget);
-  const nav = useNavigate();
-  const navigate = useNavigate();
 
   const handleHeartClick = async (e, id) => {
     e.preventDefault();
@@ -114,65 +149,61 @@ function DetailsBien() {
       });
     }
   };
-  const FavorisReducer = useSelector((state) => state.FavorisReducer);
-  // const handleNegocier = async () => {
-  //   if (!user) {
-  //     toast.custom(() => (
-  //       <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
-  //     ));
-  //     return;
-  //   }
-  //   const toastLoading = toast.loading("Chargement...");
-  //   if (user.role === "courtier") {
-  //     toast.error("Vous ne pouvez pas négocier en tant que courtier.");
-  //     return;
-  //   }
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5000/api/auth/start",
-  //       {
-  //         BienId: BienDetails.id,
-  //         userId: user.id,
-  //         courtierId: BienDetails.courtier_id,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         },
-  //       }
-  //     );
-  //     if (response.status >= 200 && response.status <= 300) {
-  //       socketConfig.emit("userConnected", {
-  //         userId: user.id,
-  //         conversationId: 1,
-  //         username: user.name,
-  //       });
+  const handleNegocier = async () => {
+    if (!user) {
+      toast.custom(() => (
+        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+      ));
+      return;
+    }
+    const toastLoading = toast.loading("Chargement...");
+    if (user.role === "courtier") {
+      toast.error("Vous ne pouvez pas négocier en tant que courtier.");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/start",
+        {
+          BienId: BienDetails.id,
+          userId: user.id,
+          courtierId: BienDetails.courtier_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status >= 200 && response.status <= 300) {
+        socketConfig.emit("userConnected", {
+          userId: user.id,
+          conversationId: 1,
+          username: user.name,
+        });
 
-  //       localStorage.setItem(
-  //         "currentConversationId",
-  //         response.data.conversation._id
-  //       );
-  //       dispatch({
-  //         type: "SET_CURRENT_CONVERSATION",
-  //         payload: response.data.conversation,
-  //       });
-  //       dispatch({
-  //         type: "SET_CONVERSATIONS",
-  //         payload: response.data.chats,
-  //       });
-  //       toast.success("Négociation démarrée avec succès !");
-  //       nav("/chat/conversation", { state: { BienDetails } });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("Erreur lors de la négociation");
-  //   } finally {
-  //     toast.dismiss(toastLoading);
-  //   }
-  // };
-
-  if (!BienDetails)
-    return <div className="text-center mt-10">Aucun bien trouvé</div>;
+        localStorage.setItem(
+          "currentConversationId",
+          response.data.conversation._id
+        );
+        dispatch({
+          type: "SET_CURRENT_CONVERSATION",
+          payload: response.data.conversation,
+        });
+        dispatch({
+          type: "SET_CONVERSATIONS",
+          payload: response.data.chats,
+        });
+        toast.success("Négociation démarrée avec succès !");
+        nav("/chat/conversation", { state: { BienDetails } });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Erreur lors de la négociation");
+    } finally {
+      toast.dismiss(toastLoading);
+    }
+  };
 
   return (
     <div className={`flex flex-col space-y-4 my-24`}>
@@ -186,34 +217,53 @@ function DetailsBien() {
             <span>retour</span>
           </button>
         </span>
-        <div
-          className={`flex items-center text-sm space-x-1 hover:bg-red-100 rounded px-4 py-2 cursor-pointer 
-            ${FavorisReducer.includes(BienDetails.id) && "bg-red-100"}
-            `}
-          onClick={(e) => handleHeartClick(e, BienDetails.id)}
-        >
-          <Heart
-            className={`h-4 
+        <BienViewTracker bienId={BienDetails?.id} userId={user?.id} />
+
+        <div className="flex items-center space-x-4 text-sm">
+          <button
+            className="flex items-center space-x-1 cursor-pointer hover:underline hover:text-red-500 "
+            onClick={() => {
+              setToggleSignalBien("waiting");
+              setTimeout(() => {
+                setToggleSignalBien(true);
+              }, 2000);
+            }}
+          >
+            <Flag className="h-4" />
+            <span>Signaler cette annonce</span>
+          </button>
+          <div
+            className={`flex items-center text-sm space-x-1 hover:bg-red-100 rounded px-4 py-2 cursor-pointer 
             ${
-              FavorisReducer.includes(BienDetails.id)
+              FavorisReducer?.some((fv) => fv?.id === BienDetails?.id) &&
+              "bg-red-100"
+            }
+            `}
+            onClick={(e) => handleHeartClick(e, BienDetails.id)}
+          >
+            <Heart
+              className={`h-4 
+            ${
+              FavorisReducer?.some((fv) => fv?.id === BienDetails?.id)
                 ? "fill-red-500 text-red-500"
                 : ""
             }
             `}
-          />
-          <span>
-            {FavorisReducer.includes(BienDetails.id)
-              ? "Retirer des favoris"
-              : "Ajouter aux favoris"}
-          </span>
+            />
+            <span>
+              {FavorisReducer?.some((fv) => fv?.id === BienDetails?.id)
+                ? "Retirer des favoris"
+                : "Ajouter aux favoris"}
+            </span>
+          </div>
         </div>
       </div>
       <div className={`flex items-start justify-between mx-8`}>
-        <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden">
+        <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden custom-scrollbar">
           <ImageZoomViewer imageUrl={BienDetails.images[selectedIndex]} />
         </div>
 
-        <div className="overflow-y-auto flex flex-col space-y-2 max-h-[550px] p-2">
+        <div className="overflow-y-auto flex flex-col space-y-2 max-h-[550px] p-2 custom-scrollbar">
           {BienDetails.images.map((img, index) => (
             <img
               src={img}
@@ -231,7 +281,7 @@ function DetailsBien() {
       <div className={`  mx-24 flex items-start justify-between `}>
         <div className="w-2/3 flex flex-col space-y-4">
           <div>
-            <h1 className="text-2xl font-bold">.{BienDetails.title}</h1>
+            <h1 className="text-2xl font-semibold">{BienDetails.title}</h1>
             <div>
               <p className="text-sm">{BienDetails.description}</p>
             </div>
@@ -270,7 +320,7 @@ function DetailsBien() {
                 </div>
                 <div>
                   <p className="text-[17px] font-semibold">
-                    {owner?.user?.nom+" "+owner?.user?.prenom}
+                    {owner?.user?.nom + " " + owner?.user?.prenom}
                   </p>
                   <p className="text-sm text-gray-500">
                     {owner.Brève_présentation
@@ -318,9 +368,7 @@ function DetailsBien() {
             <div className="flex justify-between items-center  w-full">
               <span>Nombre d'étage :</span>
               <div className="flex items-center space-x-1.5">
-                <span className="font-semibold">
-                  {BienDetails.etage}{" "}
-                </span>
+                <span className="font-semibold">{BienDetails.etage} </span>
                 <Layers className=" w-4" />
               </div>
             </div>
@@ -369,24 +417,42 @@ function DetailsBien() {
                 <div className="w-full">
                   <button
                     className="w-full flex space-x-2 items-center bg-red-500 text-white rounded-2xl px-4 py-2 cursor-pointer hover:bg-red-600"
-                    onClick={async ()=>{
+                    onClick={async () => {
                       if (!user) {
-                          toast.custom(() => (
-                            <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
-                          ));
-                          return;
-                        }
-                      await handleNegocier(user,toast,dispatch,BienDetails,nav)
+                        toast.custom(() => (
+                          <ToastWithLink
+                            msg={"vous devez connecter"}
+                            path={"/login"}
+                          />
+                        ));
+                        return;
+                      }
+                      await handleNegocier(
+                        user,
+                        toast,
+                        dispatch,
+                        BienDetails,
+                        nav
+                      );
                     }}
                   >
                     <FontAwesomeIcon icon={faComments} />
-                    <span>commencer à négocier </span>
+                    <span>
+                      {conversations.find(
+                        (b) => Number(b?.BienId) === Number(BienDetails?.id)
+                      )
+                        ? "Continuer la négociation.."
+                        : "Commencer à négocier"}{" "}
+                    </span>
                   </button>
                 </div>
               ))
             )}
           </div>
         </div>
+      </div>
+      <div>
+        <CommentaireSection bienId={BienDetails?.id} />
       </div>
       <BienMap ville={BienDetails.ville} quartier={BienDetails.quartier} />
 
@@ -414,6 +480,14 @@ function DetailsBien() {
             </Link>
           </div>
         )
+      )}
+
+      {(toggleSignalBien === "waiting" || toggleSignalBien) && (
+        <Signal
+          setToggleSignalBien={setToggleSignalBien}
+          toggleSignalBien={toggleSignalBien}
+          BienDetails={BienDetails}
+        />
       )}
     </div>
   );

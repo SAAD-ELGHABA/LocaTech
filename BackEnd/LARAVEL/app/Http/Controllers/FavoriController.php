@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bien;
 use App\Models\Favori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,9 +37,12 @@ class FavoriController extends Controller
                 // Return updated list of favori bien_ids
                 $bienIds = Favori::where('user_id', $userId)->pluck('bien_id');
 
+                // Fetch the actual biens using whereIn
+                $biens = Bien::whereIn('id', $bienIds)->with(['status', 'courtier'])->get();
+
                 return response()->json([
                     'message' => 'Ce bien a été retiré de vos favoris.',
-                    'bien_ids' => $bienIds,
+                    'biens' => $biens,
                 ], 200);
             }
 
@@ -50,10 +54,13 @@ class FavoriController extends Controller
 
             $bienIds = Favori::where('user_id', $userId)->pluck('bien_id');
 
+            // Fetch the actual biens using whereIn
+            $biens = Bien::whereIn('id', $bienIds)->with(['status', 'courtier'])->get();
+
             return response()->json([
                 'message' => 'Ce bien a été ajouté à vos favoris.',
                 'favori' => $newFavori,
-                'bien_ids' => $bienIds,
+                'biens' => $biens,
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([
@@ -75,12 +82,15 @@ class FavoriController extends Controller
                 ], 401);
             }
 
-            // Get only the bien_id values
+            // Get only the bien_id values from favoris
             $bienIds = Favori::where('user_id', $userId)->pluck('bien_id');
 
+            // Fetch the actual biens using whereIn
+            $biens = Bien::whereIn('id', $bienIds)->with(['status', 'courtier'])->get();
+
             return response()->json([
-                'message' => 'Liste des IDs des favoris récupérée avec succès.',
-                'bien_ids' => $bienIds
+                'message' => 'Favoris récupérés avec succès.',
+                'biens' => $biens
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([

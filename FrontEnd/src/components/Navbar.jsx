@@ -8,22 +8,19 @@ import axios from "axios";
 import { toast } from "sonner";
 import Logo from "./Logo";
 import Favoris from "./Favoris";
-import Notifications from "./Notifications";
 import logoUser from "../assets/logo-user.png";
 import { fetchInitialData } from "../functions/fetchInitialData";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../components/firebase/firebase";
-import { subscribe } from "../components/sendNotifications/sendNotifications";
 import { socketListener } from "../functions/socketListener";
 import { fetchConversations } from "../functions/fetchConversations";
-
+import Notifications from "./Notifications";
+import { motion } from "framer-motion";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showFavoris, setShowFavoris] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const [notifications, setNotifications] = useState([]);
+  const notifications = useSelector((state) => state.notificationsReducer);
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const conversations = useSelector((state) => state.conversationsReducer);
   const user = useSelector((state) => state.userReducer.userInfo);
@@ -51,8 +48,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!userId) return;
-    const unsubscribe = socketListener(dispatch, null, userId);
+    const unsubscribe = socketListener(dispatch, userId);
     return () => {
       unsubscribe();
     };
@@ -70,39 +66,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const mergeAndSortNotifications = (firebaseData = [], localData = []) => {
-      const all = [...firebaseData, ...localData];
-      return all.sort((a, b) => new Date(b.date) - new Date(a.date));
-    };
-
-    let firebaseData = [];
-    let localData = [];
-
-    const unsubscribeFirebase = onSnapshot(
-      collection(db, "notifications"),
-      (snapshot) => {
-        firebaseData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          read: doc.data().read || false, // kaydkhl chi valeur par défaut f case read
-        }));
-        setNotifications(mergeAndSortNotifications(firebaseData, localData));
-      }
-    );
-
-    const unsubscribeLocal = subscribe((newNotif) => {
-      localData = [...localData, newNotif];
-      setNotifications(mergeAndSortNotifications(firebaseData, localData));
-    });
-
-    return () => {
-      unsubscribeFirebase();
-      unsubscribeLocal();
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 500);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
@@ -118,8 +82,9 @@ const Navbar = () => {
     };
   }, []);
 
-  // Déconnexion
   const handleLogOut = () => {
+    const loadingToast = toast.loading("Se déconnecter...");
+
     MySwal.fire({
       title: "Se déconnecter?",
       text: "Êtes-vous sûr de se déconnecter?",
@@ -130,7 +95,6 @@ const Navbar = () => {
       confirmButtonText: "Oui, se déconnecter",
       cancelButtonText: "Annuler",
     }).then(async (result) => {
-      const loadingToast = toast.loading("Se déconnecter...");
       if (result.isConfirmed) {
         try {
           await axios.post(
@@ -165,48 +129,90 @@ const Navbar = () => {
       }
     });
   };
-
+  const loc = useLocation();
   return (
     <div className="relative">
-      {/* Navbar */}
       <nav
-        className="bg-white shadow-md px-4 md:px-6 fixed w-full top-0 left-0 z-50"
+        className={`fixed w-full top-0 left-0 z-50 px-4 md:px-6 transition-all duration-300 ${
+          !(isHomepage && !isScrolled)
+            ? "bg-white shadow-md"
+            : "bg-transparent "
+        }`}
         style={{ zIndex: 1000 }}
       >
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <Logo />
 
-          {/* Navigation links */}
           <div className="lg:flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap hidden">
-            <Link to="/acheter" className="text-black">
+            <Link
+              to="/acheter"
+              className={`${
+                loc.pathname === "/acheter" ? "text-red-500" : "text-black"
+              }
+              hover:text-red-500
+              `}
+            >
               Acheter
             </Link>
-            <Link to="/louer" className="text-black">
+            <Link
+              to="/louer"
+              className={`${
+                loc.pathname === "/louer" ? "text-red-500" : "text-black"
+              }
+              hover:text-red-500
+              `}
+            >
               Louer
             </Link>
-            <Link to="/Apropos" className="text-black">
+            <Link
+              to="/Apropos"
+              className={`${
+                loc.pathname === "/Apropos" ? "text-red-500" : "text-black"
+              }
+              hover:text-red-500
+              `}
+            >
               A propos
             </Link>
-            <Link to="/blog" className="text-black">
+            <Link
+              to="/blog"
+              className={`${
+                loc.pathname === "/blog" ? "text-red-500" : "text-black"
+              }
+              hover:text-red-500
+              `}
+            >
               Blog
             </Link>
-            <Link to="/contactUs" className="text-black">
+            <Link
+              to="/contactUs"
+              className={`${
+                loc.pathname === "/contactUs" ? "text-red-500" : "text-black"
+              }
+              hover:text-red-500
+              `}
+            >
               Contactez-nous
             </Link>
 
-            {/* Rechercher button (home vs. autres pages) */}
             {isHomepage && isScrolled ? (
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("hero-section")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-red-600 transition"
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
               >
-                <FaSearch />
-                <span>Rechercher</span>
-              </button>
+                <button
+                  onClick={() =>
+                    document
+                      .getElementById("hero-section")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-red-600 transition"
+                >
+                  <FaSearch />
+                  <span>Rechercher</span>
+                </button>
+              </motion.div>
             ) : (
               !isHomepage && (
                 <Link
@@ -219,7 +225,6 @@ const Navbar = () => {
               )
             )}
 
-            {/* Bouton déposer une annonce */}
             <Link
               to="/block"
               className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-600 transition"
@@ -228,7 +233,6 @@ const Navbar = () => {
               <span>Déposer une annonce</span>
             </Link>
 
-            {/* Espace utilisateur */}
             {user ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -277,9 +281,6 @@ const Navbar = () => {
               <Link to={"/profile-client"}>Profile</Link>
             )}
           </Link>
-          {/* <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-            Paramètres
-          </li> */}
           <li
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
             onClick={() => setShowFavoris(true)}
@@ -295,43 +296,39 @@ const Navbar = () => {
               "Favoris"
             )}
           </li>
-          {user?.role === "user" ||
-            (user?.role === "courtier" && (
-              <Link
-                to={"/chat/negocier"}
-                className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
-              >
-                <div className="flex justify-between items-center">
-                  <span>Messages</span>
-                  <span className="bg-red-500 text-white rounded-full px-1 text-[10px]">
-                    {unreadConversations.length > 0 &&
-                      unreadConversations.length}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          {user?.role === "user" ||
-            (user?.role === "courtier" && (
-              <li
-                onClick={() => setShowNotifications(true)}
-                className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-              >
-                <span>Notifications</span>
-                {notifications.some((notif) => !notif.read) && (
-                  <span className="bg-red-500 text-white rounded-full px-1 text-[10px] ml-2">
-                    {notifications.filter((notif) => !notif.read).length}
-                  </span>
-                )}
+          {(user?.role === "user" || user?.role === "courtier") && (
+            <Link
+              to={"/chat/negocier"}
+              className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
+            >
+              <div className="flex justify-between items-center">
+                <span>Messages</span>
+                <span className="bg-red-500 text-white rounded-full px-1 text-[10px]">
+                  {unreadConversations.length > 0 && unreadConversations.length}
+                </span>
+              </div>
+            </Link>
+          )}
+          {(user?.role === "user" || user?.role === "courtier") && (
+            <li
+              onClick={() => setShowNotifications(true)}
+              className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+            >
+              <span>Notifications</span>
+              {notifications.some((notif) => !notif.isRead) && (
+                <span className="bg-red-500 text-white rounded-full px-1 text-[10px] ml-2">
+                  {notifications.filter((notif) => !notif.isRead).length}
+                </span>
+              )}
+            </li>
+          )}
+          {(user?.role === "user" || user?.role === "courtier") && (
+            <Link to="/contactUs">
+              <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
+                Centre d'aide
               </li>
-            ))}
-          {user?.role === "user" ||
-            (user?.role === "courtier" && (
-              <Link to="/contactUs">
-                <li className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer">
-                  Centre d'aide
-                </li>
-              </Link>
-            ))}
+            </Link>
+          )}
           <li
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
             onClick={handleLogOut}

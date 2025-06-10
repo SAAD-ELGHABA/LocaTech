@@ -13,9 +13,9 @@ function IndexCourtier() {
       <header className="sticky top-0 w-full bg-[#161a1d] z-50 ">
         <NavBar />
       </header>
-      <div className="flex">
+      <div className="flex ">
         <Aside />
-        <div className="w-5/6 m-2">
+        <div className="ms-[18%] w-5/6 m-2">
           <Outlet />
         </div>
       </div>

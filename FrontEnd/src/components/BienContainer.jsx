@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
-import { Bath, Bed, LandPlot, Heart, MapPinCheckInside } from "lucide-react";
+import {
+  Bath,
+  Bed,
+  LandPlot,
+  Heart,
+  MapPinCheckInside,
+  Star,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleAddFavoris } from "../functions/handleAddFavoris";
 import { toast } from "sonner";
@@ -10,7 +17,7 @@ import { handleNegocier } from "../functions/handleNegocier.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 
-function BienContainer({ bien, isRecent, chatMode = false }) {
+function BienContainer({ bien, isRecent, chatMode = false, rating = null }) {
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
@@ -47,7 +54,7 @@ function BienContainer({ bien, isRecent, chatMode = false }) {
     <Link
       to={`/bien/${bien.ville}/${bien.slag}`}
       key={bien.id}
-      className="relative bg-white rounded-xl shadow overflow-hidden transition-transform duration-300 hover:scale-105"
+      className="relative bg-white rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
     >
       {isRecent && (
         <span className="absolute top-2 start-2 bg-green-500 text-white text-xs px-2 py-1 rounded z-10">
@@ -57,9 +64,9 @@ function BienContainer({ bien, isRecent, chatMode = false }) {
 
       <Heart
         className={`absolute top-2 right-2 w-5 z-5 cursor-pointer transition-colors duration-200 ${
-          isHovered || FavorisReducer.includes(bien.id)
+          isHovered || FavorisReducer?.some((fv) => fv?.id === bien?.id)
             ? "text-red-500 fill-red-500"
-            : "text-red-500"
+            : "text-red-500 fill-[#6a728231]"
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -119,21 +126,23 @@ function BienContainer({ bien, isRecent, chatMode = false }) {
             <MapPinCheckInside className="h-4" />
             <span>{bien.ville}</span>
           </p>
-          <div className="text-gray-600 flex text-sm items-center justify-between">
-            <p className="flex items-center space-x-1.5">
-              <LandPlot className="w-4" />
-              <span>{bien.superficier} m²</span>
-            </p>
-            <p className="flex items-center space-x-1.5">
-              <span>{bien.chambres}</span>
-              <Bed className="w-4" />
-            </p>
-            <p className="flex items-center space-x-1.5">
-              <span>{bien.salles_de_bain}</span>
-              <Bath className="w-4" />
-            </p>
-          </div>
-          <p className="text-gray-600 text-left">
+          {!rating && (
+            <div className="text-gray-600 flex text-sm items-center justify-between">
+              <p className="flex items-center space-x-1.5">
+                <LandPlot className="w-4" />
+                <span>{bien.superficier} m²</span>
+              </p>
+              <p className="flex items-center space-x-1.5">
+                <span>{bien.chambres}</span>
+                <Bed className="w-4" />
+              </p>
+              <p className="flex items-center space-x-1.5">
+                <span>{bien.salles_de_bain}</span>
+                <Bath className="w-4" />
+              </p>
+            </div>
+          )}
+          <p className="text-gray-600 text-left flex items-center justify-between">
             <span className="text-[#f56565] font-bold text-sm">
               {new Intl.NumberFormat("de-DE", {
                 minimumFractionDigits: 2,
@@ -141,6 +150,12 @@ function BienContainer({ bien, isRecent, chatMode = false }) {
               }).format(bien.budget)}{" "}
               MAD
             </span>
+            {rating && (
+              <div className="flex space-x-1 items-center">
+                <Star className="h-3 w-3 fill-black" />
+                <span>{Number(rating.toFixed(2))}</span>
+              </div>
+            )}
           </p>
         </div>
       )}

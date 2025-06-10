@@ -1,5 +1,5 @@
 import {combineReducers,legacy_createStore} from 'redux'
-import {ActuelCourtierReducer, AdminsReducer, AgencesReducer, allConversationsReducer, AllCourtiersReducer, assistantsReducer, BienReducer, BiensAssistantReducer, ChatAiReducer, CommandesReducer, conversationsReducer, CreateBienReducer, CreateBienToggleReducer, currentConversationReducer, FavorisReducer, filesReducer, filterBiensReducer, filtredBiensReducer, loadingReducer, RecentCourtiers, statusConversationsReducer, statusReducer, userReducer, usersReducer, VillesReducer} from './reducers'
+import {ActuelCourtierReducer, AdminsReducer, AgencesReducer, allConversationsReducer, AllCourtiersReducer, assistantsReducer, BienCommentaireReducer, BienReducer, BiensAssistantReducer, ChatAiReducer, CommandesReducer, conversationsReducer, CreateBienReducer, CreateBienToggleReducer, currentConversationReducer, FavorisReducer, filesReducer, filterBiensReducer, filtredBiensReducer, loadingReducer, notificationsReducer, RecentCourtiers, statusConversationsReducer, statusReducer, userReducer, usersReducer, VillesReducer} from './reducers'
 import { CourtierSignUpReducer } from './reducers';
 
 const reducers = combineReducers({
@@ -28,7 +28,9 @@ const reducers = combineReducers({
     currentConversationReducer,
     assistantsReducer,
     allConversationsReducer,
-    statusConversationsReducer
+    statusConversationsReducer,
+    notificationsReducer,
+    BienCommentaireReducer
 })
 
 export const store = legacy_createStore(reducers);

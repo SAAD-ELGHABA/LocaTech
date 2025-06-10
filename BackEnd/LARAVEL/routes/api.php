@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\AccordController;
 use App\Http\Controllers\AgenceController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\FavoriController;
+use App\Http\Controllers\notificationController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\VilleController;
+use App\Models\Accord;
 use App\Models\Admin;
 use App\Models\Agence;
 use App\Models\Assistant;
@@ -69,7 +73,7 @@ Route::post('/StatusCourtiers', [CourtierController::class, 'StatusCourtiers'])-
 
 
 Route::post('/CreateBien', [BienController::class, 'store'])->name('CreateBien');
-Route::get('/Biens', [BienController::class, 'index'])->name('Biens');
+Route::get('/Biens/{limit}', [BienController::class, 'index'])->name('Biens');
 Route::get('/Biens-assistant', [BienController::class, 'getBienAssistant'])->name('getBienAssistant');
 Route::post('/ActuelCourtier', [CourtierController::class, 'ActuelCourtier'])->name('ActuelCourtier');
 Route::post('/delete-Bien/{id}', [BienController::class, 'delete'])->name('deleteBien');
@@ -154,4 +158,24 @@ Route::post('/store-assistant', [AssistantController::class, 'storeAssistant'])-
 
 Route::post('/agences/{id}/evaluation', [AgenceController::class, 'evaluation'])->name('evaluation');
 
-Route::post('/status-bien/{id}',[BienController::class,'statusBien'])->name('status.bien');
+Route::post('/status-bien/{id}', [BienController::class, 'statusBien'])->name('status.bien');
+
+Route::post('/store-notifications', [notificationController::class, 'store'])->name('store.notification');
+
+Route::get('/get-notifications', [notificationController::class, 'index'])->name('index.notifications')->middleware('auth:sanctum');
+
+Route::get('/get-commentaires-bien/{bienId}', [RatingController::class, 'index'])->name('comments');
+Route::post('/rating-bien', [RatingController::class, 'addComment'])->name('add.comment')->middleware('auth:sanctum');
+
+
+Route::post('/accord-rapport', [AccordController::class, 'metterAccord'])->name('put.accord');
+
+Route::get('/get-mes-accords', [AccordController::class, 'index'])->name('accords');
+
+Route::get('/get-rates-biens/{limit}', [RatingController::class, 'getMostRated'])->name('most.rated');
+
+Route::post('/bien-signal/{BienId}', [RatingController::class, 'BienSignal'])->name('signal.bien')->middleware('auth:sanctum');
+
+Route::get('/get-bien-interactions/{BienId}', [BienController::class, 'getInteractions'])->name('get.bien.interactions');
+
+Route::post('/biens/view', [BienController::class, 'trackView'])->name('track.view.bien')->middleware('throttle:10,1');

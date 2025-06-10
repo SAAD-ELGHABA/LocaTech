@@ -40,6 +40,10 @@ class Bien extends Model
     {
         return $this->belongsTo(Status::class);
     }
+    public function rating()
+    {
+        return $this->hasMany(Rating::class);
+    }
 
     protected static function boot()
     {

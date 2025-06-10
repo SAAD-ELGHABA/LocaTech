@@ -29,24 +29,51 @@ app.use('/api/chat', chatRouter);
 app.use('/api/get-conversations', chatRouter);
 app.use('/api/assistant', chatRouter);
 
+const connectedUsers = {};
 io.on("connection", (socket) => {
     console.log("✅ New client connected:", socket.id);
-  
+      socket.on("register", (userId) => {
+      connectedUsers[userId] = socket.id;
+      console.log(`🔗 ${userId} connected with socket ID: ${socket.id}`);
+    });
     socket.on("joinConversation", (conversationId) => {
       socket.join(conversationId);
       console.log(`Socket ${socket.id} joined room: ${conversationId}`);
     });
   
-    socket.on("newMessage", ({ newMessage, conversationId }) => {
-      io.to(conversationId).emit("receiveMessage",newMessage);
+    socket.on("newMessage", ({ newMessage}) => {
+      io.emit("receiveMessage",newMessage);
     });
   
-    socket.on("disconnect", () => {
-      console.log("❌ Client disconnected:", socket.id);
-    });
+socket.on("disconnect", () => {
+  for (let userId in connectedUsers) {
+    if (connectedUsers[userId] === socket.id) {
+      delete connectedUsers[userId];
+      console.log(`❌ ${userId} disconnected`);
+      break;
+    }
+  }
+});
   });
   
   
+app.post('/api/notify', (req, res) => {
+  const { sender, receiver, object, body, data } = req.body;
+
+  const notification = { sender, receiver, object, body, data, time: new Date() };
+
+  const receiverSocketId = connectedUsers[receiver];
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit('notification', notification);
+    console.log('Notification sent:', notification);
+  } else {
+    console.log('User not connected:', receiver);
+  }
+
+  res.status(200).json({ message: 'Notification attempted', notification });
+});
+
+
 
 httpServer.listen(PORT, '0.0.0.0',() => {
   console.log(`Server is running on port ${PORT}`);

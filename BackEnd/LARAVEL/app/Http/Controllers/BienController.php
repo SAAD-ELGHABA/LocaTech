@@ -4,24 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Bien;
 use App\Http\Controllers\Controller;
+use App\Models\BienView;
 use App\Models\Courtier;
+use App\Models\Rating;
 use App\Models\Status;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class BienController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($limit)
     {
-        $Biens = Bien::with('courtier')
-            ->whereIn('status_id', [1, 5, 7])
-            ->with(['status', 'courtier'])
-            ->take(10)
-            ->get();
+        $Biens = Cache::remember('biens_cache', 3600, function () use ($limit) {
+            return Bien::with(['status', 'courtier'])
+                ->whereIn('status_id', [1, 5, 7])
+                // ->limit($limit)
+                ->get();
+        });
 
         return response()->json([
             'Biens' => $Biens
@@ -34,7 +38,7 @@ class BienController extends Controller
             ->join('status', 'biens.status_id', '=', 'status.id')
             ->orderByRaw("FIELD(status.nom, 'brouillé', 'désactivé', 'activé')")
             ->select('biens.*')
-            ->take(10)
+            // ->take(10)
             ->get();
 
 
@@ -268,5 +272,57 @@ class BienController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function getInteractions($BienId)
+    {
+        try {
+            $bien = Bien::find($BienId);
+            $comments = Rating::where('bien_id', $BienId)
+                ->with(['user' => function ($query) {
+                    $query->select('id', 'nom', 'prenom');
+                }])
+                ->get();
+            $viewCount = BienView::where('bien_id', $BienId)->get();
+            return response()->json([
+                'bien' => $bien,
+                'comments' => $comments,
+                'viewCount' => $viewCount
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Erreur..',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function trackView(Request $request)
+    {
+        $data = $request->validate([
+            'bien_id' => 'required|exists:biens,id',
+            'user_id' => 'nullable|exists:users,id'
+        ]);
+
+        $existingView = BienView::where('bien_id', $data['bien_id'])
+            ->when($data['user_id'], function ($query, $userId) {
+                return $query->where('user_id', $userId);
+            }, function ($query) use ($request) {
+                return $query->where('ip_address', $request->ip());
+            })
+            ->first();
+
+        if ($existingView) {
+            return response()->json(['message' => 'View already recorded']);
+        }
+
+        BienView::create([
+            'bien_id' => $data['bien_id'],
+            'user_id' => $data['user_id'],
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
+        return response()->json(['message' => 'View recorded']);
     }
 }

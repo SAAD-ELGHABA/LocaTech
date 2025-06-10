@@ -1,17 +1,11 @@
 import { X } from "lucide-react";
-import React from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import BienContainer from "./BienContainer";
 
 function Favoris({ setShowFavoris }) {
-  const Biens = useSelector((state) => state.BienReducer);
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
-
-  const favoriteBiens = Biens.filter((bien) =>
-    FavorisReducer.includes(bien.id)
-  );
-
+  
   return (
     <div
       className="fixed inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-50"
@@ -26,7 +20,7 @@ function Favoris({ setShowFavoris }) {
       >
         <div className="flex justify-between items-center mx-8 mb-4">
           <h1 className="text-xl font-semibold">
-            Mes Favoris ({favoriteBiens.length})
+            Mes Favoris ({FavorisReducer.length})
           </h1>
           <X
             className="h-6 cursor-pointer"
@@ -34,7 +28,7 @@ function Favoris({ setShowFavoris }) {
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
-          {favoriteBiens.map((bien) => (
+          {FavorisReducer.map((bien) => (
             <BienContainer bien={bien} />
           ))}
         </div>

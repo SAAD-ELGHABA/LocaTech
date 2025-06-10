@@ -18,7 +18,7 @@ export const handleAddFavoris = async (e, id) => {
 
     if (favorisReponse.status >= 200 && favorisReponse.status <= 300) {
       return {
-        biens_ids: favorisReponse.data.bien_ids,
+        biens_ids: favorisReponse.data.biens,
         message: favorisReponse.data.message,
       };
     }

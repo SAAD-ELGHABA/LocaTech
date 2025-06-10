@@ -17,7 +17,8 @@ import { toast } from "sonner";
 import brocheDeLocalisation from "../../../assets/broche-de-localisation.gif";
 // import locationIcon from "../../../assets/location-icon.png";
 import axios from "axios";
-import { ClockAlert, Hourglass } from "lucide-react";
+import { ChartNoAxesCombined, ClockAlert, Hourglass } from "lucide-react";
+import Interactions from "../CourtierComponent/Interactions";
 
 function MesBiens() {
   // const MesBiens = useSelector((state) => state.BienReducer);
@@ -124,15 +125,15 @@ function MesBiens() {
       },
     });
   };
-
+  const [toggleInteractions, setToggleInteractions] = useState(false);
   const statusReducer = useSelector((state) => state.statusReducer);
   const MesBiens = useSelector((state) => state.ActuelCourtierReducer?.biens);
-
+  const [BienId, setBienId] = useState(null);
   return (
     <div>
       <div className="flex justify-between mx-8 mt-3">
         <h1 className="text-lg font-semibold flex items-center space-x-2">
-          <span>Mes Biens ({MesBiens?.length>0 && MesBiens?.length})</span>
+          <span>Mes Biens ({MesBiens?.length > 0 && MesBiens?.length})</span>
           <FontAwesomeIcon icon={faScroll} />
         </h1>
         <button
@@ -163,7 +164,7 @@ function MesBiens() {
                   <div className="relative">
                     <button
                       ref={buttonRef}
-                      className=" px-4 py-2 cursor-pointer"
+                      className=" px-4 py-2 cursor-pointer hover:bg-red-50"
                       onClick={() =>
                         setActiveDropdownIndex(
                           activeDropdownIndex === index ? null : index
@@ -176,7 +177,7 @@ function MesBiens() {
                     {activeDropdownIndex === index && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-0 mt-2 w-40 bg-[#f5f3f4] border border-[#b1a7a6] rounded shadow z-10"
+                        className="absolute right-3 top-full w-50 bg-[#f5f3f4] border border-[#b1a7a6] rounded shadow z-10"
                       >
                         <ul className="text-sm text-gray-700">
                           <Link
@@ -218,6 +219,20 @@ function MesBiens() {
                               <span>Activer</span>
                             </li>
                           )}
+                          <li
+                            className="px-4 py-2 hover:bg-[#d3d3d3] text-green-500 cursor-pointer flex space-x-4 items-center"
+                            onClick={() => {
+                              setToggleInteractions("waiting");
+                              setBienId(bien?.id);
+                              setTimeout(() => {
+                                setToggleInteractions(true);
+                              }, 2000);
+                            }}
+                          >
+                            <ChartNoAxesCombined className="h-4 w-4 " />
+                            <span>Voir les interactions</span>
+                          </li>
+
                           <li
                             className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer text-red-500 flex space-x-4 items-center"
                             onClick={() => handleDeleteBien(bien.id)}
@@ -337,6 +352,13 @@ function MesBiens() {
           ""
         )}
       </div>
+      {(toggleInteractions === "waiting" || toggleInteractions) && (
+        <Interactions
+          setToggleInteractions={setToggleInteractions}
+          toggleInteractions={toggleInteractions}
+          BienId={BienId}
+        />
+      )}
     </div>
   );
 }

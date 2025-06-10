@@ -31,9 +31,6 @@ function AllCourtiers() {
     <div className="">
       <div className="text-xl font-bold flex items-center justify-between">
         <h1>Tous les Courtiers Activés</h1>
-        <span>
-          <UserPlus className="h-5" />
-        </span>
       </div>
       <div className="">
         <table className="w-full mx-auto text-center text-sm border-collapse mt-2">
@@ -56,13 +53,13 @@ function AllCourtiers() {
                 >
                   <td className="border border-gray-300 py-2">{courtier.id}</td>
                   <td className="border border-gray-300 py-2">
-                    {courtier.Nom_complet}
+                    {courtier?.user?.nom+" "+courtier?.user?.prenom}
                   </td>
                   <td className="border border-gray-300 py-2">
-                    {courtier.user_email}
+                    {courtier?.user?.email}
                   </td>
                   <td className="border border-gray-300 py-2">
-                    {courtier.agence_nom}
+                    {courtier?.agence?.agence}
                   </td>
                   <td className="border border-gray-300 py-2">
                     {usersReducer[courtier.user_id]?.email_verified_at

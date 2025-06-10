@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -36,7 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'age',
         'sexe',
         'role',
-        'image'
+        'image',
+        'fcm_token'
     ];
 
     /**
@@ -73,5 +75,17 @@ class User extends Authenticatable implements MustVerifyEmail
     public function courtier()
     {
         return $this->hasOne(Courtier::class, 'user_id');
+    }
+
+    // All notifications this user has received
+    public function receivedNotifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver');
+    }
+
+    // All notifications this user has sent
+    public function sentNotifications()
+    {
+        return $this->hasMany(Notification::class, 'sender');
     }
 }

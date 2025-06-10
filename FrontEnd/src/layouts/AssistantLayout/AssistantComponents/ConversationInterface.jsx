@@ -14,10 +14,10 @@ function ConversationInterface({ setShowConversationInterface, conversation }) {
 
   const selectedBien = biens.find((b) => b.id === Number(conversation.BienId));
   const dispatch = useDispatch();
-  useEffect(() => {
-    const cleanup = socketListener(dispatch, conversation, user.id);
-    return cleanup;
-  }, [dispatch, conversation, user.id]);
+  // useEffect(() => {
+  //   const cleanup = socketListener(dispatch, 0);
+  //   return cleanup;
+  // }, [dispatch, conversation, user.id]);
   return (
     <div className="w-[100%] h-[100vh] bg-[#2125296b] flex items-center justify-center fixed z-50 top-0 left-0">
       <div className="w-[95%] h-[95%] bg-white">

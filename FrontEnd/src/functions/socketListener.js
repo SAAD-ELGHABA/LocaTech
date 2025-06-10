@@ -1,14 +1,14 @@
 import axios from "axios";
 import socketConfig from "./socketConfig";
 
-export const socketListener = (dispatch,currentConversation=null,userId)=>{
+export const socketListener = (dispatch,userId,currentConversation=null)=>{
   console.log('outside',userId);
   
   const handleIncomingMessage = async (newMessage) => {
-    console.log('inside',newMessage?.senderId);
+    console.log('inside',userId);
     try {
       const conversationsResponse = await axios.get(
-        `http://localhost:5000/api/get-conversations/conversations/${newMessage?.senderId}`,
+        `http://localhost:5000/api/get-conversations/conversations/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -21,7 +21,9 @@ export const socketListener = (dispatch,currentConversation=null,userId)=>{
         conversationsResponse.status <= 300
       ) {
         console.log(conversationsResponse);
-        if(newMessage?.senderId === 0){
+        if(userId === 0){
+          console.log('assistant',newMessage?.senderId);
+          
           dispatch({
             type: "GET_CONVERSATION_ASSISTANT",
             payload: conversationsResponse.data,

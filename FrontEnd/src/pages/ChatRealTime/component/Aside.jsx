@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { BadgeCheck, CircleOff } from "lucide-react";
+import {
+  BadgeCheck,
+  CircleOff,
+  ClockAlert,
+  MouseOff,
+  Trash,
+  Vault,
+} from "lucide-react";
 import { socketListener } from "../../../functions/socketListener";
 
 function Aside() {
@@ -24,7 +31,7 @@ function Aside() {
       ? currentCourtier.id
       : 0;
 
-  const cleanup = socketListener(dispatch, currentConversation, userId);
+  const cleanup = socketListener(dispatch, userId, currentConversation);
   cleanup();
 
   const handleConversationClick = (id) => {
@@ -231,7 +238,7 @@ function Aside() {
                         if (bien.id === Number(conversation.BienId)) {
                           return (
                             <div
-                              className="flex items-center justify-center w-full"
+                              className="flex items-center justify-center w-full relative"
                               key={bien.id}
                             >
                               <img
@@ -239,6 +246,41 @@ function Aside() {
                                 alt="indice-image"
                                 className="w-36 rounded h-20"
                               />
+                              {conversation?.status &&
+                                conversation?.status !== "activé" && (
+                                  <div
+                                    className={`text-xs absolute -top-3 right-0 rounded px-2 py-1.5 text-white flex items-center space-x-1 shadow-xl`}
+                                    style={{
+                                      backgroundColor:
+                                        conversation.status === "supprimé"
+                                          ? "#dc2626"
+                                          : conversation.status === "brouillant"
+                                          ? "#fbbf24"
+                                          : conversation.status === "blocké"
+                                          ? "#4b5563"
+                                          : conversation.status === "désactivé"
+                                          ? "#9ca3af"
+                                          : "#34d399",
+                                    }}
+                                  >
+                                    {/* Icon */}
+                                    {conversation.status === "supprimé" && (
+                                      <Trash className="h-3 w-3" />
+                                    )}
+                                    {conversation.status === "brouillant" && (
+                                      <ClockAlert className="h-3 w-3" />
+                                    )}
+                                    {conversation.status === "blocké" && (
+                                      <Vault className="h-3 w-3" />
+                                    )}
+                                    {conversation.status === "désactivé" && (
+                                      <MouseOff className="h-3 w-3" />
+                                    )}
+                                    <span>
+                                        {conversation.status}
+                                    </span>
+                                  </div>
+                                )}
                             </div>
                           );
                         }

@@ -3,7 +3,6 @@ import { FiArrowRight, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import contactImg from "../assets/contactUs.png";
-import { sendNotification } from "../components/sendNotifications/sendNotifications";
 
 const ContactUs = ({ centreAide = false }) => {
   const [formData, setFormData] = useState({
@@ -47,9 +46,6 @@ const ContactUs = ({ centreAide = false }) => {
 
       emailjs.send(serviceID, templateID, formData, publicKey).then(
         () => {
-          sendNotification(
-            `📩 Nouveau message de ${formData.firstName} ${formData.lastName}`
-          );
           alert("✅ Votre demande a été envoyée à LocaTech avec succès !");
           localStorage.setItem(
             "submissionMessage",

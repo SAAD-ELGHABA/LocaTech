@@ -1,4 +1,4 @@
-import {  Pencil, UserRoundPen } from "lucide-react";
+import { Pencil, UserRoundPen } from "lucide-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadToCloudinary } from "../../../lib/cloudinary";
@@ -103,8 +103,8 @@ function Profile() {
             </h1>
           </div>
 
-          <div className="lg:flex space-y-6 lg:space-y-0 lg:space-x-6">
-            <div className="lg:w-1/3 flex justify-center">
+          <div className="lg:flex space-y-6 lg:space-y-0 lg:space-x-6 relative">
+            <div className="lg:w-1/3 flex justify-center sticky top-10">
               <span className="inline-block relative">
                 <img
                   src={selectedImage || user?.image || "/profile-icon.png"}
@@ -153,6 +153,7 @@ function Profile() {
                         type={type}
                         name={name}
                         id={name}
+                        disabled={name === "email" && true}
                         className="border rounded-lg border-gray-300 focus:ring-1 focus:ring-red-500 focus:outline-none px-4 py-2"
                         value={formData[name]}
                         onChange={handleChange}

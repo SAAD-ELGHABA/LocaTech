@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { fetchInitialData } from "../functions/fetchInitialData";
-import { sendNotification } from "./sendNotifications/sendNotifications";
 
 function GoogleLanding() {
   const nav = useNavigate();
@@ -38,7 +37,6 @@ function GoogleLanding() {
           payload: response.data.user,
         });
 
-        sendNotification(`✅ ${response.data.user.name || "Utilisateur"} s'est connecté avec Google.`);
         setTimeout(() => {
           if (response.data.user.role === "user") {
             nav("/");

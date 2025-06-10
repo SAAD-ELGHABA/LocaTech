@@ -32,7 +32,6 @@ export const handleSendMessage = async (dispatch,currentConversation,userId,inpu
       ) {
         socketConfig.emit("newMessage", {
           newMessage: newMessage,
-          conversationId: newMessage.conversationId,
         });
         dispatch({
           type: "SET_CONVERSATIONS",
