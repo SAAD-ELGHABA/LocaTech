@@ -1,30 +1,30 @@
 import { Send, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MySlider from "../../../components/Slider";
 import ChatInput from "../../../pages/ChatRealTime/component/ChatInput";
 import Conversation from "../../../pages/ChatRealTime/ChatPages/Conversation";
-import { socketListener } from "../../../functions/socketListener";
 
 function ConversationInterface({ setShowConversationInterface, conversation }) {
   const biens = useSelector((state) => state.BienReducer);
   const courtiers = useSelector((state) => state.AllCourtiersReducer);
   const users = useSelector((state) => state.usersReducer);
   const user = useSelector((state) => state.userReducer.userInfo);
-
-  const selectedBien = biens.find((b) => b.id === Number(conversation.BienId));
+  const currentConversationReducer = useSelector(
+    (state) => state.currentConversationReducer
+  );
+  const selectedBien = biens.find(
+    (b) => b.id === Number(currentConversationReducer.BienId)
+  );
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const cleanup = socketListener(dispatch, 0);
-  //   return cleanup;
-  // }, [dispatch, conversation, user.id]);
   return (
     <div className="w-[100%] h-[100vh] bg-[#2125296b] flex items-center justify-center fixed z-50 top-0 left-0">
       <div className="w-[95%] h-[95%] bg-white">
         <div className="flex mx-8 justify-between my-2">
           <h1 className="text-lg">
             Conversation :{" "}
-            <span className="font-semibold">{conversation._id}</span>
+            <span className="font-semibold">
+              {currentConversationReducer._id}
+            </span>
           </h1>
           <X
             className="cursor-pointer"

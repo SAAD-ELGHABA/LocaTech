@@ -19,6 +19,20 @@ export default function App() {
   const dispatch = useDispatch();
   const LoadingGlobal = useSelector((state) => state.loadingReducer);
   const user = useSelector((state) => state.userReducer.userInfo);
+
+  useEffect(() => {
+    const init = async () => {
+      localStorage.getItem("token") &&
+        (await fetchUser(dispatch, localStorage.getItem("token")));
+      setShowSplash(false);
+      await fetchBiens(dispatch);
+      await fetchNotifications(dispatch);
+      await fetchInitialData(dispatch, localStorage.getItem("token"));
+      toast.dismiss();
+    };
+
+    init();
+  }, [LoadingGlobal, dispatch, token]);
   useEffect(() => {
     if (user?.id) {
       socketConfig.emit("register", user?.id);
@@ -55,20 +69,6 @@ export default function App() {
 
     return () => socketConfig.off("notification", handleNotification);
   }, [user?.id]);
-
-  useEffect(() => {
-    const init = async () => {
-      localStorage.getItem("token") &&
-        (await fetchUser(dispatch, localStorage.getItem("token")));
-      setShowSplash(false);
-      await fetchBiens(dispatch);
-      await fetchNotifications(dispatch);
-      await fetchInitialData(dispatch, localStorage.getItem("token"));
-      toast.dismiss();
-    };
-
-    init();
-  }, [LoadingGlobal, dispatch, token]);
 
   return (
     <div className="app">

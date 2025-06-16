@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { Outlet, useLocation } from "react-router-dom";
+import PhoneNav from "../../components/PhoneNav";
 
 function Index() {
   const location = useLocation();
@@ -22,7 +23,7 @@ function Index() {
       {!shouldHide && <Navbar />}
       
       <Outlet />
-      
+      {!shouldHide && <PhoneNav/>}
       {!shouldHide && <Footer />}
     </div>
   );

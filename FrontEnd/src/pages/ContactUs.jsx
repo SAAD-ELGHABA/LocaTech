@@ -81,12 +81,11 @@ const ContactUs = ({ centreAide = false }) => {
         <FiXCircle className="text-red-500 absolute right-3 top-1/2 transform -translate-y-1/2" />
       );
     } else if (formData[field]) {
-      // إلا كانت القيمة معمّرة
       return (
         <FiCheckCircle className="text-green-500 absolute right-3 top-1/2 transform -translate-y-1/2" />
       );
     }
-    return null; // إلا ما كانش خطأ وما كانتش القيمة، ما كيظهر والو
+    return null; 
   };
 
   return (
@@ -110,9 +109,7 @@ const ContactUs = ({ centreAide = false }) => {
           </p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* profile & request */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Profile */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Vous êtes*
@@ -143,7 +140,6 @@ const ContactUs = ({ centreAide = false }) => {
                 )}
               </div>
 
-              {/* Request */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Vous souhaitez*
@@ -178,7 +174,6 @@ const ContactUs = ({ centreAide = false }) => {
               </div>
             </div>
 
-            {/* message */}
             <div>
               <label className="block text-sm mb-1 font-medium">
                 Votre message*
@@ -207,9 +202,7 @@ const ContactUs = ({ centreAide = false }) => {
               )}
             </div>
 
-            {/* first & last name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* First Name */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Votre prénom*
@@ -237,7 +230,6 @@ const ContactUs = ({ centreAide = false }) => {
                 )}
               </div>
 
-              {/* Last Name */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Votre nom*
@@ -266,9 +258,7 @@ const ContactUs = ({ centreAide = false }) => {
               </div>
             </div>
 
-            {/* postal code & email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Postal Code */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Votre code postal*
@@ -296,7 +286,6 @@ const ContactUs = ({ centreAide = false }) => {
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-sm mb-1 font-medium">
                   Votre e-mail*
@@ -325,7 +314,6 @@ const ContactUs = ({ centreAide = false }) => {
               </div>
             </div>
 
-            {/* phone */}
             <div>
               <label className="block text-sm mb-1 font-medium">
                 Votre téléphone*
@@ -377,7 +365,7 @@ const ContactUs = ({ centreAide = false }) => {
             Suivre l’actualité de LocaTech
           </p>
           <div className="flex justify-center items-center gap-2 max-w-md mx-auto">
-            <div className="relative w-full">
+            <div className="relative w-2/3 lg:w-full">
               <input
                 type="email"
                 placeholder="Saisissez votre adresse e-mail"

@@ -3,7 +3,7 @@ import axios from "axios";
 export const fetchConversations = async (userId,dispatch) => {
     try {
       const conversationsResponse = await axios.get(
-        `http://localhost:5000/api/get-conversations/conversations/${userId}`,
+        `${import.meta.env.VITE_API_SOCKET}:5000/api/get-conversations/conversations/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

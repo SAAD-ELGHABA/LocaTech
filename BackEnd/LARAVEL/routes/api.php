@@ -9,6 +9,7 @@ use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\FavoriController;
 use App\Http\Controllers\notificationController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\SignalController;
 use App\Http\Controllers\VilleController;
 use App\Models\Accord;
 use App\Models\Admin;
@@ -179,3 +180,15 @@ Route::post('/bien-signal/{BienId}', [RatingController::class, 'BienSignal'])->n
 Route::get('/get-bien-interactions/{BienId}', [BienController::class, 'getInteractions'])->name('get.bien.interactions');
 
 Route::post('/biens/view', [BienController::class, 'trackView'])->name('track.view.bien')->middleware('throttle:10,1');
+
+Route::get('/get-accord-bien/{BienId}', [AccordController::class, 'getAccordBien'])->name('getAccordBien')->middleware('auth:sanctum');
+
+
+Route::get('/get-quartier-ville/{ville}', [BienController::class, 'getQuartierVille'])->name('getQuartierVille');
+
+
+Route::get('/get-biens-assistant', [AssistantController::class, 'getBiens'])->name('getBiens');
+
+Route::get('/get-signals',[SignalController::class,'getSignals'])->name('get.signals');
+
+Route::get('/get-accords',[AccordController::class,'getAccords'])->name('get.accords');

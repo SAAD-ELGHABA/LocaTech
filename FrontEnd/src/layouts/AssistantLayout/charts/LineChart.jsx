@@ -120,7 +120,7 @@ const ConversationDashboard = () => {
               <Tooltip />
               <Legend />
               <ReferenceLine y={0} stroke="#000" />
-              <Bar dataKey="total" fill="#8884d8" />
+              <Bar dataKey="total" fill="#fb2c36" />
             </BarChart>
           ) : (
             <PieChart>

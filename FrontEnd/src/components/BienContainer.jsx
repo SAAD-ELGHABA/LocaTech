@@ -23,14 +23,14 @@ function BienContainer({ bien, isRecent, chatMode = false, rating = null }) {
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
   const user = useSelector((state) => state.userReducer.userInfo);
   const conversations = useSelector((state) => state.conversationsReducer);
+  const nav = useNavigate();
 
   const handleHeartClick = async (e, id) => {
     e.preventDefault();
     if (!user) {
-      toast.custom(() => (
-        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+      return toast.custom(() => (
+        <ToastWithLink msg={"vous devez connecter"} path={"/login"} nav={nav} />
       ));
-      return;
     }
     const { biens_ids, message } = await handleAddFavoris(e, id);
 
@@ -49,12 +49,11 @@ function BienContainer({ bien, isRecent, chatMode = false, rating = null }) {
       });
     }
   };
-  const nav = useNavigate();
   return (
     <Link
       to={`/bien/${bien.ville}/${bien.slag}`}
       key={bien.id}
-      className="relative bg-white rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+      className="relative bg-white rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105 shadow-md hover:shadow-lg"
     >
       {isRecent && (
         <span className="absolute top-2 start-2 bg-green-500 text-white text-xs px-2 py-1 rounded z-10">

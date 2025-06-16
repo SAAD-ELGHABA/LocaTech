@@ -31,7 +31,7 @@ function MesProcessAccord({ isAssistant = false }) {
         {!isAssistant && (
           <div className="mx-8 my-4 flex space-x-2 items-center">
             <ChartCandlestick className="h-6 w-6" />
-            <h1 className="text-xl font-semibold ">Mes Process</h1>
+            <h1 className="text-xl font-semibold ">Mes processus</h1>
           </div>
         )}
 
@@ -67,8 +67,26 @@ function MesProcessAccord({ isAssistant = false }) {
                         </span>
                       </div>
                     </td>
-                    <td className="py-2 px-4 text-green-500 flex items-center justify-center space-x-2">
-                      <TrendingUp className="" />
+                    <td
+                      className={`py-2 px-4 flex items-center justify-center space-x-2
+                      ${
+                        accord?.status === "accepted"
+                          ? "text-green-500"
+                          : accord?.status === "rejected"
+                          ? "text-red-500"
+                          : "text-yellow-500"
+                      }
+                      `}
+                    >
+                      <TrendingUp
+                        className={`${
+                          accord?.status === "accepted"
+                            ? "rotate-0"
+                            : accord?.status === "rejected"
+                            ? "rotate-180"
+                            : "none"
+                        }`}
+                      />
                       <span>{accord?.status || "En attente"}</span>
                     </td>
                     <td>

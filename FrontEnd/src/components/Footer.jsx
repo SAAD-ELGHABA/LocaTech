@@ -50,12 +50,10 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="footer-bottom mt-10 border-t  pt-6 flex flex-col md:flex-row items-center justify-between">
+      <div className="footer-bottom mt-10 border-t border-gray-300 pt-6 flex flex-col md:flex-row items-center justify-between">
         <div className="logo-container flex items-center gap-2">
         <Link to="/">
           <Logo/>          
-          
-            {/* <span className="text-xl font-bold"><span className="text-red-500">LocaTech</span></span> */}
           </Link>
         </div>
         <p className="mt-4 md:mt-0">&copy; LocaTech - 2025</p>

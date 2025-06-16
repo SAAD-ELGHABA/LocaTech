@@ -1,6 +1,6 @@
 import { MessagesSquare, SquareDashedMousePointer } from "lucide-react";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ConversationInterface from "./ConversationInterface";
 
 function ConversationsProcess() {
@@ -12,6 +12,8 @@ function ConversationsProcess() {
   const users = useSelector((state) => state.usersReducer);
   const [showConversationInterface, setShowConversationInterface] =
     useState(false);
+  const dispatch = useDispatch();
+
   return (
     <div>
       <div>
@@ -37,7 +39,9 @@ function ConversationsProcess() {
                           Role : courtier\nNom Complet : ${
                             courtiers.find(
                               (crt) => crt.id === Number(c.courtierId)
-                            )?.user?.nom+" "+courtiers.find(
+                            )?.user?.nom +
+                            " " +
+                            courtiers.find(
                               (crt) => crt.id === Number(c.courtierId)
                             )?.user?.prenom
                           }\nEmail : ${
@@ -100,7 +104,14 @@ function ConversationsProcess() {
                     <SquareDashedMousePointer
                       className="h-5 w-5 hover:text-red-500 cursor-pointer"
                       title="aller à la conversation"
-                      onClick={() => setShowConversationInterface(true)}
+                      onClick={async () => {
+                        await dispatch({
+                          type: "SET_CURRENT_CONVERSATION",
+                          payload: c,
+                        });
+                        setShowConversationInterface(true);
+                        // setConversation(c);
+                      }}
                     />
                   </td>
                   {showConversationInterface && (

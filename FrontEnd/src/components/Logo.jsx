@@ -8,7 +8,7 @@ function Logo() {
         <img
         src={"/logo-locatech-v1.png"}
         alt="Logo"
-        className="h-20 w-48 object-contain"
+        className="w-16 h-16 lg:h-20 lg:w-48 object-contain"
       />
       </Link>
     </div>

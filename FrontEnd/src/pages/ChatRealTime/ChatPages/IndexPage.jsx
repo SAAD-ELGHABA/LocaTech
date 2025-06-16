@@ -21,13 +21,12 @@ function IndexPage() {
   const swiperRef = useRef(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  console.log(FavorisReducer);
   
   return (
-    <div className="w-full px-4 flex justify-center items-center h-screen">
+    <div className="w-full px-4 lg:flex justify-center items-center min-h-screen">
       {user.role === "user" ? (
         FavorisReducer.length > 0 && (
-          <div className="w-full max-w-7xl px-4 h-100">
+          <div className="w-full  max-w-7xl px-8 lg:px-4 h-100">
             <h1 className="my-4 font-semibold text-xl">
               Discuter pour mes favoris
             </h1>

@@ -10,11 +10,12 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import { sendNotification } from "../functions/NotificationSender";
 import { useSelector } from "react-redux";
+import { getAccordBienConv } from "../functions/getAccordBienConv";
 
 const CourtierDropdown = ({ bienId, user_id }) => {
   const user = useSelector((state) => state.userReducer.userInfo);
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
-
+  const [accordBien, setAccordBien] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [statusData, setStatusData] = useState({
@@ -65,15 +66,45 @@ const CourtierDropdown = ({ bienId, user_id }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  useEffect(() => {
+    const getAccordBien = async () => {
+      const response = await getAccordBienConv(bienId);
+      setAccordBien(response);
+    };
+    getAccordBien();
+  }, [bienId]);
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="px-4 py-2 rounded cursor-pointer flex items-center space-x-3 hover:bg-gray-800 text-sm text-white bg-gray-700"
       >
-        <TrendingUp className="h-4 w-4" />
-        <span>Le status d'accord</span>
+        <TrendingUp
+          className={`h-4 w-4 ${
+            accordBien && accordBien === "rejected"
+              ? "text-red-500"
+              : accordBien && accordBien === "accepted"
+              ? "text-green-500"
+              : accordBien
+              ? "text-yellow-500"
+              : ""
+          }`}
+        />
+        {accordBien ? (
+          <span
+            className={` ${
+              accordBien && accordBien === "rejected"
+                ? "text-red-500"
+                : accordBien && accordBien === "accepted"
+                ? "text-green-500"
+                : "text-yellow-500"
+            }`}
+          >
+            {accordBien}
+          </span>
+        ) : (
+          <span>Le status d'accord</span>
+        )}
       </button>
 
       {isOpen && (

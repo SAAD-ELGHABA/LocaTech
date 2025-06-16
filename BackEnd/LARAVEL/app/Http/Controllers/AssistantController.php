@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assistant;
+use App\Models\Bien;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -47,5 +49,15 @@ class AssistantController extends Controller
             'assistant' => $assistant,
             'assistants' => $assistants
         ], 201);
+    }
+
+    public function getBiens()
+    {
+        $status = Status::all();
+        $allBiens = Bien::with(['courtier.user', 'status'])->get();
+        return response()->json([
+            'allBiens' => $allBiens,
+            'status' => $status
+        ]);
     }
 }

@@ -47,7 +47,7 @@ const ChatAI = ({ onClose }) => {
     setThinking(true);
 
     const prompt = generatePrompt(userMessage, Biens);
-    console.log("Prompt:", prompt); // Debug
+    console.log("Prompt:", prompt);
 
     try {
       const response = await fetch(
@@ -64,7 +64,7 @@ const ChatAI = ({ onClose }) => {
             model: "openai/gpt-3.5-turbo",
             messages: [
               ...messagesChatAi.map((msg) => ({
-                role: msg.role === "ai" ? "assistant" : msg.role, 
+                role: msg.role === "ai" ? "assistant" : msg.role,
                 content: msg.data,
               })),
               { role: "user", content: prompt },
@@ -99,11 +99,10 @@ const ChatAI = ({ onClose }) => {
 
   return (
     <div
-      className="absolute bg-white border border-gray-200 rounded-lg shadow-md w-1/2  h-[500px] flex flex-col "
+      className="absolute lg:absolute bg-white border border-gray-200 lg:rounded-lg shadow-md w-full lg:w-1/2  h-[90vh] lg:h-[500px] flex flex-col "
       style={{ zIndex: 1003 }}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Header */}
       <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <Sparkles className="text-purple-500 text-lg" />
@@ -149,7 +148,7 @@ const ChatAI = ({ onClose }) => {
             >
               <div
                 className={`rounded-lg p-3 text-sm break-words ${
-                  msg.role === "ai" ? " text-gray-800" : "bg-red-100 text-black"
+                  msg.role === "ai" ? " text-gray-800" : "bg-red-50 text-black"
                 } w-4/5`}
               >
                 {msg.role === "ai" && (
@@ -200,19 +199,22 @@ const ChatAI = ({ onClose }) => {
         )}
       </div>
 
-      <div className="p-3 border-t border-gray-200">
+      <div className="p-3 border-t border-gray-200 mb-2">
         <div className="flex items-center">
-          <input
-            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
-            type="text"
+          <textarea
+            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Poser vos questions..."
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessageWithDelay()}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !e.shiftKey && handleSendMessageWithDelay()
+            }
+            rows={1}
           />
+
           <button
             onClick={handleSendMessageWithDelay}
-            className={`flex items-center space-x-2 ml-2 px-4 py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+            className={`flex items-center lg:space-x-2 ml-2 px-4 py-3 lg:py-2 rounded-md text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400 ${
               thinking || input.trim() === "" || isSending
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-purple-500 hover:bg-purple-600 cursor-pointer"
@@ -224,7 +226,7 @@ const ChatAI = ({ onClose }) => {
             ) : (
               <FontAwesomeIcon icon={faPaperPlane} />
             )}
-            <span>Envoyer</span>
+            <span className="hidden lg:block">Envoyer</span>
           </button>
         </div>
       </div>

@@ -22,15 +22,13 @@ const Apropos = () => {
     }, 3000); // simulation 3s d'envoi
   };
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      {/* Hero Section */}
-      <section className="mb-16 mt-28">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-20">
+    <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 ">
+      <section className="mb-16 mt-20 lg:mt-28">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-800 text-center mb-10 lg:mb-20">
           LES LEADERS DE LA LOCATION IMMOBILIÈRE <span className='text-red-500'>LOCATECH</span> AU MAROC
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch min-h-[500px]">
-          {/* Contenu Textuel - Left */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch min-h-[500px] mx-4 lg:mx-0">
           <div className="space-y-4 text-gray-700 text-left h-full">
             <p className="leading-relaxed">
               <b>LocaTech</b> est une agence immobilière innovante spécialisée dans la location de propriétés haut de gamme intégrant les dernières technologies au Maroc. Notre expertise couvre les principales villes du royaume, notamment Marrakech, Casablanca, Rabat et Tanger.
@@ -62,7 +60,6 @@ const Apropos = () => {
             </div>
           </div>
 
-          {/* Tswira - Right */}
           <div className="w-full h-full flex items-stretch">
             <img 
               src={Apropos2}
@@ -73,11 +70,10 @@ const Apropos = () => {
         </div>
       </section>
 
-      {/* Key Figures Section */}
       <section className="my-16">
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-12">CHIFFRES CLÉS</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           <div className="bg-gray-50 p-6 rounded-lg text-center hover:shadow-md transition-shadow">
           <Globe className="text-red-500 text-3xl mx-auto mb-3 "/>
             <h3 className="text-4xl font-bold text-gray-800 mb-2">5</h3>
@@ -121,14 +117,12 @@ const Apropos = () => {
         </div>
       </section>
 
-      {/* Hero Section Reverse */}
       <section className="mb-16">
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-20">
           UNE NOUVELLE VISION POUR L’IMMOBILIER CONNECTÉ
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[500px]">
-          {/* Image - Left */}
           <div className="w-full h-full flex items-stretch">
             <img 
               src={Apropos1}
@@ -137,9 +131,8 @@ const Apropos = () => {
             />
           </div>
 
-          {/* Contenu Textuel - Right */}
-          <div className="space-y-4 text-gray-700 text-left h-full">
-            <p className="leading-relaxed">
+          <div className="space-y-4 text-gray-700 text-left h-full mx-4 lg:mx-0">
+            <p className="leading-relaxed ">
               Chez <b>LocaTech</b>, nous croyons que la technologie peut révolutionner la manière de vivre, louer et gérer des biens immobiliers. Nous mettons l’innovation au cœur de chaque projet.
             </p>
             <p className="leading-relaxed">
@@ -171,12 +164,10 @@ const Apropos = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
       <section className="mt-16 mb-16">
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-12">COMMENT POUVONS-NOUS VOUS AIDER ?</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Formulaire */}
           <div className="bg-[#f5f3f4] p-6 rounded shadow-md">
           <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -224,7 +215,6 @@ const Apropos = () => {
     </form>
           </div>
 
-          {/* Infos de Contact */}
           <div className="bg-[#f5f3f4] p-6 rounded shadow-md space-y-6">
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Contactez-nous</h3>

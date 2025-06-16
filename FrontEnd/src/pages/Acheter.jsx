@@ -59,10 +59,10 @@ const Acheter = () => {
   const visibleBiens = sortedBiens.slice(0, visibleCount);
 
   return (
-    <div className="mt-25 pt-12 bg-gray-50 min-h-screen">
+    <div className="mt-15 lg:mt-25 pt-12 bg-gray-50 min-h-screen">
       <FilterBar />
 
-      <div className="mb-8 mx-32 flex justify-between">
+      <div className="mb-8 mx-8 lg:mx-32 flex flex-col lg:flex-row justify-between space-y-4 lg:space-y-0">
         <h1 className="text-xl font-semibold">
           Nombres des biens pour achat : {sortedBiens?.length}
         </h1>

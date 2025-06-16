@@ -46,20 +46,23 @@ const ChatInput = ({
 
   return (
     <div
-      className={`py-4 max-h-50 ${
-        !isAssistant
-          ? "bg-[#161a1d] text-white"
-          : "border-gray-300 border rounded bg-white"
-      } w-full px-4 flex items-center justify-between gap-2 `}
+      className={`py-4 max-h-50 
+        fixed lg:static bottom-0 
+        w-full
+        ${
+          !isAssistant
+            ? "bg-[#161a1d] text-white"
+            : "border-gray-300 border rounded bg-white"
+        }  px-4 flex items-center justify-between`}
     >
       <textarea
         ref={textareaRef}
         rows={1}
-        className={`border-none outline-none focus:outline-none bg-transparent w-full resize-none overflow-auto no-scrollbar ${
+        className={`border-none outline-none focus:outline-none bg-transparent resize-none w-full overflow-auto no-scrollbar ${
           !isAssistant &&
           currentConversation?.status !== "activé" &&
           currentConversation?.status !== "en cours.."
-            ? "cursor-not-allowed bg-gray-300 text-gray-500" // Apply disabled look
+            ? "cursor-not-allowed bg-gray-300 text-gray-500"
             : ""
         }`}
         placeholder="Votre message.."
@@ -76,7 +79,11 @@ const ChatInput = ({
       />
 
       {inputValue.trim() ? (
-        <button onClick={sendMessage} disabled={isSending} className="ml-2">
+        <button
+          onClick={sendMessage}
+          disabled={isSending}
+          className="cursor-pointer"
+        >
           {isSending ? (
             <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
           ) : (

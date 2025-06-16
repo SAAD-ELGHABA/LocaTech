@@ -245,9 +245,10 @@ function FilterBar() {
 
           <button
             onClick={handleReset}
-            className="flex items-center justify-center hover:border-gray-400 border border-gray-500 rounded px-2 py-2.5 cursor-pointer"
+            className="flex items-center justify-center hover:border-gray-400 border border-gray-500 rounded px-2 py-2.5 cursor-pointer w-full lg:w-auto "
           >
             <RouteOff className="h-4" />
+            <span className="lg:hidden">réinitialiser le filtre</span>
           </button>
 
           <button

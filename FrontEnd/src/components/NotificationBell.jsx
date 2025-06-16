@@ -23,16 +23,16 @@ const NotificationBell = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="cursor-pointer text-white hover:bg-gray-800 p-2.5 rounded-full relative"
+        className={`cursor-pointer text-white hover:bg-gray-800 p-2.5 rounded-full relative`}
       >
-        <Bell className="h-5 w-5" />
+        <Bell className={`h-5 w-5 ${open && "fill-white"}`} />
         {notifications?.length > 0 && (
           <div className="bg-red-500 w-2.5 h-2.5 rounded-full absolute top-1.5 right-1.5"></div>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-md overflow-hidden z-50 min-h-[80vh] max-h-[80vh] overflow-y-scroll border border-gray-300 custom-scrollbar">
+        <div className="absolute right-1 top-full w-96 bg-white shadow-lg rounded-md overflow-hidden z-50 min-h-[80vh] max-h-[80vh] overflow-y-scroll border border-gray-300 custom-scrollbar">
           {notifications?.length > 0 ? (
             notifications?.map((n) => (
               <Link

@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 function IndexCourtier() {
   const currentcourtier = useSelector((state) => state.ActuelCourtierReducer);
-  console.log(currentcourtier);
   
   return (
     <div className="relative">

@@ -17,7 +17,7 @@ export const handleSendMessage = async (dispatch,currentConversation,userId,inpu
     setInputValue("");
     try {
       const sendMessageResponse = await axios.post(
-        "http://localhost:5000/api/chat/send",
+        `${import.meta.env.VITE_API_SOCKET}:5000/api/chat/send`,
         newMessage,
         {
           headers: {

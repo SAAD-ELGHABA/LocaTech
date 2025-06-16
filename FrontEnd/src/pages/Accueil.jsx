@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 
 const HeroSection = () => {
   return (
-    <div className="pt-40 space-y-10 flex flex-col justify-center bg-gradient-to-r from-red-100 via-white to-red-100">
+<div className="pt-20 lg:pt-40 lg:space-y-10 flex flex-col justify-center bg-gradient-to-b from-red-100 via-white to-white">
       <div className="text-center ">
         <h1
           className="text-transparent text-xl md:text-3xl font-bold mb-6 leading-snug w-3/6 mx-auto"
@@ -50,7 +50,6 @@ const HeroSection = () => {
     </div>
   );
 };
-import brocheDeLocalisation from "../assets/broche-de-localisation.gif";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FilterBar from "../components/FilterBar";
@@ -71,7 +70,7 @@ const ImageCarousel = () => {
   }, []);
 
   return (
-    <div className="relative h-64 md:h-80 lg:h-150">
+    <div className="hidden lg:block relative  h-64 md:h-80 lg:h-150">
       {" "}
       <div className="w-full h-full relative overflow-hidden">
         <div
@@ -83,9 +82,9 @@ const ImageCarousel = () => {
           }}
         />
 
-        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 w-full  rounded p-8 flex flex-col md:flex-row gap-6 z-10 ">
+        <div className="absolute lg:bottom-24 left-1/2 transform -translate-x-1/2 w-full  rounded p-8 flex flex-col md:flex-row gap-6 z-10 ">
           {Biens?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 lg:mb-12 lg:w-5/6 mx-auto">
               {[...Biens]
                 .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                 .slice(0, 3)
@@ -99,7 +98,7 @@ const ImageCarousel = () => {
             </div>
           )}
         </div>
-        <div className="z-10 absolute bottom-20 left-1/2 transform -translate-x-1/2">
+        <div className="z-10 absolute lg:bottom-20 left-1/2 transform -translate-x-1/2">
           <Link
             to={"/consulter-bien"}
             className="bg-red-500 text-white w-48 justify-center rounded-2xl px-6 py-2.5 text-sm flex items-center space-x-2"
@@ -342,7 +341,7 @@ export default function Accueil() {
           <h2 className="text-start text-xl font-bold mb-6 ">
             Trouvez votre futur logement, que ce soit pour acheter et louer
           </h2>
-          <div className="grid grid-cols-3  gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3  gap-4">
             <div className=" rounded-xl bg-white pb-2 flex flex-col gap-3">
               <img src={infoCard1} alt="Quartiers " className="rounded-t-2xl" />
               <p className="p-1 text-sm ms-2">
@@ -374,12 +373,12 @@ export default function Accueil() {
             </div>
           </div>
         </div>
-        <div className="w-5/6 mx-auto my-12">
+        <div className="lg:w-5/6 mx-4 lg:mx-auto my-12">
           <h2 className=" text-xl font-bold mb-3 ">
             Ils ont vendu ou loué grâce à LocaTech
           </h2>
           <div className=" flex justify-start p-4 items-center">
-            <div className="testimonial-image-container  max-w-[70%] relative ">
+            <div className="testimonial-image-container  w-full lg:max-w-[70%] relative ">
               <Swiper
                 modules={[Autoplay, Pagination]}
                 autoplay={{ delay: 3000 }}
@@ -392,18 +391,20 @@ export default function Accueil() {
                       <img
                         src={image}
                         alt={`Bien ${index}`}
-                        className="h-[450px] w-full rounded-xl relative object-cover"
+                        className="h-[450px] w-full rounded-xl object-cover"
                       />
                     </SwiperSlide>
                   );
                 })}
               </Swiper>
-              <div className=" absolute top-[45%] z-20 -right-[30%] max-w-[70%] bg-white p-6 bg-opacity-80  rounded-xl shadow-xl ">
+              <div className=" absolute left-[30%] lg:left-[60%] top-[50%] lg:top-[45%] z-20 -right-[5%] lg:-right-[30%] lg:max-w-[70%] bg-white p-3 lg:p-6 bg-opacity-80  rounded-xl shadow-xl ">
                 <Quote
                   className="text-start quote-icon mb-2 text-red-500"
                   size={18}
                 />
-                <h3 className="font-bold text-lg mb-2">
+                <h3 className="font-semibold text-lg mb-2 "
+                style={{lineHeight:`110%`}}
+                >
                   Le Marché Immobilier au Maroc : Diversité et Opportunités
                 </h3>
                 <p className="text-sm">
@@ -419,7 +420,7 @@ export default function Accueil() {
           </div>
         </div>
 
-        <section className="mb-24 px-4 md:px-6">
+        <section className="my-24 px-4 md:px-6">
           <h2 className="text-xl font-semibold text-center text-gray-800 mb-10">
             💬 Ce que disent nos utilisateurs
           </h2>

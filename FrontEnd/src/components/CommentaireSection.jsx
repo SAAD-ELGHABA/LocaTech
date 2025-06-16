@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, interpolate } from "framer-motion";
 import { Star } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import ToastWithLink from "./ToastWithLink";
 import { sendNotification } from "../functions/NotificationSender";
 
-function CommentaireSection({ bienId }) {
+function CommentaireSection({ bienId, isIntersactions = false }) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -108,108 +108,133 @@ function CommentaireSection({ bienId }) {
 
   return (
     <div className="mx-auto my-6 w-[90%]">
-      <div className="mb-4">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">
-          Note moyenne
-        </h3>
-        <div className="flex items-center space-x-1">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Star
-              key={i}
-              className="h-6 w-6"
-              color={i <= Math.round(averageRating) ? "black" : "#d1d5db"}
-              fill={i <= Math.round(averageRating) ? "black" : "none"}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="mt-4 w-1/5">
-        <h4 className="text-md font-semibold text-gray-800 mb-2">
-          Évaluation globale
-        </h4>
-        {[5, 4, 3, 2, 1].map((star) => {
-          const count = BienCommentaireReducer.filter(
-            (c) => c.rating === star
-          ).length;
-          const percent =
-            BienCommentaireReducer.length > 0
-              ? (count / BienCommentaireReducer.length) * 100
-              : 0;
-
-          return (
-            <div key={star} className="flex items-center space-x-2 mb-1">
-              <span className="text-sm text-gray-700 w-4">{star}</span>
-              <div className="w-full bg-gray-200 h-2 rounded">
-                <div
-                  className="bg-black h-2 rounded"
-                  style={{ width: `${percent}%` }}
-                ></div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          onClick={toggleFeedback}
-          className={`border-red-500 text-sm border text-red-500 px-4 py-2 rounded-lg hover:bg-red-100 transition duration-300 flex items-center space-x-2 cursor-pointer ${
-            showFeedback && "bg-red-100"
-          }`}
-        >
-          <Star className="h-4 w-4" />
-          <span>Donner votre feedback</span>
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.4 }}
-            className="mt-6 p-6 bg-white rounded-xl shadow-xs border border-gray-200"
-          >
-            <h3 className="text-lg font-semibold mb-3 text-gray-800">
-              Votre avis
+      <div className="flex items-center justify-between my-4">
+        <div className="lg:w-1/2 w-full ">
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+              Note moyenne
             </h3>
-            <div></div>
-            <div className="flex mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
+            <div className="flex items-center space-x-1 ">
+              {[1, 2, 3, 4, 5].map((i) => (
                 <Star
-                  key={star}
-                  className="cursor-pointer transition-transform hover:scale-110 h-5"
-                  color={(hover || rating) >= star ? "black" : "black"}
-                  fill={(hover || rating) >= star ? "black" : "none"}
-                  onMouseEnter={() => setHover(star)}
-                  onMouseLeave={() => setHover(0)}
-                  onClick={() => setRating(star)}
+                  key={i}
+                  className="h-4 w-4 lg:h-6 lg:w-6"
+                  color={i <= Math.round(averageRating) ? "black" : "#d1d5db"}
+                  fill={i <= Math.round(averageRating) ? "black" : "none"}
                 />
               ))}
             </div>
+          </div>
+          <div className="mt-4 lg:w-1/2">
+            <h4 className="text-md font-semibold text-gray-800 mb-2">
+              Évaluation globale
+            </h4>
+            {[5, 4, 3, 2, 1].map((star) => {
+              const count = BienCommentaireReducer.filter(
+                (c) => c.rating === star
+              ).length;
+              const percent =
+                BienCommentaireReducer.length > 0
+                  ? (count / BienCommentaireReducer.length) * 100
+                  : 0;
 
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Laissez un commentaire..."
-              className="w-full border border-gray-300 rounded-lg p-3 resize-none focus:outline-none focus:ring-1 focus:ring-red-400"
-              rows={4}
-            />
-
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={handleSubmit}
-                className="cursor-pointer bg-red-600 text-white px-6 py-2 rounded-2xl hover:bg-red-700 transition duration-300"
-              >
-                Envoyer
-              </button>
+              return (
+                <div key={star} className="flex items-center space-x-2 mb-1">
+                  <span className="text-sm text-gray-700 w-4">{star}</span>
+                  <div className="w-full bg-gray-200 h-2 rounded">
+                    <div
+                      className="bg-black h-2 rounded"
+                      style={{ width: `${percent}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {isIntersactions || !isIntersactions&& (
+          <div className="lg:flex items-center space-x-2 hidden ">
+            <div className="text-4xl font-bold">
+              {(() => {
+                let avg = 0;
+                const ratings = BienCommentaireReducer?.map(
+                  (bc) => bc?.rating
+                ).filter((rating) => typeof rating === "number");
+                if (ratings?.length > 0) {
+                  avg =
+                    ratings.reduce((sum, rating) => sum + rating, 0) /
+                    ratings.length;
+                }
+                return avg.toFixed(1); 
+              })()}
             </div>
-          </motion.div>
+            <Star className="w-12 h-12 fill-black" />
+          </div>
         )}
-      </AnimatePresence>
+      </div>
+      {!isIntersactions && (
+        <div className="flex justify-end">
+          <button
+            onClick={toggleFeedback}
+            className={`border-red-500 text-sm border text-red-500 px-4 py-2 rounded-lg hover:bg-red-100 transition duration-300 flex items-center space-x-2 cursor-pointer ${
+              showFeedback && "bg-red-100"
+            }`}
+          >
+            <Star className="h-4 w-4" />
+            <span>Donner votre feedback</span>
+          </button>
+        </div>
+      )}
+      {!isIntersactions && (
+        <AnimatePresence>
+          {showFeedback && (
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4 }}
+              className="mt-6 p-6 bg-white rounded-xl shadow-xs border border-gray-200"
+            >
+              <h3 className="text-lg font-semibold mb-3 text-gray-800">
+                Votre avis
+              </h3>
+              <div></div>
+              <div className="flex mb-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className="cursor-pointer transition-transform hover:scale-110 h-5"
+                    color={(hover || rating) >= star ? "black" : "black"}
+                    fill={(hover || rating) >= star ? "black" : "none"}
+                    onMouseEnter={() => setHover(star)}
+                    onMouseLeave={() => setHover(0)}
+                    onClick={() => setRating(star)}
+                  />
+                ))}
+              </div>
+
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Laissez un commentaire..."
+                className="w-full border border-gray-300 rounded-lg p-3 resize-none focus:outline-none focus:ring-1 focus:ring-red-400"
+                rows={4}
+              />
+
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={handleSubmit}
+                  className="cursor-pointer bg-red-600 text-white px-6 py-2 rounded-2xl hover:bg-red-700 transition duration-300"
+                >
+                  Envoyer
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
       <div>
-        <div className="mt-8 space-y-6 grid grid-cols-2">
+        <div className="mt-8 space-y-6 grid lg:grid-cols-2 grid-cols-1">
           {(showAll
             ? BienCommentaireReducer
             : BienCommentaireReducer.slice(0, 6)
@@ -240,7 +265,6 @@ function CommentaireSection({ bienId }) {
                     key={i}
                     className={`h-3 w-3 `}
                     color={i <= item.rating ? "black" : "black"}
-
                     fill={i <= item.rating ? "black" : "none"}
                   />
                 ))}

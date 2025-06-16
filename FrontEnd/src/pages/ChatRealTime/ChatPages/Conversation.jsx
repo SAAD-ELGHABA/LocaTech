@@ -1,12 +1,11 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import {
   BadgeCheck,
-  CheckCircle,
+  ChevronLeft,
   ClockAlert,
   MessageCircleQuestion,
-  MouseOff,
+  PanelLeftClose,
   Send,
   ShieldCheck,
   Trash,
@@ -15,6 +14,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import {Link } from 'react-router-dom'
 import socketConfig from "../../../functions/socketConfig.js";
 import { socketListener } from "../../../functions/socketListener.js";
 import ChatInput from "../component/ChatInput.jsx";
@@ -53,9 +53,6 @@ function Conversation({ isAssistant = false }) {
     }
   }, [currentConversation]);
 
-  // const cleanup = socketListener(dispatch, currentConversation, userId);
-  // cleanup();
-
   useEffect(() => {
     console.log(userId);
     const unsubscribe = socketListener(dispatch, userId, currentConversation);
@@ -79,12 +76,15 @@ function Conversation({ isAssistant = false }) {
   return (
     <div
       className={`${
-        isAssistant ? "h-full" : "h-screen"
-      }  flex flex-col justify-between bg-white`}
+        isAssistant ? "h-full" : "h-full min-h-[90vh] lg:h-screen"
+      }  flex flex-col justify-between bg-white relative`}
     >
       {!isAssistant && (
-        <div className="relative flex items-center justify-between bg-[#161a1d] text-white px-4 py-1">
-          <div>
+        <div className="fixed lg:relative w-full flex items-center justify-between bg-[#161a1d] text-white px-2 lg:px-4 lg:py-1 py-2 ">
+          <div className="flex items-center space-x-2">
+            <Link to={'/chat/negocier'} className="lg:hidden">
+              <ChevronLeft />
+            </Link>
             {user.role === "courtier" && client && (
               <div className="flex items-start space-x-2">
                 <div className="flex justify-center items-center w-10 h-10">
@@ -102,13 +102,12 @@ function Conversation({ isAssistant = false }) {
                 </div>
               </div>
             )}
-
             {user.role === "user" &&
               courtiers.map((courtier) => {
                 if (courtier.id === Number(currentConversation.courtierId)) {
                   return (
                     <div
-                      className="flex items-start space-x-2"
+                      className="flex items-center space-x-2 lg:space-x-2"
                       key={courtier.id}
                     >
                       <div className="flex justify-center items-center w-10 h-10">
@@ -118,15 +117,15 @@ function Conversation({ isAssistant = false }) {
                           className="w-10 h-10 rounded-full"
                         />
                       </div>
-                      <div>
+                      <div className="line-clamp-2">
                         <h5 className="text-xs">
                           {courtier?.user?.nom + " " + courtier?.user?.nom}
                         </h5>
-                        <p className="text-xs text-gray-400">courtier</p>
-                        <p className="text-xs text-gray-400 flex items-center">
+                        <p className="text-xs text-gray-400 flex items-center relative">
                           <span>{courtier?.agence?.agence}</span>
-                          <BadgeCheck className="h-3 text-white fill-blue-600" />
+                          <BadgeCheck className="h-3 text-white fill-blue-600 lg:flex hidden" />
                         </p>
+                        <p className="text-xs text-gray-400">courtier</p>
                       </div>
                     </div>
                   );
@@ -140,7 +139,7 @@ function Conversation({ isAssistant = false }) {
                 user_id={currentConversation?.clientId}
               />
             )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center lg:gap-2 ">
             {biens.map((bien) => {
               if (bien.id === Number(currentConversation.BienId)) {
                 return (
@@ -155,7 +154,7 @@ function Conversation({ isAssistant = false }) {
                     <img
                       src={bien.images[0] || ""}
                       alt={bien.title}
-                      className="w-15 h-15 rounded-xl"
+                      className="w-12 h-12 lg:w-15 lg:h-15 rounded-xl"
                     />
                     <h5 className="text-xs">{bien.name}</h5>
                   </div>
@@ -168,7 +167,7 @@ function Conversation({ isAssistant = false }) {
       {currentConversation?.status &&
         currentConversation?.status !== "activé" && (
           <div
-            className={`text-sm sticky top-0 mt-1 font-medium rounded shadow min-w-1/3 mx-auto px-4 py-4 text-white flex items-center gap-2`}
+            className={`text-sm sticky top-16 lg:top-0 mt-1 font-medium rounded shadow min-w-1/3 mx-auto px-4 py-4 text-white flex items-center gap-2`}
             style={{
               backgroundColor:
                 currentConversation.status === "supprimé"
@@ -203,7 +202,7 @@ function Conversation({ isAssistant = false }) {
           </div>
         )}
 
-      <div className="flex-1 overflow-y-auto mt-4 px-4 space-y-4 custom-scrollbar py-4">
+      <div className="flex-1 overflow-y-auto mt-16 lg:mt-4 px-4 space-y-4 custom-scrollbar py-4">
         <div className="flex w-5/6 text-center bg-red-100 text-red-500  rounded-lg p-4 text-sm mx-auto">
           <ShieldCheck className="h-8 w-8 mr-2" />
           <p>
@@ -212,7 +211,7 @@ function Conversation({ isAssistant = false }) {
             est là pour ça. On peut commencer quand tu veux !
           </p>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 py-12 lg:py-0">
           {currentConversation?.messages?.length > 0 &&
             currentConversation?.messages?.map((msg, index) => {
               const isLast = index === currentConversation.messages.length - 1;
@@ -228,7 +227,7 @@ function Conversation({ isAssistant = false }) {
                       : "justify-center text-center"
                   }`}
                 >
-                  <div className={` max-w-4/5 p-2 text-sm`}>
+                  <div className={` lg:max-w-4/5 lg:p-2 text-sm`}>
                     <div
                       className={`flex ${
                         Number(currentConversation.clientId) ===
@@ -260,11 +259,11 @@ function Conversation({ isAssistant = false }) {
                       />
                     </div>
                     <div
-                      className={` px-3 py-6 rounded-xl min-w-xs m-1 text-gray-700 ${
+                      className={` px-3 py-6 rounded-xl min-w-xs lg:m-1 text-gray-700 ${
                         Number(msg?.senderId) ===
                           Number(currentConversation?.clientId) &&
                         user?.role === "user"
-                          ? "bg-gray-300 border border-gray-100 "
+                          ? "bg-gray-200 border border-gray-100 "
                           : Number(msg?.senderId) ===
                               Number(currentConversation?.courtierId) &&
                             user?.role === "courtier"
@@ -285,7 +284,7 @@ function Conversation({ isAssistant = false }) {
                         </span>
                       </div>
                     </div>
-                    <div className="text-[10px] text-gray-500 text-start ms-2">
+                    <div className="text-[10px] text-gray-500 text-start mt-1 ms-2">
                       {new Date(msg.createdAt).toLocaleTimeString()}
                     </div>
                   </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Accord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AccordController extends Controller
 {
@@ -43,5 +44,19 @@ class AccordController extends Controller
         return response()->json([
             'accords' => $accords
         ]);
+    }
+
+    public function getAccordBien($BienId)
+    {
+        $bienAccord = Accord::where('bienId', $BienId)->first();
+        return response()->json([
+            'bienAccord' => $bienAccord
+        ]);
+    }
+
+    public function getAccords()
+    {
+        $accords = Accord::with(['user', 'courtier.user', 'bien'])->get();
+        return $accords;
     }
 }

@@ -1,10 +1,23 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 function Info() {
   const dispatch = useDispatch();
   const createBien = useSelector((state) => state.CreateBienReducer);
   const villes = useSelector((state) => state.VillesReducer);
-
+  const [quartiesVille, setQuartiersVille] = useState([]);
+  const fetchQuartiersVille = async (ville) => {
+    try {
+      const res = await axios.get(`/api/get-quartier-ville/${ville}`);
+      console.log(res);
+      setQuartiersVille(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchQuartiersVille(createBien?.ville);
+  }, [createBien?.ville]);
   return (
     <div className="mx-8 my-2 flex space-x-6 overflow-y-auto">
       <div className="w-1/3 flex flex-col space-y-4">
@@ -209,7 +222,7 @@ function Info() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Quartier</label>
-          <input
+          {/* <input
             type="text"
             name="Quartier"
             placeholder="Veuillez entrer la Quartier de bien"
@@ -221,7 +234,27 @@ function Info() {
                 payload: { quartier: e.target.value },
               });
             }}
-          />
+          /> */}
+          <select
+            id=""
+            name="Quartier"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            onChange={(e) => {
+              dispatch({
+                type: "SET_CREATE_BIEN",
+                payload: { quartier: e.target.value },
+              });
+            }}
+            value={quartiesVille?.find(q=>q?.nom===createBien.quartier)?.nom}
+          >
+            {quartiesVille?.length > 0 ? (
+              quartiesVille?.map((q) => (
+                <option value={q?.nom} selected={createBien.quartier=== q?.nom && true}>{q?.nom}</option>
+              ))
+            ) : (
+              <option value="">vous devez d'abord choisir la ville</option>
+            )}
+          </select>
         </div>
         <div className="flex items-center space-x-4">
           <label className="block text-sm font-medium mb-1">

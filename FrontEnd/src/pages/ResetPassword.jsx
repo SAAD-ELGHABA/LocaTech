@@ -72,8 +72,8 @@ const ResetPassword = () => {
 
   return (
     <div className="w-full flex justify-center ">
-      <div className="md:block w-1/2  flex  h-screen items-center justify-center  ">
-        <form onSubmit={handleFormData} className=" w-1/2 mx-auto mt-52">
+      <div className="md:block lg:w-1/2 w-full flex h-screen items-center justify-center  ">
+        <form onSubmit={handleFormData} className=" lg:w-1/2 mx-auto lg:mt-52">
         <h1 className="text-xl font-bold">Réinitialisez votre mot de passe</h1>
           <div className="py-1 ">
             <label className="block text-sm mb-1">mot de passe</label>
@@ -124,9 +124,9 @@ const ResetPassword = () => {
         </form>
       </div>
       <div
-        className="hidden md:block w-1/2 bg-cover bg-center"
+        className="hidden md:block  w-1/2 bg-cover bg-center"
         style={{
-          backgroundImage: "url(accueil 1.png)", // Replace with actual path
+          backgroundImage: "url(accueil 1.png)", 
         }}
       >
         <img src={asideimg} alt="aside image" />

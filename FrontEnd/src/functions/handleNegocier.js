@@ -11,7 +11,7 @@ export const handleNegocier = async (user,toast,dispatch,BienDetails,nav) => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/start",
+        `${import.meta.env.VITE_API_SOCKET}:5000/api/auth/start`,
         {
           BienId: BienDetails.id,
           userId: user.id,

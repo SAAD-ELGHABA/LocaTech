@@ -151,8 +151,8 @@ function MesBiens() {
         </button>
       </div>
       <div>
-        {MesBiens.length > 0 ? (
-          MesBiens.filter((bien) => bien.status_id !== 2)
+        {MesBiens?.length > 0 ? (
+          MesBiens?.filter((bien) => bien.status_id !== 2)
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
             .map((bien, index) => (
               <div
@@ -177,12 +177,12 @@ function MesBiens() {
                     {activeDropdownIndex === index && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-3 top-full w-50 bg-[#f5f3f4] border border-[#b1a7a6] rounded shadow z-10"
+                        className="absolute right-3 top-full w-50 bg-[#f5f3f4] border border-[#b1a7a669] rounded shadow z-10"
                       >
                         <ul className="text-sm text-gray-700">
                           <Link
                             to={`/bien/${bien.ville}/${bien.slag}`}
-                            className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                            className="px-4 py-3 hover:bg-[#d3d3d39a] cursor-pointer flex space-x-4 items-center"
                           >
                             <FontAwesomeIcon icon={faInfo} />
                             <span>Voir détails</span>
@@ -198,13 +198,13 @@ function MesBiens() {
                                 payload: bien,
                               });
                             }}
-                            className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                            className="px-4 py-3 hover:bg-[#d3d3d39a] cursor-pointer flex space-x-4 items-center"
                           >
                             <FontAwesomeIcon icon={faPen} />
                             <span>Modifier</span>
                           </li>
                           <li
-                            className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                            className="px-4 py-3 hover:bg-[#d3d3d39a] cursor-pointer flex space-x-4 items-center"
                             onClick={() => handleBrouillerBien(bien.id)}
                           >
                             <FontAwesomeIcon icon={faPowerOff} />
@@ -212,7 +212,7 @@ function MesBiens() {
                           </li>
                           {bien.status === 6 && (
                             <li
-                              className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer flex space-x-4 items-center"
+                              className="px-4 py-3 hover:bg-[#d3d3d39a] cursor-pointer flex space-x-4 items-center"
                               onClick={() => handleActiverBien(bien.id)}
                             >
                               <FontAwesomeIcon icon={faPlay} />
@@ -220,7 +220,7 @@ function MesBiens() {
                             </li>
                           )}
                           <li
-                            className="px-4 py-2 hover:bg-[#d3d3d3] text-green-500 cursor-pointer flex space-x-4 items-center"
+                            className="px-4 py-3 hover:bg-[#d3d3d39a] text-green-500 cursor-pointer flex space-x-4 items-center"
                             onClick={() => {
                               setToggleInteractions("waiting");
                               setBienId(bien?.id);
@@ -234,7 +234,7 @@ function MesBiens() {
                           </li>
 
                           <li
-                            className="px-4 py-2 hover:bg-[#d3d3d3] cursor-pointer text-red-500 flex space-x-4 items-center"
+                            className="px-4 py-3 hover:bg-[#d3d3d39a] cursor-pointer text-red-500 flex space-x-4 items-center"
                             onClick={() => handleDeleteBien(bien.id)}
                           >
                             <FontAwesomeIcon icon={faTrash} />
@@ -339,7 +339,7 @@ function MesBiens() {
                 </div>
               </div>
             ))
-        ) : MesBiens.filter(
+        ) : MesBiens?.filter(
             (bien) =>
               bien.courtier_id === ActuelCourtierReducer.id && bien.status !== 2
           ).length === 0 ? (

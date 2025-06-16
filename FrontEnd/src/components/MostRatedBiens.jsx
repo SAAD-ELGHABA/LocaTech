@@ -47,14 +47,24 @@ function MostRatedBiens() {
           <Swiper
             modules={[Autoplay, FreeMode]}
             spaceBetween={20}
-            slidesPerView={3}
             freeMode={true}
             loop={true}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
             }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12  mx-auto"
+            breakpoints={{
+              0: {
+                slidesPerView: 1,
+              },
+              640: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: 3,
+              },
+            }}
+            className="mb-12 mx-auto"
           >
             {mostRated?.length > 0 ? (
               mostRated?.map((b) => (

@@ -3,6 +3,8 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
 @import 'leaflet/dist/leaflet.css';
+/* plugins: [require('@tailwindcss/typography')], */
+
 * {
   scroll-behavior: smooth;
 }
@@ -1012,8 +1014,7 @@ body {
 /* Sections */
 .section {
   display: flex;
-  gap: 20px;
-  padding: 40px 60px;
+  padding: 40px;
   align-items: center;
   flex-wrap: wrap;
   margin-top: 20px;

@@ -47,6 +47,9 @@ import Evaluations from "../layouts/AdminLayout/adminPages/Evaluations";
 import ProfileCourtier from "../layouts/CourtierLayout/Courtierpages/ProfileCourtier";
 import Control from "../layouts/AssistantLayout/AssistantPages/Control";
 import ControlAccord from "../layouts/AssistantLayout/AssistantPages/ControlAccord";
+import SignalControl from "../layouts/AssistantLayout/AssistantPages/SignalControl";
+import AccordControl from "../layouts/AssistantLayout/AssistantPages/AccordControl";
+import BlogDetails from "../components/BlogDetails";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -179,6 +182,10 @@ const Router = createBrowserRouter([
         path: "/centre-aide",
         element: <CentreAide />,
       },
+      {
+        path: "/blog-article-details/:slug",
+        element: <BlogDetails/>,
+      },
     ],
   },
   {
@@ -275,7 +282,7 @@ const Router = createBrowserRouter([
         element: <DashboardAssistant />,
       },
       {
-        path: "/tableau-de-bord-assistant",
+        path: ASSISTANT_INDEX,
         element: <DashboardAssistant />,
       },
       {
@@ -287,9 +294,17 @@ const Router = createBrowserRouter([
         element: <Control />,
       },
       {
-        path:'/control-accord',
-        element:<ControlAccord/>
-      }
+        path: "/control-accord",
+        element: <ControlAccord />,
+      },
+      {
+        path: "/signal-control",
+        element: <SignalControl />,
+      },
+      {
+        path: "/accord-control",
+        element: <AccordControl />,
+      },
     ],
   },
 ]);

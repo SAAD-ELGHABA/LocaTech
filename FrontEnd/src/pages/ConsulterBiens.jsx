@@ -7,7 +7,7 @@ import { LoaderCircle } from "lucide-react";
 
 function ConsulterBiens() {
   const [sortOption, setSortOption] = useState("date");
-  const [visibleCount, setVisibleCount] = useState(10); // show 10 initially
+  const [visibleCount, setVisibleCount] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const Biens = useSelector((state) => state.BienReducer);
@@ -44,7 +44,7 @@ function ConsulterBiens() {
           setTimeout(() => {
             setVisibleCount((prev) => prev + 10);
             setIsLoadingMore(false);
-          }, 1000); // simulate loading delay
+          }, 1000);
         }
       }
     };
@@ -54,12 +54,12 @@ function ConsulterBiens() {
   }, [isLoadingMore, visibleCount, sortedBiensToRender.length]);
 
   const visibleBiens = sortedBiensToRender.slice(0, visibleCount);
-
+  
   return (
-    <div className="my-32">
+    <div className="my-20 lg:my-32">
       <FilterBar />
-      <div className="mb-8 mx-32 flex justify-between items-center">
-        <h1 className="text-xl">
+      <div className="mb-8 mx-10 lg:mx-32 flex justify-between items-center">
+        <h1 className="text-lg">
           Biens : <span className="font-semibold">{biensToRender.length}</span>
         </h1>
         <SortSelect sortOption={sortOption} setSortOption={setSortOption} />

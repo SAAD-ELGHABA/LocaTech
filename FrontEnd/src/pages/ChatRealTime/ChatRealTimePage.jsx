@@ -10,6 +10,9 @@ function ChatRealTimePage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer.userInfo);
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
+  const currentConversation = useSelector(
+    (state) => state.currentConversationReducer
+  );
   useEffect(() => {
     const fetchData = async () => {
       const userId =
@@ -64,11 +67,13 @@ function ChatRealTimePage() {
 
   return (
     <div>
-      <div className="flex ">
-        <div className="w-2/6 lg:block hidden">
+      <div className="lg:flex">
+        <div className={`w-full lg:w-2/6 ${
+          location.pathname == '/chat/conversation' ? "hidden":"flex"
+        } lg:block`}>
           <Aside />
         </div>
-        <div className="lg:w-4/6 w-full">
+        <div className="lg:w-4/6 w-full lg:block">
           <Outlet />
         </div>
       </div>

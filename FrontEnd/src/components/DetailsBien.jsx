@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import MapFromUrl from "./MapFormUrl";
-import { handleNegocier } from "../functions/handleNegocier.js";
 import {
   faCalendar,
   faChevronLeft,
@@ -67,9 +66,9 @@ function DetailsBien() {
         <div className="flex justify-end w-full mx-auto container">
           <div className="bg-gray-200 w-1/6 h-6 rounded"></div>
         </div>
-        <div className="flex space-x-4 w-[90%]">
-          <div className="flex-1 h-[400px] bg-gray-200 rounded"></div>
-          <div className="w-[200px] space-y-2">
+        <div className="lg:flex space-y-2 lg:space-x-4 w-[90%]">
+          <div className="flex-1 h-[200px] lg:h-[400px] bg-gray-200 rounded"></div>
+          <div className="lg:w-[200px] space-y-2">
             <div className="h-[150px] bg-gray-200 rounded"></div>
             <div className="h-[150px] bg-gray-200 rounded"></div>
           </div>
@@ -127,10 +126,9 @@ function DetailsBien() {
   const handleHeartClick = async (e, id) => {
     e.preventDefault();
     if (!user) {
-      toast.custom(() => (
-        <ToastWithLink msg={"vous devez connecter"} path={"/login"} />
+      return toast.custom(() => (
+        <ToastWithLink msg={"vous devez connecter"} path={"/login"} nav={nav} />
       ));
-      return;
     }
     const { biens_ids, message } = await handleAddFavoris(e, id);
 
@@ -163,7 +161,7 @@ function DetailsBien() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/start",
+        `${import.meta.env.VITE_API_SOCKET}:5000/api/auth/start`,
         {
           BienId: BienDetails.id,
           userId: user.id,
@@ -206,7 +204,7 @@ function DetailsBien() {
   };
 
   return (
-    <div className={`flex flex-col space-y-4 my-24`}>
+    <div className={`flex flex-col space-y-4 my-20 lg:my-24`}>
       <div className="mx-auto w-[90%] flex items-center justify-between">
         <span>
           <button
@@ -219,9 +217,9 @@ function DetailsBien() {
         </span>
         <BienViewTracker bienId={BienDetails?.id} userId={user?.id} />
 
-        <div className="flex items-center space-x-4 text-sm">
+        <div className="flex items-center space-x-2 lg:space-x-4 text-sm">
           <button
-            className="flex items-center space-x-1 cursor-pointer hover:underline hover:text-red-500 "
+            className="flex items-center lg:space-x-1 cursor-pointer hover:underline hover:text-red-500 "
             onClick={() => {
               setToggleSignalBien("waiting");
               setTimeout(() => {
@@ -230,10 +228,10 @@ function DetailsBien() {
             }}
           >
             <Flag className="h-4" />
-            <span>Signaler cette annonce</span>
+            <span className="hidden lg:block">Signaler cette annonce</span>
           </button>
           <div
-            className={`flex items-center text-sm space-x-1 hover:bg-red-100 rounded px-4 py-2 cursor-pointer 
+            className={`flex items-center text-sm space-x-1 hover:bg-red-100 rounded px-2 lg:px-4 py-2 cursor-pointer 
             ${
               FavorisReducer?.some((fv) => fv?.id === BienDetails?.id) &&
               "bg-red-100"
@@ -250,7 +248,7 @@ function DetailsBien() {
             }
             `}
             />
-            <span>
+            <span className="hidden lg:block">
               {FavorisReducer?.some((fv) => fv?.id === BienDetails?.id)
                 ? "Retirer des favoris"
                 : "Ajouter aux favoris"}
@@ -258,18 +256,20 @@ function DetailsBien() {
           </div>
         </div>
       </div>
-      <div className={`flex items-start justify-between mx-8`}>
+      <div
+        className={`flex flex-col lg:flex-row items-start justify-between mx-8`}
+      >
         <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden custom-scrollbar">
           <ImageZoomViewer imageUrl={BienDetails.images[selectedIndex]} />
         </div>
 
-        <div className="overflow-y-auto flex flex-col space-y-2 max-h-[550px] p-2 custom-scrollbar">
+        <div className="overflow-y-auto flex lg:flex-col lg:space-y-2 space-x-2 lg:space-x-0 max-h-[550px] p-2 custom-scrollbar">
           {BienDetails.images.map((img, index) => (
             <img
               src={img}
               alt={`thumbnail-${index}`}
               key={index}
-              className={`h-[150px] w-auto object-contain cursor-pointer rounded ${
+              className={`h-[50px] lg:h-[150px] w-auto object-contain cursor-pointer rounded ${
                 index === selectedIndex ? "ring-2 ring-[#a4161a]" : ""
               }`}
               onClick={() => setSelectedIndex(index)}
@@ -278,17 +278,21 @@ function DetailsBien() {
         </div>
       </div>
       <hr className="border-[#b1a7a650]" />
-      <div className={`  mx-24 flex items-start justify-between `}>
-        <div className="w-2/3 flex flex-col space-y-4">
+      <div
+        className={` mx-10 lg:mx-24 flex flex-col lg:flex-row lg:items-start lg:justify-between relative`}
+      >
+        <div className="lg:w-2/3 flex flex-col space-y-4">
           <div>
-            <h1 className="text-2xl font-semibold">{BienDetails.title}</h1>
+            <h1 className="text-lg lg:text-2xl font-semibold">
+              {BienDetails.title}
+            </h1>
             <div>
-              <p className="text-sm">{BienDetails.description}</p>
+              <p className=" text-xs lg:text-sm">{BienDetails.description}</p>
             </div>
           </div>
           <div className="flex justify-between me-4">
-            <div className="flex space-x-2 items-center text-xl">
-              <img src={brocheDeLocalisation} alt="" className="h-6" />
+            <div className="flex space-x-2 items-center  text-lg lg:text-xl">
+              <img src={brocheDeLocalisation} alt="" className="h-5 lg:h-6" />
               <span className="font-semibold">{BienDetails.type}</span>
               <span>à</span>
               <span className="font-semibold">{BienDetails.ville}</span>
@@ -298,9 +302,9 @@ function DetailsBien() {
           </div>
           {BienDetails.meuble === 1 && (
             <div className="border-t border-b border-gray-300 py-4">
-              <div className="flex space-x-2 items-center text-[#161a1d]">
-                <CircleCheckBig className="w-8" />
-                <p className="text-lg font-semibold">
+              <div className="flex space-x-3 items-center text-[#161a1d]">
+                <CircleCheckBig className="w-10 lg:w-8" />
+                <p className="text-sm lg:text-lg font-semibold">
                   Ce Bien est meublé, offre tout le nécessaire pour vivre
                   confortablement, avec des meubles, des appareils et des
                   accessoires.
@@ -319,10 +323,10 @@ function DetailsBien() {
                   />
                 </div>
                 <div>
-                  <p className="text-[17px] font-semibold">
+                  <p className="text-sm lg:text-[17px]  font-semibold">
                     {owner?.user?.nom + " " + owner?.user?.prenom}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs lg:text-sm text-gray-500">
                     {owner.Brève_présentation
                       ? owner.Brève_présentation
                       : "sans expérience"}
@@ -334,10 +338,10 @@ function DetailsBien() {
             )}
           </div>
         </div>
-        <div className=" w-1/4 rounded border border-gray-300 p-4 shadow flex flex-col space-y-6">
-          <div className="font-bold my-5 flex flex-col space-y-2">
-            <span>{formattedBudget} MAD</span>
+        <div className="shadow-xl lg:w-1/4 rounded-xl border border-gray-100 p-4 flex flex-col-reverse sticky top-1/2">
+          <div className="font-bold my-3 justify-center flex flex-col space-y-4">
             <hr className="border-gray-300" />
+            <span>{formattedBudget} MAD</span>
           </div>
           <div className="flex space-y-2 flex-col">
             <div className="flex justify-between items-center  w-full">
@@ -373,12 +377,12 @@ function DetailsBien() {
               </div>
             </div>
           </div>
-          <div className={` flex justify-between text-sm`}>
+          <div className={` flex justify-between text-sm my-4`}>
             {user &&
             user.role === "courtier" &&
             BienDetails.courtier_id === currentCourtier.id ? (
-              <div className="flex flex-col items-center justify-start space-y-2">
-                <div className="flex items-center text-start justify-start w-full">
+              <div className="flex flex-col items-center justify-start space-y-2 w-full border-b pb-4 border-gray-300 ">
+                <div className="flex items-center text-start justify-between space-x-2 w-full">
                   <p>Action :</p>
                   <button
                     onClick={() => {
@@ -392,18 +396,20 @@ function DetailsBien() {
                         payload: BienDetails,
                       });
                     }}
-                    className="px-2 py-2 cursor-pointer flex space-x-4 items-center"
+                    className="px-2 py-2 cursor-pointer flex space-x-2 items-center hover:bg-gray-100 rounded"
                   >
                     <FontAwesomeIcon icon={faPen} />
+                    <span className="hidden lg:flex">Modifier</span>
                   </button>
                   <button
-                    className="px-2 py-2  cursor-pointer text-red-500 flex space-x-4 items-center"
+                    className="px-2 py-2  cursor-pointer text-red-500 flex space-x-2 items-center hover:bg-red-100 rounded"
                     onClick={() => handleDeleteBien(BienDetails.id)}
                   >
                     <FontAwesomeIcon icon={faTrash} />
+                    <span className="hidden lg:flex">Supprimer</span>
                   </button>
                 </div>
-                <div className="flex items-center space-x-4 text-gray-600">
+                <div className="w-full flex items-center justify-start space-x-4 text-gray-600">
                   <div className="text-xs">
                     <p>{new Date(BienDetails.created_at).toLocaleString()}</p>
                     <p>{new Date(BienDetails.updated_at).toLocaleString()}</p>
@@ -461,7 +467,7 @@ function DetailsBien() {
         <MesBiens />
       ) : (
         filteredBiens.length > 0 && (
-          <div className="mx-24 flex flex-col space-y-4 items-start justify-between mt-5">
+          <div className="mx-12 lg:mx-24 flex flex-col space-y-4 items-start justify-between mt-5">
             <h1 className="text-xl font-semibold flex items-center space-x-3">
               <span>Recommendations</span>
               <Paperclip className="h-5" />

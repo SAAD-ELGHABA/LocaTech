@@ -6,8 +6,10 @@ use App\Models\Bien;
 use App\Http\Controllers\Controller;
 use App\Models\BienView;
 use App\Models\Courtier;
+use App\Models\Quartier;
 use App\Models\Rating;
 use App\Models\Status;
+use App\Models\Ville;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,13 +22,14 @@ class BienController extends Controller
      */
     public function index($limit)
     {
-        $Biens = Cache::remember('biens_cache', 3600, function () use ($limit) {
-            return Bien::with(['status', 'courtier'])
-                ->whereIn('status_id', [1, 5, 7])
-                // ->limit($limit)
-                ->get();
-        });
-
+        // $Biens = Cache::remember('biens_cache', 3600, function () use ($limit) {
+        //     return Bien::with(['status', 'courtier'])
+        //         ->whereIn('status_id', [1, 5, 7])
+        //         ->get();
+        // });
+        $Biens = Bien::with(['status', 'courtier'])
+            ->whereIn('status_id', [1, 5, 7])
+            ->get();
         return response()->json([
             'Biens' => $Biens
         ], 200);
@@ -122,7 +125,7 @@ class BienController extends Controller
             $filters = $request->only(['type', 'typeAffaire', 'budget', 'ville']);
 
             $query = Bien::query();
-
+            $query->whereIn('status_id', [1, 5, 7]);
             if (!empty($filters['type'])) {
                 $query->where('type', $filters['type']);
             }
@@ -305,11 +308,7 @@ class BienController extends Controller
         ]);
 
         $existingView = BienView::where('bien_id', $data['bien_id'])
-            ->when($data['user_id'], function ($query, $userId) {
-                return $query->where('user_id', $userId);
-            }, function ($query) use ($request) {
-                return $query->where('ip_address', $request->ip());
-            })
+            ->where('user_id', $data['user_id'])
             ->first();
 
         if ($existingView) {
@@ -318,11 +317,16 @@ class BienController extends Controller
 
         BienView::create([
             'bien_id' => $data['bien_id'],
-            'user_id' => $data['user_id'],
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent()
+            'user_id' => $data['user_id']
         ]);
 
         return response()->json(['message' => 'View recorded']);
+    }
+
+    public function getQuartierVille($ville)
+    {
+        $Ville = Ville::where('nom', $ville)->first();
+        $quarties = Quartier::where('ville_id', $Ville->id)->get();
+        return $quarties;
     }
 }

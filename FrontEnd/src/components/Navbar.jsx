@@ -140,10 +140,10 @@ const Navbar = () => {
         }`}
         style={{ zIndex: 1000 }}
       >
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div className="flex md:flex-row justify-between items-center ">
           <Logo />
 
-          <div className="lg:flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap hidden">
+          <div className="lg:flex items-center gap-5 text-sm font-medium overflow-x-auto whitespace-nowrap hidden ">
             <Link
               to="/acheter"
               className={`${
@@ -232,38 +232,40 @@ const Navbar = () => {
               <FaPlusCircle />
               <span>Déposer une annonce</span>
             </Link>
-
-            {user ? (
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setShowDropdown((prev) => !prev)}
-                  className="border border-red-500 text-red-500 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-100 transition cursor-pointer"
-                >
-                  <img
-                    src={user.image || logoUser}
-                    alt="Utilisateur"
-                    className="h-5 w-5 rounded-full"
-                  />
-                  <span>Mon Espace</span>
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="border border-red-500 text-red-500 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-100 transition"
-              >
-                <FaUserCircle />
-                <span>Mon Espace</span>
-              </Link>
-            )}
           </div>
+
+          {user ? (
+            <div className="relative text-sm" ref={dropdownRef}>
+              <button
+                onClick={() => setShowDropdown((prev) => !prev)}
+                className={`border border-red-500 text-red-500 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-100 transition cursor-pointer ${
+                  showDropdown && user && "bg-white"
+                }`}
+              >
+                <img
+                  src={user.image || logoUser}
+                  alt="Utilisateur"
+                  className="h-5 w-5 rounded-full"
+                />
+                <span>Mon Espace</span>
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="border border-red-500 text-red-500 px-4 py-2 rounded-full flex items-center gap-2 text-sm hover:bg-red-100 transition"
+            >
+              <FaUserCircle />
+              <span>Mon Espace</span>
+            </Link>
+          )}
         </div>
       </nav>
 
       {showDropdown && user && (
         <ul
           ref={dropdownRef}
-          className="fixed top-16 right-6 text-sm text-[#161a1d] bg-white border border-gray-300 rounded shadow-lg w-48 z-[1000] flex flex-col space-y-1"
+          className="fixed top-14 lg:top-16 right-6 text-sm text-[#161a1d] bg-white border border-gray-300 rounded shadow-lg w-48 z-[1000] flex flex-col space-y-1"
         >
           <Link
             to={

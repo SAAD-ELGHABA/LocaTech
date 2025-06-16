@@ -27,6 +27,7 @@ class Bien extends Model
         'etage',
         'meuble',
         'slag',
+        'quartier'
     ];
     protected $casts = [
         'images' => 'array',

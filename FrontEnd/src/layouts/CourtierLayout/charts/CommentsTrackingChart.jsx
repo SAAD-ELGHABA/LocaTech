@@ -9,16 +9,16 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function ViewTrackingChart({ views }) {
-  const chartData = views.map((view, index) => {
-    const date = new Date(view.created_at);
+function CommentsTrackingChart({ comments }) {
+  const chartData = comments.map((comment, index) => {
+    const date = new Date(comment.created_at);
     return {
       name: date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
       }),
-      views: index + 1,
-      timestamp: view.created_at,
+      rating: comment?.rating,
+      timestamp: comment.created_at,
     };
   });
 
@@ -42,7 +42,7 @@ function ViewTrackingChart({ views }) {
           <Tooltip />
           <Area
             type="monotone"
-            dataKey="views"
+            dataKey="rating"
             stroke="red"
             fill="#e5383b"
           />
@@ -52,4 +52,4 @@ function ViewTrackingChart({ views }) {
   );
 }
 
-export default ViewTrackingChart;
+export default CommentsTrackingChart;

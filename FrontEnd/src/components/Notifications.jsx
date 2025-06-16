@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BellOff, BellRing, ConciergeBell, Eye, Trash } from "lucide-react";
+import { BellOff, BellRing, ConciergeBell, Eye, Trash, X } from "lucide-react";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
@@ -15,7 +15,7 @@ function Notifications({ onClose }) {
   return (
     <div
       className="fixed w-[100vw] top-0 right-0 h-screen bg-[#0000006b] flex justify-center items-center"
-      style={{ zIndex: 1005 }}
+      style={{ zIndex: 1006 }}
       onClick={() => onClose(true)}
     >
       <motion.div
@@ -23,13 +23,20 @@ function Notifications({ onClose }) {
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed top-0 right-0 w-[30%] bg-white h-full shadow-lg z-50"
+        className="fixed top-0 right-0 lg:w-[30%] bg-white h-full shadow-lg z-50"
         onClick={(e) => e.stopPropagation()}
       >
         <div className=" h-full" onClick={(e) => e.stopPropagation()}>
-          <div className="mb-2 mx-8 mt-4 flex items-center space-x-2 pb-2 border-b border-gray-400">
+          <div className="flex justify-between items-center mb-2 mx-8 mt-4">
+          <div className=" flex items-center space-x-2 pb-2 border-b border-gray-400">
             <BellRing className="h-5 w-5" />
             <h1 className="text-xl font-semibold">Mes Notifications</h1>
+          </div>
+            <X className="cursor-pointer"
+              onClick={()=>{
+                onClose(true)
+              }}
+            />
           </div>
           <div className="overflow-y-scroll h-[85%] custom-scrollbar">
             {notifications?.length > 0 ? (

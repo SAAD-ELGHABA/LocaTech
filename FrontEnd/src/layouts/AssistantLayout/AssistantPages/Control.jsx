@@ -1,19 +1,36 @@
-import { SlidersVertical, Trash } from "lucide-react";
-import {
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
+import { LoaderCircle, SlidersVertical, Trash } from "lucide-react";
+import { useCallback, useRef, useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
+import { sendNotification } from "../../../functions/NotificationSender";
 
 function Control() {
   const courtiers = useSelector((state) => state.AllCourtiersReducer);
   const BienReducer = useSelector((state) => state.BiensAssistantReducer);
-
+  const [allBiens, setAllBiens] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState([]);
+  const fetchAllBien = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get(`/api/get-biens-assistant`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setAllBiens(res?.data?.allBiens);
+      setStatus(res?.data?.status);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchAllBien();
+  }, []);
   const [visibleCount, setVisibleCount] = useState(10);
   const observer = useRef();
   const lastBienRef = useCallback((node) => {
@@ -34,7 +51,7 @@ function Control() {
   const dispatch = useDispatch();
 
   const filteredBiens = useMemo(() => {
-    return BienReducer.filter((bien) => {
+    return allBiens?.filter((bien) => {
       const courtier = getCourtierById(bien.courtier_id);
       const evaluation = courtier?.agence?.evaluation?.evaluation || "";
 
@@ -57,7 +74,7 @@ function Control() {
 
       return matchesSearch && matchesEvaluation;
     });
-  }, [BienReducer, getCourtierById, searchTerm, evaluationFilter, dispatch]);
+  }, [allBiens, getCourtierById, searchTerm, evaluationFilter, dispatch]);
 
   const handleStatusBien = async (status, bienId) => {
     const loading = toast.loading("chargement...");
@@ -73,10 +90,21 @@ function Control() {
       );
       if (res.status >= 200 && res.status <= 300) {
         toast.success(res.data.message);
-        dispatch({
-          type: "ALLBIENS_ASSISTANT",
-          payload: res.data.Biens,
-        });
+        setAllBiens(res?.data?.Biens);
+        console.log(res);
+
+        await sendNotification(
+          res?.data?.bienUpdated?.courtier?.user?.id,
+          res?.data?.bienUpdated?.courtier?.user?.id,
+          "Le statut d'un bien immobilier a changé",
+          `
+          l'assistant a changé votre statut de bien pour qu'il soit :
+          ${res?.data?.bienUpdated?.status?.nom}
+          `,
+          {
+            link: `/bien/${res?.data?.bienUpdated?.ville}/${res?.data?.bienUpdated?.slag}`,
+          }
+        );
       }
     } catch (error) {
       console.log(error);
@@ -85,7 +113,11 @@ function Control() {
     }
   };
 
-  return (
+  return isLoading ? (
+    <div className="h-[50vh] flex justify-center items-center">
+      <LoaderCircle className="text-red-500 h-8 w-8 animate-spin" />
+    </div>
+  ) : (
     <div className="p-2">
       <div className="flex items-center justify-between mb-6 relative">
         <h1 className="text-xl font-semibold">
@@ -133,7 +165,18 @@ function Control() {
           )}
         </div>
       </div>
+      {/* <div className="grid grid-cols-5 my-2">
+            {
+              status?.length > 0 &&
 
+              status?.map(s=>
+
+                <button className="p-1.5 rounded hover:bg-gray-200">
+                  #{s?.nom}
+                </button>
+              )
+            }
+          </div> */}
       <div className="space-y-2">
         {filteredBiens.slice(0, visibleCount).map((bien, index) => {
           const imageUrl = bien.images?.length
@@ -146,9 +189,13 @@ function Control() {
             <div
               key={bien.id}
               ref={isLast ? lastBienRef : null}
-              className="bg-white shadow rounded-lg overflow-hidden flex flex-col md:flex-row text-sm"
+              className="bg-white shadow rounded-lg overflow-hidden flex flex-col md:flex-row text-sm max-h-[300px]"
             >
-              <img src={imageUrl} alt="bien" className="w-full md:w-1/3" />
+              <img
+                src={imageUrl}
+                alt="bien"
+                className="w-full object-cover md:w-1/2"
+              />
               <div className="p-4 flex-1">
                 <div className="flex space-x-2 items-center">
                   <img
@@ -174,12 +221,14 @@ function Control() {
                       ? bien.title.substring(0, 40) + ".."
                       : bien.title}
                   </h2>
-                  <Link
-                    to={`/bien/${bien.ville}/${bien.slag}`}
-                    className="hover:text-red-500"
-                  >
-                    voir annonce
-                  </Link>
+                  <div>
+                    <Link
+                      to={`/bien/${bien.ville}/${bien.slag}`}
+                      className="hover:text-red-500"
+                    >
+                      voir annonce
+                    </Link>
+                  </div>
                 </div>
 
                 <p className="text-gray-700 mb-1">
@@ -206,7 +255,7 @@ function Control() {
                 </p>
 
                 <div className="flex justify-between items-center">
-                  <div className="flex space-x-2 items-center text-sm">
+                  {/* <div className="flex space-x-2 items-center text-sm">
                     <button
                       onClick={() => {
                         (bien?.status?.nom === "brouillée" ||
@@ -237,11 +286,37 @@ function Control() {
                         ? "désactivé"
                         : "désactiver"}
                     </button>
+                  </div> */}
+                  <div className="grid lg:grid-cols-5 mt-2 gap-2 text-xs">
+                    {status?.length &&
+                      status?.map((s) => (
+                        <button
+                          className={`
+                            px-2 py-1 rounded text-white
+                            ${
+                              bien?.status?.nom === s?.nom
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer bg-[#9CA3AF] hover:bg-gray-500"
+                            }
+                          `}
+                          style={{
+                            backgroundColor:
+                              bien?.status?.nom === s?.nom
+                                ? s?.["coleur-code"]
+                                : "",
+                          }}
+                          onClick={() => {
+                            handleStatusBien(s?.nom, bien?.id);
+                          }}
+                        >
+                          {s?.nom}
+                        </button>
+                      ))}
                   </div>
-                  <p className="text-gray-500 text-sm">
-                    {new Date(bien?.created_at).toLocaleString()}
-                  </p>
                 </div>
+                <p className="text-gray-500 text-xs mt-2">
+                  {new Date(bien?.created_at).toLocaleString()}
+                </p>
               </div>
             </div>
           );

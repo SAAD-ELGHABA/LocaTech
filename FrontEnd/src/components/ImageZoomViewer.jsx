@@ -25,19 +25,13 @@ const ImageZoomViewer = ({ imageUrl }) => {
   const handleZoomOut = () => setZoom((z) => Math.max(0.1, z - 0.1));
 
   return (
-    <>
-      <div className="w-fit relative">
+    <div className="relative h-[25vh] lg:h-[80vh]">
+      <div className="w-fit ">
         <img
           src={imageUrl}
           alt="indice"
           className="rounded shadow object-cover w-full"
         />
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="absolute cursor-pointer top-8 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-200"
-        >
-          <Maximize2 size={18} />
-        </button>
       </div>
 
       {isModalOpen && (
@@ -61,7 +55,7 @@ const ImageZoomViewer = ({ imageUrl }) => {
             <button
               onClick={() => {
                 setIsModalOpen(false);
-                setZoom(1); 
+                setZoom(1);
                 setTransformOrigin("center center");
               }}
               className="bg-white p-2 rounded shadow hover:bg-gray-100"
@@ -87,7 +81,13 @@ const ImageZoomViewer = ({ imageUrl }) => {
           </div>
         </div>
       )}
-    </>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="absolute cursor-pointer top-[5%] right-2 bg-white p-1 rounded-full shadow hover:bg-gray-200"
+      >
+        <Maximize2 className="h-4 w-4" />
+      </button>
+    </div>
   );
 };
 

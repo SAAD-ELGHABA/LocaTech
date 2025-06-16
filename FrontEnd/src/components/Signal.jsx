@@ -49,7 +49,8 @@ function Signal({ setToggleSignalBien, toggleSignalBien, BienDetails }) {
 
   return (
     <div
-      className="fixed inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-[1002]"
+      className="fixed inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center "
+      style={{zIndex:1006}}
       onClick={() => {
         setToggleSignalBien(false);
       }}
@@ -57,8 +58,8 @@ function Signal({ setToggleSignalBien, toggleSignalBien, BienDetails }) {
       <div
         className={`flex flex-col bg-white rounded-lg shadow-xl overflow-hidden custom-scrollbar ${
           toggleSignalBien === "waiting"
-            ? "w-[20%] h-[30%]"
-            : "w-full max-w-md h-auto max-h-[90vh]"
+            ? "w-[20%] h-[10%] lg:h-[30%]"
+            : "w-[90%] lg:w-full max-w-md h-auto max-h-[90vh]"
         }`}
         onClick={(e) => e.stopPropagation()}
       >

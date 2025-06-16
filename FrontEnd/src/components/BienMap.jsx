@@ -64,12 +64,18 @@ const BienMap = ({ ville, quartier }) => {
   }, [ville, quartier]);
 
   return center ? (
-    <div className="w-[calc(100vw-150px)] h-[550px] mx-auto rounded my-20">
+    <div className="lg:w-[calc(100vw-150px)] w-[calc(100vw-50px)]  lg:h-[550px] mx-auto rounded my-20 ">
       <h1 className="my-4 text-xl font-semibold">Où se situe le logement</h1>
       <MapContainer
         center={center}
-        zoom={quartier ? 18 : 10}
-        style={{ width: "100%", height: "500px" }}
+        zoom={quartier ? 17 : 10}
+        style={{
+          width: "100%",
+          height: "500px",
+          border: `2px solid #ced4da`,
+          borderRadius: `10px`,
+          boxShadow:`2px 2px 5px #ced4da`
+        }}
         zoomControl={false}
         attributionControl={false}
       >
