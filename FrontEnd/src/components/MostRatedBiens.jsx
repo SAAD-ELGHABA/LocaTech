@@ -19,7 +19,6 @@ function MostRatedBiens() {
         const res = await axios.get(`/api/get-rates-biens/${limit}`);
         if (res.status >= 200 && res.status <= 300) {
           setMostRated(res?.data?.mostRated);
-          console.log(res);
         }
       } catch (error) {
         console.log(error);
@@ -33,10 +32,10 @@ function MostRatedBiens() {
   return (
     <div className="w-5/6 mx-auto my-8">
       {isLoading ? (
-        <div className="text-center h-30 flex items-center justify-center">
-          <div className="flex items-center justify-center h-full">
-            <LoaderCircle className="animate-spin h-12 w-12 text-red-500" />
-          </div>
+        <div className="text-center animate-pulse h-70 grid  grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="bg-gray-400 h-68 rounded"></div>
+          <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
+          <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
         </div>
       ) : (
         <div>
@@ -73,8 +72,10 @@ function MostRatedBiens() {
                 </SwiperSlide>
               ))
             ) : (
-              <div className="flex items-center justify-center h-full">
-                <LoaderCircle className="animate-spin h-12 w-12 text-red-500" />
+              <div className="text-center animate-pulse h-70 grid  grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="bg-gray-400 h-68 rounded"></div>
+                <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
+                <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
               </div>
             )}
           </Swiper>

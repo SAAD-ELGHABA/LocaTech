@@ -221,6 +221,15 @@ function DetailsBien() {
           <button
             className="flex items-center lg:space-x-1 cursor-pointer hover:underline hover:text-red-500 "
             onClick={() => {
+              if (!user) {
+                return toast.custom(() => (
+                  <ToastWithLink
+                    msg={"vous devez connecter"}
+                    path={"/login"}
+                    nav={nav}
+                  />
+                ));
+              }
               setToggleSignalBien("waiting");
               setTimeout(() => {
                 setToggleSignalBien(true);

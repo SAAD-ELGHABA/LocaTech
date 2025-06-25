@@ -26,7 +26,7 @@ function BarChartComponent() {
 
   return (
     <div className="flex justify-center">
-      <div className="h-[400px] w-2/3 overflow-y-auto overflow-x-scroll">
+      <div className="h-[400px] w-2/3 overflow-y-auto overflow-x-scroll custom-scrollbar">
         <table className="w-[1000px] text-center text-sm">
           <thead>
             <tr className="border-b border-gray-300 py-2">
@@ -74,7 +74,7 @@ function BarChartComponent() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="biens" fill="#8884d8" />
+            <Bar dataKey="biens" fill="#ef4444" />
           </BarChart>
         </ResponsiveContainer>
       </div>

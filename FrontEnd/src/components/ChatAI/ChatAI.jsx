@@ -99,12 +99,12 @@ const ChatAI = ({ onClose }) => {
 
   return (
     <div
-      className="absolute lg:absolute bg-white border border-gray-200 lg:rounded-lg shadow-md w-full lg:w-1/2  h-[90vh] lg:h-[500px] flex flex-col "
+      className="absolute lg:absolute bg-white border border-gray-200 lg:rounded-lg shadow-md w-full lg:w-1/2  h-[100vh] lg:h-[500px] flex flex-col "
       style={{ zIndex: 1003 }}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200 ">
+        <div className="flex items-center space-x-2 ">
           <Sparkles className="text-purple-500 text-lg" />
           <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
             LocaTech ChatAI
@@ -120,7 +120,7 @@ const ChatAI = ({ onClose }) => {
 
       <div
         ref={conversationRef}
-        className="p-4 overflow-y-auto flex-1 space-y-2"
+        className="p-4 overflow-y-auto flex-1 space-y-2 "
         id="conversation"
       >
         <div className="flex flex-wrap gap-2 my-4">
@@ -199,7 +199,7 @@ const ChatAI = ({ onClose }) => {
         )}
       </div>
 
-      <div className="p-3 border-t border-gray-200 mb-2">
+      <div className="p-3 border-t fixed bottom-0 w-full lg:static border-gray-200 mb-2">
         <div className="flex items-center">
           <textarea
             className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"

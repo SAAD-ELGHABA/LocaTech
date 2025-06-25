@@ -50,6 +50,8 @@ import ControlAccord from "../layouts/AssistantLayout/AssistantPages/ControlAcco
 import SignalControl from "../layouts/AssistantLayout/AssistantPages/SignalControl";
 import AccordControl from "../layouts/AssistantLayout/AssistantPages/AccordControl";
 import BlogDetails from "../components/BlogDetails";
+import Affaires from "../layouts/AdminLayout/adminPages/Affaires";
+import AccessRouteAdmin from "./accessRoute.jsx/AccessRouteAdmin";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -184,7 +186,7 @@ const Router = createBrowserRouter([
       },
       {
         path: "/blog-article-details/:slug",
-        element: <BlogDetails/>,
+        element: <BlogDetails />,
       },
     ],
   },
@@ -224,7 +226,11 @@ const Router = createBrowserRouter([
     ],
   },
   {
-    element: <IndexAdmin />,
+    element: (
+      <AccessRouteAdmin>
+        <IndexAdmin />
+      </AccessRouteAdmin>
+    ),
     children: [
       {
         path: TABLEA_DE_BORD_ADMIN,
@@ -266,6 +272,10 @@ const Router = createBrowserRouter([
       {
         path: "/evaluations",
         element: <Evaluations />,
+      },
+      {
+        path: "/affaires",
+        element: <Affaires />,
       },
     ],
   },

@@ -17,13 +17,13 @@ import Dropdown from "../../../components/Dropdown";
 function AccordControl() {
   const [accords, setAccords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [idSignal, setIdSignal] = useState(null);
   const [showConversationInterface, setShowConversationInterface] =
     useState(false);
   const dispatch = useDispatch();
   const allConversationsReducer = useSelector(
     (state) => state.allConversationsReducer
   );
+  const [accordUpdated, setAccordUpdated] = useState(null);
   const fetchAccords = async () => {
     setIsLoading(true);
     try {
@@ -41,8 +41,7 @@ function AccordControl() {
   };
   useEffect(() => {
     fetchAccords();
-  }, []);
-  const [selectedOption, setSelectedOption] = useState("");
+  }, [accordUpdated]);
   return isLoading ? (
     <div className="h-[50vh] flex justify-center items-center">
       <LoaderCircle className="text-red-500 h-8 w-8 animate-spin" />
@@ -56,6 +55,17 @@ function AccordControl() {
       <ul>
         {accords?.map((a) => (
           <li key={a?.id} className="border-b border-gray-300 py-4 px-2 ">
+            <div className="flex items-center justify-end ">
+              {a?.affaires ? (
+                <span className="text-xs text-gray-500">
+                  a été {a?.affaires?.status} par l'assistant
+                </span>
+              ) : (
+                <span className="text-xs text-gray-500">
+                  Pas d'affaire associée
+                </span>
+              )}
+            </div>
             <div className="flex items-center space-x-4">
               <div>
                 <Link to={`/bien/${a?.bien?.ville}/${a?.bien?.slag}`}>
@@ -111,14 +121,20 @@ function AccordControl() {
                       }
                       `}
               >
-                <span>{a?.status}</span>
+                <span>
+                  {a?.status === "accepted"
+                    ? "accepté"
+                    : a?.status === "rejected"
+                    ? "rejeté"
+                    : a?.status}
+                </span>
                 <TrendingUp
                   className={`${
                     a?.status === "accepted"
                       ? "rotate-0"
                       : a?.status === "rejected"
                       ? "rotate-180"
-                      : "none"
+                      : "hidden"
                   }`}
                 />
               </div>
@@ -152,10 +168,13 @@ function AccordControl() {
               </div>
               <div className="text-xs text-gray-500  mt-2">
                 <Dropdown
-                  options={["Option 1", "Option 2", "Option 3"]}
-                  selected={selectedOption}
-                  setSelected={setSelectedOption}
-                  placeholder="Choose an option"
+                  setAccordUpdated={setAccordUpdated}
+                  idAccord={a?.id}
+                  placeholder={
+                    a?.affaires
+                      ? `a été ${a?.affaires?.status} par l'assistant`
+                      : "Sélectionnez une action"
+                  }
                 />
               </div>
             </div>

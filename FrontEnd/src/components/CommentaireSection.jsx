@@ -107,7 +107,7 @@ function CommentaireSection({ bienId, isIntersactions = false }) {
   const roundedRating = Math.round(averageRating);
 
   return (
-    <div className="mx-auto my-6 w-[90%]">
+    <div className="mx-auto my-6 w-[85%]">
       <div className="flex items-center justify-between my-4">
         <div className="lg:w-1/2 w-full ">
           <div className="mb-4">

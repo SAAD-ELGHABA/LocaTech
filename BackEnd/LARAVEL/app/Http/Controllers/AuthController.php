@@ -30,6 +30,7 @@ class AuthController extends Controller
                 'password' => $request->input('email_verified') ? '' : 'required',
             ]);
             $credentials = $request->only('email', 'password');
+            
             if ($validation && Auth::attempt($credentials)) {
                 $user = User::find(Auth::id());
                 $token = $user->createToken('authToken')->plainTextToken;

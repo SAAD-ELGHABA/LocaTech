@@ -4,13 +4,22 @@ import FilterBar from "../components/FilterBar";
 import BienContainer from "../components/BienContainer";
 import SortSelect from "../components/SortSelect";
 import { LoaderCircle } from "lucide-react";
+import axios from "axios";
+import { fetchMyHistory } from "../functions/fetchMyHistory";
 
 function ConsulterBiens() {
-  const [sortOption, setSortOption] = useState("date");
+  const [sortOption, setSortOption] = useState();
   const [visibleCount, setVisibleCount] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-
+  const dispatch = useDispatch();
   const Biens = useSelector((state) => state.BienReducer);
+  useEffect(() => {
+    async function fetchData() {
+      await fetchMyHistory(Biens, dispatch);
+    }
+    fetchData();
+  }, []);
+
   const filtredBiensReducer = useSelector((state) => state.filtredBiensReducer);
   const biensToRender =
     filtredBiensReducer.length > 0 ? filtredBiensReducer : Biens;
@@ -26,8 +35,9 @@ function ConsulterBiens() {
       case "price-desc":
         return b.budget - a.budget;
       case "date":
-      default:
         return new Date(b.created_at) - new Date(a.created_at);
+      default:
+        return 
     }
   });
 
@@ -54,7 +64,7 @@ function ConsulterBiens() {
   }, [isLoadingMore, visibleCount, sortedBiensToRender.length]);
 
   const visibleBiens = sortedBiensToRender.slice(0, visibleCount);
-  
+
   return (
     <div className="my-20 lg:my-32">
       <FilterBar />

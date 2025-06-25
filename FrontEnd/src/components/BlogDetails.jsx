@@ -10,7 +10,7 @@ function BlogDetails() {
   const fetchArticleDetails = async () => {
     try {
       const res = await axios.get(
-        `https://a3bf-41-141-112-151.ngrok-free.app/wp-json/wp/v2/posts?slug=${slug}`,
+        `${import.meta.env.VITE_API_WP_URL}/wp-json/wp/v2/posts?slug=${slug}`,
         {
           headers: {
             "ngrok-skip-browser-warning": "true",
@@ -21,7 +21,9 @@ function BlogDetails() {
       setArticle(res?.data[0]);
       if (res?.data[0].featured_media) {
         const imgRes = await axios.get(
-          `https://a3bf-41-141-112-151.ngrok-free.app/wp-json/wp/v2/media/${res?.data[0].featured_media}`,
+          `${import.meta.env.VITE_API_WP_URL}/wp-json/wp/v2/media/${
+            res?.data[0].featured_media
+          }`,
           {
             headers: {
               "ngrok-skip-browser-warning": "true",

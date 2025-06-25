@@ -21,4 +21,8 @@ class Accord extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function affaires()
+    {
+        return $this->hasOne(Affaire::class, 'accord_id');
+    }
 }

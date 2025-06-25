@@ -5,6 +5,7 @@ import { MessageCircleQuestion } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
+import { socketListener } from "../../functions/socketListener";
 
 function ChatRealTimePage() {
   const dispatch = useDispatch();
@@ -65,15 +66,41 @@ function ChatRealTimePage() {
     fetchData();
   }, []);
 
+  let userId;
+
+  if (user.role === "user") {
+    userId = user.id;
+  } else if (user.role === "courtier") {
+    userId = currentCourtier?.id;
+  } else if (user.role === "assistant") {
+    userId = 0;
+  }
+  useEffect(() => {
+    const unsubscribe = socketListener(dispatch, userId, currentConversation);
+    return () => {
+      unsubscribe();
+    };
+  }, [currentConversation, dispatch, userId]);
+
   return (
     <div>
       <div className="lg:flex">
-        <div className={`w-full lg:w-2/6 ${
-          location.pathname == '/chat/conversation' ? "hidden":"flex"
-        } lg:block`}>
+        <div
+          className={`${
+            ["/chat/conversation"].some((path) =>
+              location.pathname.startsWith(path)
+            )
+              ? "hidden lg:flex lg:w-2/6"
+              : "block w-full lg:flex lg:w-2/6"
+          }`}
+        >
           <Aside />
         </div>
-        <div className="lg:w-4/6 w-full lg:block">
+
+        <div
+          className={`flex w-full lg:flex lg:w-4/6 
+            `}
+        >
           <Outlet />
         </div>
       </div>

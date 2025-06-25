@@ -11,14 +11,30 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // You can also loop over multiple users or select specific ones
-        $user = User::inRandomOrder()->first(); // pick a random user
+        // 1. Create the admin user
+        $user = User::create([
+            'nom' => 'Admin',
+            'prenom' => 'Super',
+            'email' => 'admin@locatech.com',
+            'password' => Hash::make('locatech'), // secure password
+            'email_verified' => true,
+            'email_verified_at' => now(),
+            'telephone' => '0612345678',
+            'adresse' => 'Rue des Admins, Marrakech',
+            'code_postal' => '40000',
+            'ville' => 'Marrakech',
+            'CIN' => 'AA123456',
+            'age' => 30,
+            'sexe' => 'Homme',
+            'role' => 'admin',
+            'image' => null,
+            'fcm_token' => null,
+        ]);
 
-        if ($user) {
-            Admin::create([
-                'user_id' => $user->id,
-                'password_admin' => Hash::make('adminpassword123'), // encrypt password
-            ]);
-        }
+        // 2. Create the admin table entry
+        Admin::create([
+            'user_id' => $user->id,
+            'password_admin' => Hash::make('locatech'), // separate admin password if needed
+        ]);
     }
 }

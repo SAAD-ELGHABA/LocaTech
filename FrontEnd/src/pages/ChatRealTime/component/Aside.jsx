@@ -44,7 +44,7 @@ function Aside() {
 
   return (
     <div className="flex flex-col justify-start space-y-2 items-center w-full h-screen bg-[#161a1d] p-1 sticky top-0 text-white overflow-y-auto">
-      <div className="flex items-center shrink-0 justify-center w-full">
+      <div className="flex items-center shrink-0 justify-center w-full shadow-md ">
         <Link to="/">
           <img
             src={"/logo-locatech-v1.png"}

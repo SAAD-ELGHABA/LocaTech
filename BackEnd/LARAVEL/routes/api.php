@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
 use App\Http\Controllers\CourtierController;
 use App\Http\Controllers\FavoriController;
+use App\Http\Controllers\MyHistoryController;
 use App\Http\Controllers\notificationController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\SignalController;
@@ -189,6 +190,10 @@ Route::get('/get-quartier-ville/{ville}', [BienController::class, 'getQuartierVi
 
 Route::get('/get-biens-assistant', [AssistantController::class, 'getBiens'])->name('getBiens');
 
-Route::get('/get-signals',[SignalController::class,'getSignals'])->name('get.signals');
+Route::get('/get-signals', [SignalController::class, 'getSignals'])->name('get.signals');
 
-Route::get('/get-accords',[AccordController::class,'getAccords'])->name('get.accords');
+Route::get('/get-accords', [AccordController::class, 'getAccords'])->name('get.accords');
+
+Route::post('/accords/validate', [AccordController::class, 'validateAccord'])->name('validate.accord')->middleware('auth:sanctum');
+
+Route::get('/my-history', [MyHistoryController::class, 'getTracking'])->name('getTracking')->middleware('auth:sanctum');

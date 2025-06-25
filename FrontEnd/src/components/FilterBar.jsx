@@ -7,6 +7,7 @@ import axios from "axios";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router";
+import { fetchMyHistory } from "../functions/fetchMyHistory";
 
 function FilterBar() {
   const searchBoxRef = useRef(null);
@@ -34,6 +35,14 @@ function FilterBar() {
     { label: "Entre 5M et 10M", min: 5000000, max: 10000000 },
     { label: "Plus de 10M", min: 10000000, max: null },
   ];
+  const Biens = useSelector((state) => state.BienReducer);
+
+  useEffect(() => {
+    async function fetchData() {
+      await fetchMyHistory(Biens, dispatch);
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 0);
@@ -93,19 +102,16 @@ function FilterBar() {
   };
 
   const handleReset = () => {
-    const resetFilter = toast.loading("Réinitialisation des filtres...");
     try {
       dispatch({ type: "RESET_FILTER" });
       dispatch({ type: "RESET_FILTERED_BIENS" });
       toast.success("Filtres réinitialisés !");
-      toast.dismiss(resetFilter);
     } catch (error) {
       toast.error(
         error?.response?.data?.message || "Erreur lors de la réinitialisation."
       );
-      toast.dismiss(resetFilter);
     } finally {
-      toast.dismiss(resetFilter);
+      //
     }
   };
 
@@ -265,13 +271,15 @@ function FilterBar() {
             )}
           </button>
 
-          <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto">
+          <div className="p-[1px] rounded-md bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 w-full sm:w-auto animate-gradient-x">
             <button
               onClick={() => setShowChatAI(true)}
-              className="flex items-center justify-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 bg-white text-gray-800 px-4 py-2 rounded-md w-full sm:w-auto relative overflow-hidden cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-purple-500" />
-              Prévoir des recommandations
+              <span className="gradient-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500 bg-clip-text text-transparent animate-gradient-x">
+                Prévoir des recommandations
+              </span>
             </button>
           </div>
 

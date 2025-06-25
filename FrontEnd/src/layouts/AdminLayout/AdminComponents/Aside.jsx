@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronRight,
   Star,
+  BadgePercent,
 } from "lucide-react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -70,6 +71,11 @@ function Aside({ isOpen = true }) {
       to: "/evaluations",
       icon: <Star className="h-4" />,
       label: "Evaluation",
+    },
+    {
+      to: "/affaires",
+      icon: <BadgePercent  className="h-4" />,
+      label: "Affaires",
     },
   ];
 

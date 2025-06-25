@@ -14,6 +14,7 @@ import { socketListener } from "../functions/socketListener";
 import { fetchConversations } from "../functions/fetchConversations";
 import Notifications from "./Notifications";
 import { motion } from "framer-motion";
+import LogoutModal from "./LogoutModal";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -61,10 +62,6 @@ const Navbar = () => {
   const MySwal = withReactContent(Swal);
   const isHomepage = location.pathname === "/";
 
-  const clearNotifications = () => {
-    setNotifications([]);
-  };
-
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     const handleClickOutside = (event) => {
@@ -81,54 +78,32 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const handleLogOut = () => {
-    const loadingToast = toast.loading("Se déconnecter...");
-
-    MySwal.fire({
-      title: "Se déconnecter?",
-      text: "Êtes-vous sûr de se déconnecter?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#ef4444",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Oui, se déconnecter",
-      cancelButtonText: "Annuler",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.post(
-            "/api/logout",
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          dispatch({ type: "LOGOUT" });
-          localStorage.removeItem("token");
-          localStorage.removeItem("currentConversationId");
-          await fetchInitialData(dispatch, null);
-          toast.success("Déconnexion réussie !");
-          MySwal.fire({
-            title: "Déconnecté",
-            text: "Vous avez été déconnecté avec succès.",
-            icon: "success",
-            confirmButtonColor: "#3b82f6",
-          });
-          navigate("/login");
-        } catch (error) {
-          toast.error("Échec de la déconnexion.");
-          console.error(error);
-        } finally {
-          toast.dismiss(loadingToast);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const handleLogOut = async () => {
+    try {
+      await axios.post(
+        "/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      } else {
-        toast.dismiss(loadingToast);
-      }
-    });
+      );
+      await fetchInitialData(dispatch, null);
+      navigate("/login");
+      dispatch({ type: "LOGOUT" });
+      localStorage.removeItem("token");
+      localStorage.removeItem("currentConversationId");
+      toast.success("Déconnexion réussie !");
+    } catch (error) {
+      toast.error("Échec de la déconnexion.");
+      console.error(error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
+
   const loc = useLocation();
   return (
     <div className="relative">
@@ -195,43 +170,15 @@ const Navbar = () => {
               Contactez-nous
             </Link>
 
-            {isHomepage && isScrolled ? (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
+            {user?.role === "courtier" && (
+              <Link
+                to="/block"
+                className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-600 transition"
               >
-                <button
-                  onClick={() =>
-                    document
-                      .getElementById("hero-section")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-red-600 transition"
-                >
-                  <FaSearch />
-                  <span>Rechercher</span>
-                </button>
-              </motion.div>
-            ) : (
-              !isHomepage && (
-                <Link
-                  to="/"
-                  className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-red-600 transition"
-                >
-                  <FaSearch />
-                  <span>Rechercher</span>
-                </Link>
-              )
+                <FaPlusCircle />
+                <span>Déposer une annonce</span>
+              </Link>
             )}
-
-            <Link
-              to="/block"
-              className="bg-[#F44336] text-white px-4 py-2 rounded-full flex items-center gap-2 hover:bg-red-600 transition"
-            >
-              <FaPlusCircle />
-              <span>Déposer une annonce</span>
-            </Link>
           </div>
 
           {user ? (
@@ -273,11 +220,15 @@ const Navbar = () => {
                 ? "/assistant-index"
                 : user.role === "courtier"
                 ? "/courtier-index"
+                : user.role === "admin"
+                ? "/tableau-de-bord-admin"
                 : "/profile-client"
             }
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
           >
-            {user.role === "courtier" || user.role === "assistant" ? (
+            {user.role === "courtier" ||
+            user.role === "assistant" ||
+            user.role === "admin" ? (
               "Mon espace"
             ) : (
               <Link to={"/profile-client"}>Profile</Link>
@@ -333,10 +284,19 @@ const Navbar = () => {
           )}
           <li
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"
-            onClick={handleLogOut}
+            onClick={() => {
+              setIsLoggingOut(true);
+            }}
           >
             Déconnexion
           </li>
+          {isLoggingOut && (
+            <LogoutModal
+              isOpen={isLoggingOut}
+              onConfirm={handleLogOut}
+              onCancel={() => setIsLoggingOut(false)}
+            />
+          )}
         </ul>
       )}
 
@@ -344,7 +304,7 @@ const Navbar = () => {
       {showNotifications && (
         <Notifications
           onClose={() => setShowNotifications(false)}
-          onClear={clearNotifications}
+          // onClear={clearNotifications}
         />
       )}
     </div>

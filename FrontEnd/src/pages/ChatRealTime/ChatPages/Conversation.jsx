@@ -181,7 +181,6 @@ function Conversation({ isAssistant = false }) {
                   : "#34d399",
             }}
           >
-            {/* Icon */}
             {currentConversation.status === "supprimé" && (
               <Trash className="h-5 w-5" />
             )}

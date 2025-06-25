@@ -52,6 +52,8 @@ const LoginPage = () => {
             nav("/courtier-index");
           } else if (response.data.user.role === "assistant") {
             nav("/assistant-index");
+          } else if (response.data.user.role === "admin") {
+            nav("/tableau-de-bord-admin");
           }
         }, 1000);
       }
