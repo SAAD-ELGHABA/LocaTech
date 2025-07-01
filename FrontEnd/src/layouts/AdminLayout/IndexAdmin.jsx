@@ -5,6 +5,10 @@ import { Outlet } from "react-router";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import { fetchCourtiers } from "../../functions/fetchCourtiers";
+import { fetchAgence } from "../../functions/fetchAgence";
+import { fetchAdmins } from "../../functions/fetchAdmins";
+import { fetchUsers } from "../../functions/fetchUsers";
 
 function IndexAdmin() {
   const dispatch = useDispatch();
@@ -20,21 +24,16 @@ function IndexAdmin() {
             payload: recentResponse.data,
           });
         }
-        const adminsResponse = await axios.get("/api/get-admins");
-        if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
-          dispatch({
-            type: "GET_ADMINS",
-            payload: adminsResponse.data.admins,
-          });
-        }
         const AssistantsResponse = await axios.get("/api/get-assistants");
-        if (adminsResponse.status >= 200 && adminsResponse.status <= 300) {
+        if (
+          AssistantsResponse.status >= 200 &&
+          AssistantsResponse.status <= 300
+        ) {
           dispatch({
             type: "GET_ASSISTANTS",
             payload: AssistantsResponse.data.assistants,
           });
         }
-
       } catch (error) {
         console.error("Error:", error);
         toast.error("Erreur lors du chargement des données.");
@@ -49,7 +48,10 @@ function IndexAdmin() {
       }
     };
     fetchData();
-
+    fetchCourtiers(dispatch);
+    fetchAgence(dispatch);
+    fetchAdmins(dispatch);
+    fetchUsers(dispatch);
   }, []);
 
   return (

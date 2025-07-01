@@ -30,12 +30,16 @@ function MostRatedBiens() {
   }, []);
 
   return (
-    <div className="w-5/6 mx-auto my-8">
+    <div className="w-[85%] lg:w-[95%] mx-auto my-8">
       {isLoading ? (
-        <div className="text-center animate-pulse h-70 grid  grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="bg-gray-400 h-68 rounded"></div>
-          <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
-          <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
+        <div className="w-full mx-auto grid gap-2">
+          <div className="bg-gray-300 h-14 rounded w-2/6"></div>
+          <div className="text-center animate-pulse h-70 grid  grid-cols-1 lg:grid-cols-4 gap-4">
+            <div className="bg-gray-300 h-68 rounded"></div>
+            <div className="bg-gray-300 h-68 rounded hidden lg:flex"></div>
+            <div className="bg-gray-300 h-68 rounded hidden lg:flex"></div>
+            <div className="bg-gray-300 h-68 rounded hidden lg:flex"></div>
+          </div>
         </div>
       ) : (
         <div>
@@ -60,7 +64,7 @@ function MostRatedBiens() {
                 slidesPerView: 2,
               },
               1024: {
-                slidesPerView: 3,
+                slidesPerView: 4,
               },
             }}
             className="mb-12 mx-auto"

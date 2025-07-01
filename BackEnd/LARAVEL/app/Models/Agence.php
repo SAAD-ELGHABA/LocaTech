@@ -10,7 +10,9 @@ class Agence extends Model
         'agence',
         'Numéro_ICE',
         'RC',
-        'evaluation_id'
+        'evaluation_id',
+        'telephone',
+        'email'
     ];
     public function evaluation()
     {

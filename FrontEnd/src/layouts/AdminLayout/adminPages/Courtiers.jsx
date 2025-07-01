@@ -1,47 +1,82 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import dossierVide from "../../../assets/dossier-vide.png";
+import { LoaderCircle, Plus, Search } from "lucide-react";
+import CourtierModal from "../AdminComponents/Modals/CourtierModal";
+import { fetchCourtiers } from "../../../functions/fetchCourtiers";
 
 function Courtiers() {
   const courtiers = useSelector((state) => state.AllCourtiersReducer);
   const status = useSelector((state) => state.statusReducer);
+  const dispatch = useDispatch();
+  const loader = useRef(null);
+
+  useEffect(() => {
+    fetchCourtiers(dispatch);
+  }, []);
 
   const [selectedRow, setSelectedRow] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [toggleCourtierModal, setToggleCourtierModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const totalPages = Math.ceil(courtiers.length / usersPerPage);
-  const maxVisiblePages = 3;
-  const half = Math.floor(maxVisiblePages / 2);
-
-  let startPage = Math.max(currentPage - half, 1);
-  let endPage = startPage + maxVisiblePages - 1;
-
-  if (endPage > totalPages) {
-    endPage = totalPages;
-    startPage = Math.max(endPage - maxVisiblePages + 1, 1);
-  }
-
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentCourtiers = courtiers.slice(indexOfFirstUser, indexOfLastUser);
-
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
+  const loadMore = () => {
+    setVisibleCount((prev) => prev + 10);
   };
+
+  const handleObserver = useCallback((entries) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      loadMore();
+    }
+  }, []);
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: "20px",
+      threshold: 1.0,
+    };
+    const observer = new IntersectionObserver(handleObserver, option);
+    if (loader.current) observer.observe(loader.current);
+  }, [handleObserver]);
+
   return (
     <div className="p-4">
-      <div>
-        <h1 className="text-xl font-semibold">Courtiers</h1>
+      {toggleCourtierModal && (
+        <CourtierModal
+          setToggleCourtierModal={setToggleCourtierModal}
+          selectedRow={selectedRow}
+          setSelectedRow={setSelectedRow}
+        />
+      )}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-bold">Courtiers</h1>
+        <div className="border rounded px-4 py-1.5 flex w-1/3 border-gray-400 text-sm">
+          <input
+            type="text"
+            className="w-[95%] h-full focus:outline-none"
+            placeholder="chercher des conversations .. "
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          />
+          <div className="flex justify-end w-[5%] text-gray-400">
+            <Search className="h-5 w-5" />
+          </div>
+        </div>
+        <button
+          className="flex items-center space-x-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors text-sm"
+          onClick={() => setToggleCourtierModal(true)}
+        >
+          <span>Ajouter un courtier</span>
+          <Plus className="h-5 w-5" />
+        </button>
       </div>
+
       <div className="mb-4">
         <table className="w-full mx-auto text-center text-sm border-collapse">
           <thead>
-            <tr style={{ border: "1px solid #d3d3d3" }} className="bg-gray-200">
+            <tr className="bg-gray-200" style={{ border: "1px solid #d3d3d3" }}>
               <th className="py-2" style={{ border: "1px solid #d3d3d3" }}>
                 #
               </th>
@@ -53,9 +88,22 @@ function Courtiers() {
             </tr>
           </thead>
           <tbody>
-            {currentCourtiers.length > 0 &&
-              currentCourtiers.map((courtier) => (
+            {courtiers
+              .filter(
+                (courtier) =>
+                  courtier?.user?.nom.toLowerCase().includes(searchTerm) ||
+                  courtier?.user?.prenom.toLowerCase().includes(searchTerm) ||
+                  courtier?.user?.email.toLowerCase().includes(searchTerm) ||
+                  courtier?.agence?.agence.toLowerCase().includes(searchTerm) ||
+                  courtier?.status?.nom.toLowerCase().includes(searchTerm)
+              )
+              .slice(0, visibleCount)
+              .map((courtier) => (
                 <tr
+                  onClick={() => {
+                    setToggleCourtierModal(true);
+                    setSelectedRow(courtier.id);
+                  }}
                   key={courtier.id}
                   style={{ border: "1px solid #d3d3d3" }}
                   className="hover:bg-gray-100 cursor-pointer"
@@ -64,7 +112,7 @@ function Courtiers() {
                     {courtier.id}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier?.user?.nom+" "+courtier?.user?.prenom}
+                    {courtier?.user?.nom + " " + courtier?.user?.prenom}
                   </td>
                   <td style={{ border: "1px solid #d3d3d3" }}>
                     {courtier?.user?.email}
@@ -93,6 +141,7 @@ function Courtiers() {
                   </td>
                 </tr>
               ))}
+
             {courtiers.length === 0 && (
               <tr>
                 <td colSpan={7} className="py-10">
@@ -108,39 +157,11 @@ function Courtiers() {
             )}
           </tbody>
         </table>
-        <div className="flex justify-center space-x-1 mt-8 text-xs">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50 cursor-pointer"
-          >
-            Précédent
-          </button>
 
-          {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
-            const pageNumber = startPage + i;
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`cursor-pointer px-4 py-2 ${
-                  currentPage === pageNumber
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-200"
-                } rounded`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
-
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
-          >
-            Suivant
-          </button>
+        <div ref={loader} className="flex justify-center mt-4">
+          {visibleCount < courtiers.length && (
+            <LoaderCircle className="text-red-500 animate-spin" />
+          )}
         </div>
       </div>
     </div>

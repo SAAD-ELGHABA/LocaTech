@@ -23,5 +23,11 @@ export default defineConfig({
       secure: false,
       rewrite: (path) => path.replace(/^\/node/, '')
     },
+      host: true,
+      port: 5173,
+      strictPort: true,
+      allowedHosts: [
+        'aeb3-160-177-94-208.ngrok-free.app',
+      ],
   },
 })

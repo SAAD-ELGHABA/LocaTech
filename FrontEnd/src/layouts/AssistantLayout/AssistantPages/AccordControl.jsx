@@ -49,7 +49,7 @@ function AccordControl() {
   ) : accords?.length > 0 ? (
     <div className="mx-8 my-4">
       <div className="flex items-center space-x-2 mb-6">
-        <h1 className="text-xl font-semibold">Accords</h1>
+        <h1 className="text-xl font-bold">Accords</h1>
         <HandshakeIcon />
       </div>
       <ul>

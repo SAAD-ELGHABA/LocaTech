@@ -32,7 +32,7 @@ const NotificationBell = () => {
       </button>
 
       {open && (
-        <div className="absolute right-1 top-full w-96 bg-white shadow-lg rounded-md overflow-hidden z-50 min-h-[80vh] max-h-[80vh] overflow-y-scroll border border-gray-300 custom-scrollbar">
+        <div className="absolute right-1 top-full w-90 bg-white shadow-lg rounded-md overflow-hidden z-50 min-h-[80vh] max-h-[80vh] overflow-y-scroll border border-gray-300 custom-scrollbar">
           {notifications?.length > 0 ? (
             notifications?.map((n) => (
               <Link

@@ -63,7 +63,7 @@ function Aside({ isOpen = true }) {
       label: "Assistants",
     },
     {
-      to: "/all-users",
+      to: "/utilisateurs",
       icon: <Users className="h-4" />,
       label: "Utilisateurs",
     },
@@ -74,7 +74,7 @@ function Aside({ isOpen = true }) {
     },
     {
       to: "/affaires",
-      icon: <BadgePercent  className="h-4" />,
+      icon: <BadgePercent className="h-4" />,
       label: "Affaires",
     },
   ];
@@ -82,7 +82,7 @@ function Aside({ isOpen = true }) {
   return (
     <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed">
       <div className="my-4 text-center">
-        <h1 className="text-lg font-semibold">Bienvenue Admin</h1>
+        <h1 className="text-lg font-semibold text-white">Bienvenue Admin</h1>
       </div>
       <div className="w-full text-sm flex flex-col">
         {links.map((link) => {

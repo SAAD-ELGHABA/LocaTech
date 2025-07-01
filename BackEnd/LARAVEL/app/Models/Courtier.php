@@ -31,4 +31,8 @@ class Courtier extends Model
     {
         return $this->hasMany(Bien::class);
     }
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }

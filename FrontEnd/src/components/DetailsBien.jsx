@@ -473,16 +473,18 @@ function DetailsBien() {
 
       <hr className="border-[#b1a7a6]" />
       {user && user.role === "courtier" ? (
-        <MesBiens />
+        <div className="w-[90%] mx-auto">
+          <MesBiens />
+        </div>
       ) : (
         filteredBiens.length > 0 && (
-          <div className="mx-12 lg:mx-24 flex flex-col space-y-4 items-start justify-between mt-5">
+          <div className="mx-6 lg:mx-12 flex flex-col space-y-4 items-start justify-between mt-5">
             <h1 className="text-xl font-semibold flex items-center space-x-3">
               <span>Recommendations</span>
               <Paperclip className="h-5" />
             </h1>
-            <div className="items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full mx-auto">
-              {filteredBiens.slice(0, 5).map((bien) => (
+            <div className="items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mx-auto">
+              {filteredBiens.slice(0, 8).map((bien) => (
                 <BienContainer bien={bien} />
               ))}
             </div>

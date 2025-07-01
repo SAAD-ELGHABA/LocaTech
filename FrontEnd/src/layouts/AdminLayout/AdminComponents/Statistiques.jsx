@@ -29,7 +29,14 @@ function Statistiques() {
     };
     AccordRes();
   }, []);
-  return (
+  return !CourtierTotal || !UsersTotal || !BiensTotal || !accords?.length ? (
+    <div className="grid grid-cols-4 gap-4 my-4 animate-pulse">
+      <div className="h-25 bg-gray-300 rounded"></div>
+      <div className="h-25 bg-gray-300 rounded"></div>
+      <div className="h-25 bg-gray-300 rounded"></div>
+      <div className="h-25 bg-gray-300 rounded"></div>
+    </div>
+  ) : (
     <div className="grid grid-cols-4 gap-4 my-4">
       <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
         <ShieldUser />

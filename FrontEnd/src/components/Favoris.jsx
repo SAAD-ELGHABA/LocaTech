@@ -18,7 +18,7 @@ function Favoris({ setShowFavoris }) {
         exit={{ y: -100, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         onClick={(e)=>{e.stopPropagation()}}
-        className="w-[90%] h-[90%] bg-white rounded shadow-3xl  overflow-auto relative"
+        className="w-[85%] lg:w-[95%] h-[90%] bg-white rounded shadow-3xl  overflow-auto relative"
       >
         <div className="flex justify-between items-center px-4 py-2 lg:py-4 shadow-md mb-4 sticky z-10 top-0 bg-white left-0 right-0">
           <h1 className="text-xl font-semibold">
@@ -29,7 +29,7 @@ function Favoris({ setShowFavoris }) {
             onClick={() => setShowFavoris(false)}
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 w-[85%] lg:w-[95%] mx-auto ">
           {FavorisReducer.map((bien) => (
             <BienContainer bien={bien} />
           ))}

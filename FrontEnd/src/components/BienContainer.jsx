@@ -113,8 +113,8 @@ function BienContainer({ bien, isRecent, chatMode = false, rating = null }) {
           </button>
         </div>
       ) : (
-        <div className="p-3 space-y-1 text-sm">
-          <h2 className="text-lg font-semibold text-left text-gray-800">
+        <div className="p-3  text-xs">
+          <h2 className="text-sm font-semibold text-left text-gray-800">
             {bien.title.length > 25 ? (
               <div>{bien.title.substring(0, 25)}..</div>
             ) : (
@@ -142,7 +142,7 @@ function BienContainer({ bien, isRecent, chatMode = false, rating = null }) {
             </div>
           )}
           <p className="text-gray-600 text-left flex items-center justify-between">
-            <span className="text-[#f56565] font-bold text-sm">
+            <span className="text-[#f56565] font-bold text-xs">
               {new Intl.NumberFormat("de-DE", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,

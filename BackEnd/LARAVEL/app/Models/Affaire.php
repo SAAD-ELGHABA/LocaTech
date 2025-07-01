@@ -11,4 +11,14 @@ class Affaire extends Model
         'assistant_id',
         'status',
     ];
+
+    public function accord()
+    {
+        return $this->belongsTo(Accord::class, 'accord_id');
+    }
+
+    public function assistant()
+    {
+        return $this->belongsTo(User::class, 'assistant_id');
+    }
 }

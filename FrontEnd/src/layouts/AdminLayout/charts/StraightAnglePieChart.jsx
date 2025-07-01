@@ -8,21 +8,25 @@ export default function StraightAnglePieChart() {
   const BienAcheter = biens.filter(
     (bien) => bien.typeAffaire === "acheter" || bien.typeAffaire === "Acheter"
   ).length;
-  const BienLouer = biens.filter((bien) => bien.typeAffaire === "louer" || bien.typeAffaire === "Louer").length;
+  const BienLouer = biens.filter(
+    (bien) => bien.typeAffaire === "louer" || bien.typeAffaire === "Louer"
+  ).length;
 
   const data = [
-    { name: "Acheter", value: BienAcheter ,fill: "#ef4444"},
-    { name: "Louer", value: BienLouer ,fill: "#3b82f6"},
+    { name: "Acheter", value: BienAcheter, fill: "#ef4444" },
+    { name: "Louer", value: BienLouer, fill: "#3b82f6" },
   ];
 
   const renderCustomLabel = ({ percent, name }) =>
     `${name}: ${(percent * 100).toFixed(1)}%`;
 
-  return (
+  return biens.length === 0 ? (
+    <div className="animate-pulse h-full w-full bg-gray-300"></div>
+  ) : (
     <ResponsiveContainer width="100%" height={300} className={"text-sm"}>
-        <div className="text-sm font-semibold flex items-center justify-between mb-4 mx-8">
-            Le pourcentage des biens par type d'affaire %
-        </div>
+      <div className="text-sm font-semibold flex items-center justify-between mb-4 mx-8">
+        Le pourcentage des biens par type d'affaire %
+      </div>
       <PieChart>
         <Pie
           dataKey="value"

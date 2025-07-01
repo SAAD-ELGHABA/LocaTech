@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { BadgeCheck, Handshake } from "lucide-react";
+import { BadgeCheck, Handshake, Star } from "lucide-react";
 import { toast } from "sonner";
 
 function Evaluations() {
@@ -108,8 +108,11 @@ function Evaluations() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="mx-8 mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Évaluation d'agences</h1>
+      <div className=" mb-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold flex items-center space-x-2">
+          <span>Évaluation d'agences</span>
+          <Star/>
+        </h1>
         <div className="my-2">
           <input
             type="text"

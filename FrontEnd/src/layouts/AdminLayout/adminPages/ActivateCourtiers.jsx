@@ -1,6 +1,7 @@
 import { UserPlus, UserX } from "lucide-react";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCourtiers } from "../../../functions/fetchCourtiers";
 
 function AllCourtiers() {
   const usersReducer = useSelector((state) => state.usersReducer);
@@ -10,7 +11,11 @@ function AllCourtiers() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const courtiersPerPage = 10;
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    fetchCourtiers(dispatch);
+  }, []);
   const indexOfLastCourtier = currentPage * courtiersPerPage;
   const indexOfFirstCourtier = indexOfLastCourtier - courtiersPerPage;
 
@@ -28,9 +33,9 @@ function AllCourtiers() {
   };
 
   return (
-    <div className="">
+    <div className="p-4">
       <div className="text-xl font-bold flex items-center justify-between">
-        <h1>Tous les Courtiers Activés</h1>
+        <h1 className="font-bold text-xl">Tous les Courtiers Activés</h1>
       </div>
       <div className="">
         <table className="w-full mx-auto text-center text-sm border-collapse mt-2">
@@ -53,7 +58,7 @@ function AllCourtiers() {
                 >
                   <td className="border border-gray-300 py-2">{courtier.id}</td>
                   <td className="border border-gray-300 py-2">
-                    {courtier?.user?.nom+" "+courtier?.user?.prenom}
+                    {courtier?.user?.nom + " " + courtier?.user?.prenom}
                   </td>
                   <td className="border border-gray-300 py-2">
                     {courtier?.user?.email}

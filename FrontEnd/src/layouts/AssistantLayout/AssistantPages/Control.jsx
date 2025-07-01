@@ -120,7 +120,7 @@ function Control() {
   ) : (
     <div className="p-2">
       <div className="flex items-center justify-between mb-6 relative">
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-xl font-bold text-gray-800">
           Contrôler les biens et les courtiers ({filteredBiens.length})
         </h1>
         <div className="flex items-center space-x-2 relative">

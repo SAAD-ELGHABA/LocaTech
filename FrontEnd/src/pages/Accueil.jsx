@@ -62,7 +62,7 @@ const HeroSection = () => (
       </h1>
       <Link
         to="/consulter-bien"
-        className="flex items-center mx-auto bg-red-500 w-48 justify-center py-2 rounded-3xl text-white hover:scale-105"
+        className="flex items-center mx-auto bg-red-500 w-48 justify-center py-2 rounded-3xl text-white hover:scale-102 text-sm transition-transform duration-300"
       >
         <div>Trouver votre bien</div>
         <FontAwesomeIcon icon={faChevronRight} />
@@ -72,52 +72,6 @@ const HeroSection = () => (
   </motion.div>
 );
 
-const ImageCarousel = () => {
-  const images = [image1, image2, image3];
-  const Biens = useSelector((state) => state.BienReducer);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(
-      () => setCurrentIndex((prev) => (prev + 1) % images.length),
-      3000
-    );
-    return () => clearInterval(intervalId);
-  }, [images.length]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="hidden lg:block relative h-64 md:h-80 lg:h-150"
-    >
-      <div className="w-full h-full relative overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-fixed filter blur-[2px]"
-          style={{ backgroundImage: `url(${images[currentIndex]})` }}
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10 lg:mt-22 lg:w-5/6 mx-auto">
-          {[...Biens]
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .slice(0, 3)
-            .map((bien) => (
-              <BienContainer key={bien.id} bien={bien} isRecent={true} />
-            ))}
-        </div>
-        <div className="absolute lg:bottom-20 left-1/2 transform -translate-x-1/2">
-          <Link
-            to="/consulter-bien"
-            className="bg-red-500 text-white w-48 justify-center rounded-2xl px-6 py-2.5 flex items-center"
-          >
-            <span>Voir Plus</span>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Link>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
 
 export default function Accueil() {
   const [submissionMessage, setSubmissionMessage] = useState("");
@@ -183,7 +137,6 @@ export default function Accueil() {
       )}
 
       <HeroSection />
-      <ImageCarousel />
       <MostRatedBiens />
       <motion.div
         initial={{ opacity: 0, y: 50 }}

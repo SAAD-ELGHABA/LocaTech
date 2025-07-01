@@ -20,6 +20,7 @@ function FilterBar() {
     typeAffaire: false,
     budget: false,
   });
+  const messagesChatAi = useSelector((state) => state.ChatAiReducer);
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -281,6 +282,9 @@ function FilterBar() {
                 Prévoir des recommandations
               </span>
             </button>
+            {messagesChatAi?.[messagesChatAi.length - 2]?.role === "ai" && (
+              <div className="h-4 w-4 bg-red-500"></div>
+            )}
           </div>
 
           {showChatAI && (

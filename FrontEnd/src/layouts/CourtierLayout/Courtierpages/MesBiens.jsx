@@ -129,7 +129,14 @@ function MesBiens() {
   const statusReducer = useSelector((state) => state.statusReducer);
   const MesBiens = useSelector((state) => state.ActuelCourtierReducer?.biens);
   const [BienId, setBienId] = useState(null);
-  return (
+  return ActuelCourtierReducer.length === 0 ? (
+    <div className="flex flex-col space-y-4 mx-8 mt-3 animate-pulse  h-screen">
+      <div className="h-24 w-2/6 bg-gray-300 rounded"></div>
+      <div className="lg:h-[800px] w-full bg-gray-300 rounded"></div>
+      <div className="lg:h-[800px] w-full bg-gray-300 rounded"></div>
+      <div className="lg:h-[800px] w-full bg-gray-300 rounded"></div>
+    </div>
+  ) : (
     <div>
       <div className="flex justify-between mx-8 mt-3">
         <h1 className="text-lg font-semibold flex items-center space-x-2">

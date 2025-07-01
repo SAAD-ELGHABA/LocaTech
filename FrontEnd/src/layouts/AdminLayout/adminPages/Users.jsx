@@ -1,123 +1,139 @@
-import { UserPlus, UserX } from "lucide-react";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { Plus, Search } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import UsersModal from "../AdminComponents/Modals/UsersModal";
+import { fetchUsers } from "../../../functions/fetchUsers";
 
 function Users() {
   const usersReducer = useSelector((state) => state.usersReducer);
   const filteredUsers = usersReducer.filter((user) => user.role === "user");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetchUsers(dispatch);
+  },[]);
 
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const observerRef = useRef(null);
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+  const visibleUsers = filteredUsers.slice(0, visibleCount);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => {
+            const next = prev + 10;
+            return next <= filteredUsers.length ? next : prev;
+          });
+        }
+      },
+      {
+        threshold: 1,
+      }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
     }
-  };
 
-  const getPaginationRange = () => {
-    const maxVisiblePages = 3;
-    let start = Math.max(currentPage - 1, 1);
-    let end = Math.min(start + maxVisiblePages - 1, totalPages);
-
-    if (end - start < maxVisiblePages - 1) {
-      start = Math.max(end - maxVisiblePages + 1, 1);
-    }
-
-    const range = [];
-    for (let i = start; i <= end; i++) {
-      range.push(i);
-    }
-    return range;
-  };
-
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [filteredUsers.length, visibleCount]);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center text-xl font-bold mb-4">
-        <h1>Tous les utilisateurs</h1>
+      {toggleModal && (
+        <UsersModal
+          setToggleModal={setToggleModal}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+        />
+      )}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-bold mb-4">Utilisateurs {usersReducer?.length}</h1>
+        <div className="border rounded px-4 py-1.5 flex w-1/3 border-gray-400 text-sm">
+          <input
+            type="text"
+            className="w-[95%] h-full focus:outline-none"
+            placeholder="chercher des conversations .. "
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          />
+          <div className="flex justify-end w-[5%] text-gray-400">
+            <Search className="h-5 w-5" />
+          </div>
+        </div>
+        <button
+          className="flex items-center space-x-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors text-sm"
+          onClick={() => setToggleModal(true)}
+        >
+          <span>Ajouter un utilisateur</span>
+          <Plus className="h-5 w-5" />
+        </button>
       </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-center border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-300 py-2">#</th>
-              <th className="border border-gray-300 py-2">Nom Complet</th>
-              <th className="border border-gray-300 py-2">E-mail</th>
-              <th className="border border-gray-300 py-2">Téléphone</th>
-              <th className="border border-gray-300 py-2">Créé le</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentUsers.length > 0 ? (
-              currentUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  className="hover:bg-gray-100 transition cursor-pointer"
-                >
-                  <td className="border border-gray-300 py-2">{user.id}</td>
-                  <td className="border border-gray-300 py-2">
-                    {user.nom} {user.prenom}
-                  </td>
-                  <td className="border border-gray-300 py-2">{user.email}</td>
-                  <td className="border border-gray-300 py-2">
-                    {user.telephone}
-                  </td>
-                  <td className="border border-gray-300 py-2">
-                    {new Date(user.created_at).toLocaleDateString("fr-FR")}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="border py-6 text-gray-500">
-                  <div className="flex flex-col items-center justify-center space-y-2">
-                    <UserX className="h-10 w-10 text-red-500" />
-                    <span>Aucun utilisateur trouvé</span>
-                  </div>
+      <table className="w-full text-sm border-collapse text-center">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="py-2 border border-gray-300">#</th>
+            <th className="py-2 border border-gray-300">Nom</th>
+            <th className="py-2 border border-gray-300">Email</th>
+            <th className="py-2 border border-gray-300">Telephone</th>
+            <th className="py-2 border border-gray-300">Crée à</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleUsers
+            .filter(
+              (user) =>
+                user?.nom.toLowerCase().includes(searchTerm) ||
+                user?.prenom.toLowerCase().includes(searchTerm) ||
+                user?.email.toLowerCase().includes(searchTerm) ||
+                user?.telephone.toLowerCase().includes(searchTerm)
+            )
+            .map((user, index) => (
+              <tr
+                key={user.id}
+                className="hover:bg-gray-100 cursor-pointer py-2"
+                onClick={() => {
+                  setToggleModal(true);
+                  setSelectedUser(user?.id);
+                }}
+              >
+                <td className="py-2 border border-gray-300">{index + 1}</td>
+                <td className="py-2 border border-gray-300">
+                  {user?.nom} {user?.prenom}
+                </td>
+                <td className="py-2 border border-gray-300">{user?.email}</td>
+                <td className="py-2 border border-gray-300">
+                  {user?.telephone}
+                </td>
+                <td className="py-2 border border-gray-300">
+                  {new Date(user?.created_at).toLocaleDateString()}
+                </td>
+                <td className="py-2 border border-gray-300">
+                  {user?.role}
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))}
 
-      <div className="flex justify-center items-center space-x-2 mt-6 text-xs">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
-        >
-          Précédent
-        </button>
+          {visibleUsers.length === 0 && (
+            <tr>
+              <td colSpan="4" className="text-center py-8 text-gray-400">
+                Aucun utilisateur trouvé.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-        {getPaginationRange().map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`px-4 py-2 rounded ${
-              currentPage === page
-                ? "bg-red-500 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
-        >
-          Suivant
-        </button>
-      </div>
+      <div ref={observerRef} className="h-10"></div>
     </div>
   );
 }

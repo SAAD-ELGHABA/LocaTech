@@ -52,6 +52,7 @@ import AccordControl from "../layouts/AssistantLayout/AssistantPages/AccordContr
 import BlogDetails from "../components/BlogDetails";
 import Affaires from "../layouts/AdminLayout/adminPages/Affaires";
 import AccessRouteAdmin from "./accessRoute.jsx/AccessRouteAdmin";
+import AffaireDetails from "../layouts/AdminLayout/AdminComponents/AffaireDetails";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -77,7 +78,7 @@ const ASSISTANTS_ADMIN = "/assistants-admin";
 // const DETAILS_BIEN = "/bien/:ville/:slag";
 const DETAILS_BIEN_CLIENT = "/bien/:ville/:slag";
 
-const GET_USERS = "/all-users";
+const GET_USERS = "/utilisateurs";
 const COURTIERS = "/courtiers";
 const GET_COURTIER = "/activate-courtier";
 
@@ -277,6 +278,10 @@ const Router = createBrowserRouter([
         path: "/affaires",
         element: <Affaires />,
       },
+      {
+        path:"/affaire/:courtierId/:clientId/:accordId",
+        element: <AffaireDetails />,
+      }
     ],
   },
   {

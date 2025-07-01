@@ -37,11 +37,14 @@ function ConsulterBiens() {
       case "date":
         return new Date(b.created_at) - new Date(a.created_at);
       default:
-        return 
+        return;
     }
   });
 
-  const recentBienIds = sortedBiensToRender.slice(0, 10).map((b) => b.id);
+  const recentBienIds = [...biensToRender]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) 
+    .slice(0, 10)
+    .map((b) => b.id);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,7 +80,7 @@ function ConsulterBiens() {
 
       {visibleBiens.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-12 w-5/6 mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 w-[85%] lg:w-[95%] mx-auto">
             {visibleBiens.map((bien) => (
               <BienContainer
                 key={bien.id}

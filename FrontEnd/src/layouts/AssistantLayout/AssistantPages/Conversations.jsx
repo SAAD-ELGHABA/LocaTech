@@ -44,16 +44,6 @@ function Conversations() {
     };
   }, [userId]);
 
-  // useEffect(() => {
-  //   console.log(userId);
-
-  //   if (!userId) return;
-
-  //   const unsubscribe = socketListener(dispatch, currentConversation, userId);
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, [userId]);
 
   const user = useSelector((state) => state.userReducer.userInfo);
 

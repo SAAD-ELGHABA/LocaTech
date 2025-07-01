@@ -39,7 +39,7 @@ function SignalControl() {
     <div className="mx-8 my-4">
       <div>
         <div className="flex items-center space-x-2 mb-6">
-          <h1 className="text-xl font-semibold">Nombre de signaux</h1>
+          <h1 className="text-xl font-bold">Nombre de signaux</h1>
           <FlagTriangleLeft className="h-6" />
         </div>
         <table className="w-full text-center text-sm text-gray-600">

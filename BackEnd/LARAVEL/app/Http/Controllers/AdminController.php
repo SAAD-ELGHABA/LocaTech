@@ -4,10 +4,137 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
+
+    public function handleAdmin(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string',
+            'prenom' => 'required|string',
+            'email' => 'required|email',
+            'telephone' => 'required|string',
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if ($user) {
+            $user->update([
+                'nom' => $validated['nom'],
+                'prenom' => $validated['prenom'],
+                'telephone' => $validated['telephone'],
+                'email' => $validated['email'],
+            ]);
+
+            $admin = Admin::where('user_id', $user->id)->first();
+            if (!$admin) {
+                Admin::create([
+                    'user_id' => $user->id,
+                ]);
+            }
+
+            return response()->json(['message' => 'Admin mis à jour avec succès.']);
+        } else {
+            $user = User::create([
+                'nom' => $validated['nom'],
+                'prenom' => $validated['prenom'],
+                'email' => $validated['email'],
+                'telephone' => $validated['telephone'],
+                'password' => bcrypt(Str::random(10)),
+            ]);
+
+            Admin::create([
+                'user_id' => $user->id,
+                'password_admin' => $user->password
+            ]);
+
+            return response()->json(['message' => 'Admin créé avec succès.']);
+        }
+    }
+
+    public function handleUsers(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telephone' => 'required|string|max:20',
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if ($user) {
+            $user->update([
+                'nom' => $validated['nom'],
+                'prenom' => $validated['prenom'],
+                'telephone' => $validated['telephone'],
+                'email' => $validated['email'],
+
+            ]);
+        } else {
+            $user = User::create([
+                'nom' => $validated['nom'],
+                'prenom' => $validated['prenom'],
+                'email' => $validated['email'],
+                'telephone' => $validated['telephone'],
+                'password' => bcrypt('defaultpassword'),
+                'email_verified_at' => now(),
+                'email_verified' => true
+            ]);
+        }
+
+        return response()->json([
+            'message' => $user->wasRecentlyCreated
+                ? 'Utilisateur créé avec succès.'
+                : 'Informations de l\'utilisateur mises à jour avec succès.',
+            'user' => $user,
+        ]);
+    }
+
+    public function deleteUser($selectedUser)
+    {
+        $user = User::find($selectedUser);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Utilisateur non trouvé.',
+            ], 404);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Utilisateur supprimé avec succès.',
+        ], 200);
+    }
+
+    public function deleteAdmin($selectedAdminId)
+    {
+
+        $admin = User::where('id', $selectedAdminId)
+            ->where('role', 'admin')
+            ->first();
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Administrateur non trouvé.',
+            ], 404);
+        }
+
+        $admin->delete();
+
+        return response()->json([
+            'message' => 'Administrateur supprimé avec succès.',
+        ], 200);
+    }
+
+
+
+
     /**
      * Display a listing of the resource.
      */

@@ -25,6 +25,12 @@ function BarChartComponent() {
   const statusReducer = useSelector((state) => state.statusReducer);
 
   return (
+    courtiers.length === 0 ? (
+      <div className="animate-pulse h-96 w-full flex gap-2">
+        <div className="w-4/6 bg-gray-300 h-full"></div>
+        <div className="w-2/6 bg-gray-300 h-full"></div>
+      </div>
+    ) : (
     <div className="flex justify-center">
       <div className="h-[400px] w-2/3 overflow-y-auto overflow-x-scroll custom-scrollbar">
         <table className="w-[1000px] text-center text-sm">
@@ -79,6 +85,7 @@ function BarChartComponent() {
         </ResponsiveContainer>
       </div>
     </div>
+    )
   );
 }
 

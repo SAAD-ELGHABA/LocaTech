@@ -42,11 +42,13 @@ function DashboardIndex() {
       };
     });
 
-  return (
+  return biens.length === 0 ? (
+    <div className="animate-pulse h-full w-full bg-gray-300"></div>
+  ) : (
     <ResponsiveContainer width="100%" height="100%" className={"text-xs"}>
-        <div className="text-xl font-semibold flex items-center justify-between mb-4 mx-8">
-            Les Biens Crées Par Mois
-        </div>
+      <div className="text-xl font-semibold flex items-center justify-between mb-4 mx-8">
+        Les Biens Crées Par Mois
+      </div>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />

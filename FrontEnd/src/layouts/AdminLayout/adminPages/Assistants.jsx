@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
-
+import LogoUser from '../../../assets/logo-user.png'
 function Assistants() {
   const assistantsReducer = useSelector((state) => state.assistantsReducer);
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ function Assistants() {
       if (response.status >= 200 && response.status <= 300) {
         toast.success(response.data.message);
         console.log(response);
-        
+
         dispatch({
           type: "GET_ASSISTANTS",
           payload: response.data.assistants,
@@ -133,7 +133,7 @@ function Assistants() {
                 Traitement...
               </div>
             ) : (
-              "Ajouter"
+              "Valider"
             )}
           </button>
         </div>
@@ -156,7 +156,15 @@ function Assistants() {
               {assistantsReducer.map((assistant) => (
                 <tr
                   key={assistant.id}
-                  className="border-b border-gray-200 hover:bg-gray-100"
+                  className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setFormData({
+                      nom: assistant?.user?.nom,
+                      prenom: assistant?.user?.prenom,
+                      email: assistant?.user?.email,
+                      telephone: assistant?.user?.telephone,
+                    });
+                  }}
                 >
                   <td className="px-4 py-2">{assistant?.user?.nom}</td>
                   <td className="px-4 py-2">{assistant?.user?.prenom}</td>
@@ -165,7 +173,7 @@ function Assistants() {
                   <td className="px-4 py-2">{assistant?.status?.nom}</td>
                   <td className="px-4 py-2 flex justify-center">
                     <img
-                      src={assistant?.user?.image}
+                      src={assistant?.user?.image || LogoUser}
                       alt="Assistant"
                       className="w-10 h-10 rounded-full object-cover"
                     />

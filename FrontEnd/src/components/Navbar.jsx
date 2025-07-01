@@ -79,30 +79,7 @@ const Navbar = () => {
     };
   }, []);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const handleLogOut = async () => {
-    try {
-      await axios.post(
-        "/api/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      await fetchInitialData(dispatch, null);
-      navigate("/login");
-      dispatch({ type: "LOGOUT" });
-      localStorage.removeItem("token");
-      localStorage.removeItem("currentConversationId");
-      toast.success("Déconnexion réussie !");
-    } catch (error) {
-      toast.error("Échec de la déconnexion.");
-      console.error(error);
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
+
 
   const loc = useLocation();
   return (
@@ -293,7 +270,7 @@ const Navbar = () => {
           {isLoggingOut && (
             <LogoutModal
               isOpen={isLoggingOut}
-              onConfirm={handleLogOut}
+              // onConfirm={handleLogOut}
               onCancel={() => setIsLoggingOut(false)}
             />
           )}

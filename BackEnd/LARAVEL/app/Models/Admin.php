@@ -13,4 +13,9 @@ class Admin extends Model
         'user_id',
         'password_admin',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

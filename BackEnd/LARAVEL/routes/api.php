@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccordController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AffaireController;
 use App\Http\Controllers\AgenceController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AuthController;
@@ -101,7 +103,7 @@ Route::get('/get-users', function () {
 });
 
 Route::get('/get-courtiers', function () {
-    $courtiers = Courtier::with(['agence.evaluation', 'user'])->get();
+    $courtiers = Courtier::with(['agence.evaluation', 'user', 'status'])->get();
     return response()->json([
         'courtiers' => $courtiers
     ]);
@@ -117,14 +119,7 @@ Route::get('/get-agences', function () {
 });
 
 Route::get('/get-admins', function () {
-    $admins = DB::table('admins')
-        ->join('users', 'admins.user_id', '=', 'users.id')
-        ->select(
-            'admins.*',
-            DB::raw("CONCAT(users.nom, ' ', users.prenom) as Nom_complet"),
-            'users.email as user_email'
-        )
-        ->get();
+    $admins = Admin::with('user')->get();
     return response()->json([
         'admins' => $admins
     ]);
@@ -197,3 +192,34 @@ Route::get('/get-accords', [AccordController::class, 'getAccords'])->name('get.a
 Route::post('/accords/validate', [AccordController::class, 'validateAccord'])->name('validate.accord')->middleware('auth:sanctum');
 
 Route::get('/my-history', [MyHistoryController::class, 'getTracking'])->name('getTracking')->middleware('auth:sanctum');
+
+Route::get('/get-affaires', [AffaireController::class, 'index'])->name('get.affaires')->middleware('auth:sanctum');
+
+Route::get("/get-affaire/{courtierId}/{clientId}/{accordId}", [AffaireController::class, 'getAffaire'])->name('get.affaire');
+
+Route::get('/get-agences', [AgenceController::class, 'index'])->name('get.agences');
+
+Route::post('/add-courtiers', [CourtierController::class, 'addCourtiers'])->name('add.courtiers')->middleware('auth:sanctum');
+
+Route::post('toggle-agences', [AgenceController::class, 'toggleAgence'])->name('toggle.agence')->middleware('auth:sanctum');
+
+Route::get('/get-evaluations', [
+    'uses' => function () {
+        $evaluations = DB::table('evaluations')->get();
+        return response()->json([
+            'evaluations' => $evaluations
+        ]);
+    }
+])->name('get.evaluations');
+
+Route::post('/delete-courtier/{selectedRow}', [CourtierController::class, 'deleteCourtier'])->name('delete.courtier')->middleware('auth:sanctum');
+
+Route::post('/delete-agence/{selectedAgenceId}', [AgenceController::class, 'deleteAgence'])->name('delete.agence')->middleware('auth:sanctum');
+
+Route::post('/handle-admins', [AdminController::class, 'handleAdmin'])->name('handle.admin')->middleware('auth:sanctum');
+
+Route::post('/handle-user', [AdminController::class, 'handleUsers'])->name('handle.user')->middleware('auth:sanctum');
+
+Route::post('/delete-user/{selectedUser}', [AdminController::class, 'deleteUser'])->name('delete.user')->middleware('auth:sanctum');
+
+Route::post('/delete-admin/{selectedAdminId}', [AdminController::class, 'deleteAdmin'])->name('delete.admin')->middleware('auth:sanctum');

@@ -1,17 +1,20 @@
 import { faArrowsRotate, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import dossierVide from "../../../assets/dossier-vide.png";
+import { fetchCourtiers } from "../../../functions/fetchCourtiers";
 
 function RecentCourtiers() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
   const LoadinfGlobal = useSelector((state) => state.loadingReducer);
-
+  useEffect(() => {
+    fetchCourtiers(dispatch);
+  }, []);
   const [selectedRow, setSelectedRow] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
@@ -98,7 +101,7 @@ function RecentCourtiers() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full p-4">
       <div className="mb-2 flex justify-between">
         <h1 className="text-xl font-bold">Les Recents Courtiers</h1>
       </div>
@@ -106,7 +109,9 @@ function RecentCourtiers() {
         <table className="w-full mx-auto text-center text-sm border-collapse">
           <thead>
             <tr style={{ border: "1px solid #d3d3d3" }} className="bg-gray-200">
-              <th className="py-2" style={{ border: "1px solid #d3d3d3" }}>id</th>
+              <th className="py-2" style={{ border: "1px solid #d3d3d3" }}>
+                id
+              </th>
               <th style={{ border: "1px solid #d3d3d3" }}>Nom Complet</th>
               <th style={{ border: "1px solid #d3d3d3" }}>E-mail</th>
               <th style={{ border: "1px solid #d3d3d3" }}>Nom Agence</th>

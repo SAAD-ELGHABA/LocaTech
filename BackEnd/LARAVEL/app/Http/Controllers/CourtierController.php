@@ -246,4 +246,108 @@ class CourtierController extends Controller
             ], 500);
         }
     }
+
+    public function addCourtiers(Request $request)
+    {
+        try {
+            $validation = $request->validate([
+                'nom' => 'required',
+                'prenom' => 'required',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users', 'email')->ignore($request->input('email'), 'email')
+                ],
+                'telephone' => 'required',
+                'agence_id' => 'required|exists:agences,id',
+            ], [
+                'email.unique' => 'L\'email est déjà utilisé.',
+            ]);
+
+            $user = User::where('email', $request['email'])->first();
+
+            if ($user) {
+                $user->update([
+                    "nom" => $request['nom'],
+                    "prenom" => $request['prenom'],
+                    "telephone" => $request['telephone'],
+                    'role' => 'courtier',
+                ]);
+            } else {
+                $user = User::create([
+                    "nom" => $request['nom'],
+                    "prenom" => $request['prenom'],
+                    "email" => $request['email'],
+                    "password" => Hash::make(Str::random(16)),
+                    "telephone" => $request['telephone'],
+                    'role' => 'courtier',
+                    'email_verified_at' => now(),
+                    'email_verified' => true
+                ]);
+            }
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Erreur lors de la création ou modification de l\'utilisateur !'
+                ], 500);
+            }
+
+            $courtier = Courtier::where('user_id', $user->id)
+                ->where('agence_id', $request['agence_id'])
+                ->first();
+
+            if ($courtier) {
+                $courtier->status_id = 5;
+                $courtier->save();
+            } else {
+                $courtier = Courtier::create([
+                    'agence_id' => $request['agence_id'],
+                    'user_id' => $user->id,
+                    'status_id' => 5
+                ]);
+            }
+
+            if (!$courtier) {
+                return response()->json([
+                    'message' => 'Erreur lors de la création ou modification du courtier !'
+                ], 500);
+            }
+
+            return response()->json([
+                'message' => "Le courtier a été ajouté ou mis à jour avec succès. Un email de confirmation sera envoyé à l'utilisateur."
+            ], 201);
+        } catch (Error $error) {
+            return response()->json([
+                'message' => $error
+            ], 500);
+        }
+    }
+
+    public function deleteCourtier($selectedRow)
+    {
+        $courtier = Courtier::find($selectedRow);
+
+        if (!$courtier) {
+            return response()->json(['message' => 'Courtier introuvable'], 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            $courtier->delete();
+
+            $user = User::find($courtier->user_id);
+            if ($user) {
+                $user->delete();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => "Ce courtier a été supprimé avec succès"
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Erreur lors de la suppression'], 500);
+        }
+    }
 }
