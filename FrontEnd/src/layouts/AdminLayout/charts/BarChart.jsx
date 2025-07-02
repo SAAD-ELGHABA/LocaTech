@@ -18,7 +18,7 @@ function BarChartComponent() {
       (bien) => bien.courtier_id === courtier.id
     ).length;
     return {
-      name: courtier.name,
+      name: courtier?.name,
       biens: count,
     };
   });
@@ -63,7 +63,7 @@ function BarChartComponent() {
                     {
                       statusReducer.find((s)=>
                         s.id === c.status_id  
-                      ).nom
+                      )?.nom
                     }
                   </td>
                   <td>{c.SEO}</td>

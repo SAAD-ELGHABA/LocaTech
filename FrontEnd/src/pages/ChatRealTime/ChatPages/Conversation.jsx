@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import {Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import socketConfig from "../../../functions/socketConfig.js";
 import { socketListener } from "../../../functions/socketListener.js";
 import ChatInput from "../component/ChatInput.jsx";
@@ -82,7 +82,7 @@ function Conversation({ isAssistant = false }) {
       {!isAssistant && (
         <div className="fixed lg:relative w-full flex items-center justify-between bg-[#161a1d] text-white px-2 lg:px-4 lg:py-1 py-2 ">
           <div className="flex items-center space-x-2">
-            <Link to={'/chat/negocier'} className="lg:hidden">
+            <Link to={"/chat/negocier"} className="lg:hidden">
               <ChevronLeft />
             </Link>
             {user.role === "courtier" && client && (
@@ -133,12 +133,18 @@ function Conversation({ isAssistant = false }) {
               })}
           </div>
           {user?.role === "courtier" &&
-            currentConversation?.status === "activé" && (
+            currentConversation?.status === "activé" &&
+            biens.some(
+              (b) =>
+                Number(currentConversation?.BienId) === b?.id &&
+                [1, 5, 7].includes(b.status_id)
+            ) && (
               <CourtierDropdown
-                bienId={Number(currentConversation.BienId)}
+                bienId={Number(currentConversation?.bienId)}
                 user_id={currentConversation?.clientId}
               />
             )}
+
           <div className="flex items-center lg:gap-2 ">
             {biens.map((bien) => {
               if (bien.id === Number(currentConversation.BienId)) {

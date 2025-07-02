@@ -3,14 +3,16 @@ import { Bell, ContactRound, LogOut, ShieldCheck } from "lucide-react";
 import Logo from "../../../components/Logo";
 import NotificationBell from "../../../components/NotificationBell";
 import { useSelector } from "react-redux";
+import LogoutModal from "../../../components/LogoutModal";
+import logoUser from "../../../assets/logo-user.png";
 
 function NavBar() {
   const user = useSelector((state) => state.userReducer.userInfo);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const imageRef = useRef(null);
   const dropdownRef = useRef(null);
-  
-  // Detect clicks outside dropdown/image
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -39,7 +41,7 @@ function NavBar() {
           <div className="relative">
             <img
               ref={imageRef}
-              src={user?.image}
+              src={user?.image || logoUser}
               alt="User avatar"
               className="h-6 w-6 rounded-full cursor-pointer"
               onClick={() => setDropdownOpen((prev) => !prev)}
@@ -47,34 +49,43 @@ function NavBar() {
             {dropdownOpen && (
               <div
                 ref={dropdownRef}
-                className="absolute text-black right-0 mt-2 bg-white rounded-md shadow-lg py-2 z-50 flex flex-col items-center min-w-60 text-center w-auto border border-gray-300"
+                className="absolute text-black right-0 mt-2 bg-white rounded-md shadow-lg pt-2 z-50 flex flex-col items-center min-w-66 text-center w-auto border border-gray-300"
               >
-                <div>
-                  <img
-                    ref={imageRef}
-                    src={user?.image}
-                    alt="User avatar"
-                    className="h-16 w-16 rounded-full cursor-pointer"
-                    onClick={() => setDropdownOpen((prev) => !prev)}
-                  />
+                <div className="flex items-center space-x-3 px-4 py-2">
+                  <div>
+                    <img
+                      ref={imageRef}
+                      src={user?.image || logoUser}
+                      alt="User avatar"
+                      className="h-16 w-16 rounded-full cursor-pointer"
+                      onClick={() => setDropdownOpen((prev) => !prev)}
+                    />
+                  </div>
+                  <div className="flex flex-col items-start text-xs">
+                    <div className="text-gray-700 text-sm font-semibold">
+                      {user?.nom} {user?.prenom}
+                    </div>
+                    <div className="text-gray-500 text-start">{user?.email}</div>
+                    <div className="text-gray-500 ">(assistant)</div>
+                  </div>
                 </div>
-                <div className="text-gray-700 text-lg font-semibold">
-                  {user?.nom}
-                </div>
-                <div className="text-gray-700 text-lg font-semibold">
-                  {user?.prenom}
-                </div>
-                <div className="text-gray-500 text-sm">{user?.email}</div>
                 <button
                   onClick={() => {
-                    // Insert logout logic here
+                    setIsLoggingOut(true);
                   }}
-                  className="border-t border-gray-300 mt-4 w-full text-left  px-4 py-2 text-gray-800 hover:bg-gray-200 flex items-center justify-center space-x-2"
+                  className="border-t border-gray-200 mt-4 w-full text-left  px-4 py-3 text-gray-800 hover:bg-gray-200 flex items-center justify-start space-x-2 cursor-pointer text-sm ps-12"
                 >
-                  <LogOut className="inline-block mr-2 h-5 w-5" />
+                  <LogOut className="inline-block mr-2 h-4 w-4" />
                   <span>Logout</span>
                 </button>
               </div>
+            )}
+            {isLoggingOut && (
+              <LogoutModal
+                isOpen={isLoggingOut}
+                // onConfirm={handleLogOut}
+                onCancel={() => setIsLoggingOut(false)}
+              />
             )}
           </div>
         </div>

@@ -34,7 +34,7 @@ function Aside() {
   cleanup();
 
   const handleConversationClick = (id) => {
-    nav("/chat/conversation");
+    nav(`/chat/conversation/${id}`);
     localStorage.setItem("currentConversationId", id);
     dispatch({
       type: "SET_CURRENT_CONVERSATION",
@@ -61,7 +61,20 @@ function Aside() {
               (a, b) =>
                 new Date(b.lastMessageDate) - new Date(a.lastMessageDate)
             )
-            .filter((c) => c?.status !== "supprimé")
+            .filter((c) => {
+              if (c?.status === "supprimé") return false;
+              const bienCorrespondant = biens.find(
+                (b) => Number(c?.BienId) === b?.id
+              );
+
+              if (user?.role === "courtier") {
+                if (!bienCorrespondant) return false;
+                if (![1, 5, 7].includes(bienCorrespondant.status_id))
+                  return false;
+              }
+
+              return true;
+            })
             .map((conversation) => {
               const lastMessageSenderId = Number(
                 conversation.messages?.slice(-1)[0]?.senderId
@@ -275,9 +288,7 @@ function Aside() {
                                     {conversation.status === "désactivé" && (
                                       <MouseOff className="h-3 w-3" />
                                     )}
-                                    <span>
-                                        {conversation.status}
-                                    </span>
+                                    <span>{conversation.status}</span>
                                   </div>
                                 )}
                             </div>

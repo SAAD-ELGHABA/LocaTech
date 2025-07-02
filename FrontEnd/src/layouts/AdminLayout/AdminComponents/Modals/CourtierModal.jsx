@@ -263,7 +263,7 @@ function CourtierModal({
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 </div>
               ) : (
-                <span>Ajouter</span>
+                selectedRow ? "Modifier":"Ajouter"
               )}
             </button>
             {selectedRow && (

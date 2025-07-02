@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
+use App\Models\Accord;
+use App\Models\Bien;
+use App\Models\Courtier;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -133,7 +137,24 @@ class AdminController extends Controller
     }
 
 
+    public function lastMonthStats()
+    {
+        $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
 
+        $courtierCount = Courtier::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $usersCount = User::where('role', 'user')
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $biensCount = Bien::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+        $accordsCount = Accord::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
+
+        return response()->json([
+            'courtiers' => $courtierCount,
+            'users' => $usersCount,
+            'biens' => $biensCount,
+            'accords' => $accordsCount,
+        ]);
+    }
 
     /**
      * Display a listing of the resource.

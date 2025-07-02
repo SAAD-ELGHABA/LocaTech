@@ -223,3 +223,5 @@ Route::post('/handle-user', [AdminController::class, 'handleUsers'])->name('hand
 Route::post('/delete-user/{selectedUser}', [AdminController::class, 'deleteUser'])->name('delete.user')->middleware('auth:sanctum');
 
 Route::post('/delete-admin/{selectedAdminId}', [AdminController::class, 'deleteAdmin'])->name('delete.admin')->middleware('auth:sanctum');
+
+Route::get('/get-stats-last-month', [AdminController::class, 'lastMonthStats'])->name('get.stats')->middleware('auth:sanctum');

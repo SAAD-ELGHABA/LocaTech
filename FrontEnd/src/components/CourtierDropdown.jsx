@@ -11,6 +11,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { sendNotification } from "../functions/NotificationSender";
 import { useSelector } from "react-redux";
 import { getAccordBienConv } from "../functions/getAccordBienConv";
+import { toast } from "sonner";
 
 const CourtierDropdown = ({ bienId, user_id }) => {
   const user = useSelector((state) => state.userReducer.userInfo);
@@ -50,8 +51,10 @@ const CourtierDropdown = ({ bienId, user_id }) => {
           link: "/control-accord",
         }
       );
+      toast.success(response?.data?.message);
     } catch (error) {
       console.error("Error:", error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }

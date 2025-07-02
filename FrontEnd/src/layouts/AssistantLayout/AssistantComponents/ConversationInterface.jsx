@@ -40,7 +40,7 @@ function ConversationInterface({ setShowConversationInterface, conversation }) {
               <MySlider items={selectedBien?.images} slidesPerView={1} />
               <div>
                 <h1 className="text-lg font-semibold">{selectedBien?.title}</h1>
-                <p className="text-sm text-gray-600 h-[190px] overflow-y-scroll">
+                <p className="text-sm text-gray-600 h-[190px] overflow-y-auto custom-scrollbar">
                   {selectedBien?.description}
                 </p>
               </div>

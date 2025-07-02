@@ -268,7 +268,7 @@ function AgenceModal({
                       <Loader2 className="animate-spin mr-2 h-5 w-5" /> Envoi...
                     </>
                   ) : (
-                    "Ajouter"
+                    selectedAgenceId ? "Modifier":"Ajouter"
                   )}
                 </button>
               </div>

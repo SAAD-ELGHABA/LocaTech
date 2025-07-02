@@ -199,7 +199,7 @@ const Router = createBrowserRouter([
         element: <IndexPage />,
       },
       {
-        path: "/chat/conversation",
+        path: "/chat/conversation/:idConversation",
         element: <Conversation />,
       },
     ],

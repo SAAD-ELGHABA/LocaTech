@@ -11,6 +11,7 @@ function SortSelect({ sortOption, setSortOption }) {
         onChange={(e) => setSortOption(e.target.value)}
         className="text-sm border-none w-full focus:outline-none lg:px-2 py-1 bg-transparent"
       >
+        <option value="">Sort par</option>
         <option className="px-2 py-1" value="date">
           Par Date
         </option>

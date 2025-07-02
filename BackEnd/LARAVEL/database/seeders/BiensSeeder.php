@@ -19,7 +19,7 @@ class BiensSeeder extends Seeder
         $types = ['maison', 'villa', 'appartement'];
         $typeAffaires = ['acheter', 'louer'];
 
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 70; $i++) {
             $images = [];
 
             $ville = $faker->randomElement($villes);
@@ -27,7 +27,7 @@ class BiensSeeder extends Seeder
             $courtier = $faker->randomElement($courtiers);
 
             // Generate 5 random images using picsum.photos
-            for ($j = 0; $j < 5; $j++) {
+            for ($j = 0; $j < 10; $j++) {
                 $images[] = 'https://picsum.photos/1200/700?random=' . rand(1, 10000);
             }
 
@@ -48,7 +48,7 @@ class BiensSeeder extends Seeder
                 'typeAffaire'      => $faker->randomElement($typeAffaires),
                 'images'           => json_encode($images),
                 'video_url'        => $faker->optional()->url,
-                'status'           => 1,
+                'status_id'           => 1,
                 'chambres'         => $faker->numberBetween(1, 5),
                 'salles_de_bain'   => $faker->numberBetween(1, 3),
                 'etage'            => $faker->numberBetween(0, 10),
