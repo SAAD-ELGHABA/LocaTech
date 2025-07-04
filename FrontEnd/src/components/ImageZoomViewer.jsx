@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
 
-const ImageZoomViewer = ({ imageUrl }) => {
+const ImageZoomViewer = ({ imageUrl, status }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [transformOrigin, setTransformOrigin] = useState("center center");
@@ -81,12 +81,21 @@ const ImageZoomViewer = ({ imageUrl }) => {
           </div>
         </div>
       )}
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="absolute cursor-pointer top-[5%] right-2 bg-white p-1 rounded-full shadow hover:bg-gray-200"
-      >
-        <Maximize2 className="h-4 w-4" />
-      </button>
+      <div className="absolute top-[5%] right-2 grid grid-cols-2 gap-4">
+        <div
+          onClick={() => setIsModalOpen(true)}
+          style={{ backgroundColor: `${status?.["coleur-code"]}` }}
+          className=" cursor-pointer  text-white px-2 py-1 rounded-full shadow hover:bg-gray-200"
+        >
+          {status?.nom}
+        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className=" cursor-pointer bg-white rounded-full shadow hover:bg-gray-200 flex items-center justify-center"
+        >
+          <Maximize2 className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 };

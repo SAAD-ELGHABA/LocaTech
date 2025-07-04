@@ -198,7 +198,7 @@ const Navbar = () => {
                 : user.role === "courtier"
                 ? "/courtier-index"
                 : user.role === "admin"
-                ? "/tableau-de-bord-admin"
+                ? "/admin/tableau-de-bord-admin"
                 : "/profile-client"
             }
             className="ps-4 pe-6 py-3 hover:bg-gray-100 cursor-pointer"

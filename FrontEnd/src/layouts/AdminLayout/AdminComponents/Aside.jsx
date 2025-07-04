@@ -23,7 +23,7 @@ function Aside({ isOpen = true }) {
 
   const links = [
     {
-      to: "/tableau-de-bord-admin",
+      to: "/admin/tableau-de-bord-admin",
       icon: <LayoutDashboard className="h-4" />,
       label: "Tableau de bord",
     },
@@ -33,47 +33,47 @@ function Aside({ isOpen = true }) {
       isDropdown: true,
       subLinks: [
         {
-          to: "/courtiers",
+          to: "/admin/courtiers",
           label: "Tous les courtiers",
         },
         {
-          to: "/recent-courtiers",
+          to: "/admin/recent-courtiers",
           label: "Courtiers récents",
           badge: recentCourtiers?.length,
         },
         {
-          to: "/activate-courtier",
+          to: "/admin/activate-courtier",
           label: "Courtiers activés",
         },
       ],
     },
     {
-      to: "/agences",
+      to: "/admin/agences",
       icon: <Building2 className="h-4" />,
       label: "Agences",
     },
     {
-      to: "/Admins",
+      to: "/admin/Admins",
       icon: <ShieldCheck className="h-4" />,
       label: "Admins",
     },
     {
-      to: "/assistants-admin",
+      to: "/admin/assistants-admin",
       icon: <ContactRound className="h-4" />,
       label: "Assistants",
     },
     {
-      to: "/utilisateurs",
+      to: "/admin/utilisateurs",
       icon: <Users className="h-4" />,
       label: "Utilisateurs",
     },
     {
-      to: "/evaluations",
+      to: "/admin/evaluations",
       icon: <Star className="h-4" />,
       label: "Evaluation",
     },
     {
-      to: "/affaires",
+      to: "/admin/affaires",
       icon: <BadgePercent className="h-4" />,
       label: "Affaires",
     },

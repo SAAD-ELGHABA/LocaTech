@@ -98,6 +98,7 @@ function CreateBien() {
   return (
     <div
       className="absolute inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-50"
+      style={{zIndex:1008}}
       onClick={() =>
         dispatch({
           type: "SHOW_CREATEBIENTOGGLE",

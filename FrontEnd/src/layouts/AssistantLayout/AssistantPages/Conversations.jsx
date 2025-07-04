@@ -44,6 +44,8 @@ function Conversations() {
     };
   }, [userId]);
 
+  const cleanup = socketListener(dispatch, 0);
+  cleanup();
 
   const user = useSelector((state) => state.userReducer.userInfo);
 

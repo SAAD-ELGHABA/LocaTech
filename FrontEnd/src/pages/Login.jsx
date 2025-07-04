@@ -53,7 +53,7 @@ const LoginPage = () => {
           } else if (response.data.user.role === "assistant") {
             nav("/assistant-index");
           } else if (response.data.user.role === "admin") {
-            nav("/tableau-de-bord-admin");
+            nav("/admin/tableau-de-bord-admin");
           }
         }, 1000);
       }

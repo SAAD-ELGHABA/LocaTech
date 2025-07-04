@@ -66,21 +66,21 @@ const COURTIE = "/courtier";
 const VERIFY_EMAIL = "/verify-email/:id/:hash";
 const RESEND_EMAIL_VERIFICATION_PATH = "/resend_verification_email";
 const GOOGLELANDING = "/google-langing";
-const RECENT_COURTIERS = "/recent-courtiers";
+const RECENT_COURTIERS = "recent-courtiers";
 
 const COURTIE_INDEX = "/courtier-index";
 const MESBIENS = "/MesBiens";
 
 const CONSULTER_BIENS = "/consulter-bien";
-const TABLEA_DE_BORD_ADMIN = "/tableau-de-bord-admin";
-const ASSISTANTS_ADMIN = "/assistants-admin";
+const TABLEA_DE_BORD_ADMIN = "tableau-de-bord-admin";
+const ASSISTANTS_ADMIN = "assistants-admin";
 
 // const DETAILS_BIEN = "/bien/:ville/:slag";
 const DETAILS_BIEN_CLIENT = "/bien/:ville/:slag";
 
-const GET_USERS = "/utilisateurs";
-const COURTIERS = "/courtiers";
-const GET_COURTIER = "/activate-courtier";
+const GET_USERS = "utilisateurs";
+const COURTIERS = "courtiers";
+const GET_COURTIER = "activate-courtier";
 
 const ADMIN_INDEX = "/admin-index";
 
@@ -227,6 +227,7 @@ const Router = createBrowserRouter([
     ],
   },
   {
+    path: "/admin",
     element: (
       <AccessRouteAdmin>
         <IndexAdmin />
@@ -263,25 +264,25 @@ const Router = createBrowserRouter([
         element: <Assistants />,
       },
       {
-        path: "/agences",
+        path: "agences",
         element: <Agences />,
       },
       {
-        path: "/admins",
+        path: "admins",
         element: <Admins />,
       },
       {
-        path: "/evaluations",
+        path: "evaluations",
         element: <Evaluations />,
       },
       {
-        path: "/affaires",
+        path: "affaires",
         element: <Affaires />,
       },
       {
-        path:"/affaire/:courtierId/:clientId/:accordId",
+        path: "affaire/:courtierId/:clientId/:accordId",
         element: <AffaireDetails />,
-      }
+      },
     ],
   },
   {

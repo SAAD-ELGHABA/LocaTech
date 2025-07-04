@@ -152,7 +152,7 @@ function Affaires() {
               </div>
               <div className="flex flex-col items-center justify-end space-y-2 text-xs">
                 <Link
-                  to={`/affaire/${affaire?.accord?.courtier?.id}/${affaire?.accord?.user?.id}/${affaire?.accord?.id}`}
+                  to={`/admin/affaire/${affaire?.accord?.courtier?.id}/${affaire?.accord?.user?.id}/${affaire?.accord?.id}`}
                   className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center space-x-2 min-w-[120px] cursor-pointer"
                 >
                   <Barcode className="h-4 w-4" />

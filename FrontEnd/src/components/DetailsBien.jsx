@@ -193,7 +193,7 @@ function DetailsBien() {
           payload: response.data.chats,
         });
         toast.success("Négociation démarrée avec succès !");
-        nav("/chat/conversation", { state: { BienDetails } });
+        nav(`/chat/conversation/${0}`, { state: { BienDetails } });
       }
     } catch (error) {
       console.log(error);
@@ -269,7 +269,10 @@ function DetailsBien() {
         className={`flex flex-col lg:flex-row items-start justify-between mx-8`}
       >
         <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden custom-scrollbar">
-          <ImageZoomViewer imageUrl={BienDetails.images[selectedIndex]} />
+          <ImageZoomViewer
+            imageUrl={BienDetails.images[selectedIndex]}
+            status={BienDetails?.status}
+          />
         </div>
 
         <div className="overflow-y-auto flex lg:flex-col lg:space-y-2 space-x-2 lg:space-x-0 max-h-[550px] p-2 custom-scrollbar">

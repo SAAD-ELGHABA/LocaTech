@@ -140,7 +140,7 @@ function Conversation({ isAssistant = false }) {
                 [1, 5, 7].includes(b.status_id)
             ) && (
               <CourtierDropdown
-                bienId={Number(currentConversation?.bienId)}
+                bienId={Number(currentConversation?.BienId)}
                 user_id={currentConversation?.clientId}
               />
             )}
