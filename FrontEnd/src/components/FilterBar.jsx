@@ -8,6 +8,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router";
 import { fetchMyHistory } from "../functions/fetchMyHistory";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FilterBar() {
   const searchBoxRef = useRef(null);
@@ -70,21 +71,6 @@ function FilterBar() {
   };
 
   const handleSearch = async () => {
-    if (
-      (location.pathname.startsWith("/") &&
-        filterBiensReducer.typeAffaire === "acheter") ||
-      filterBiensReducer.typeAffaire === "Acheter"
-    ) {
-      nav("/acheter");
-    } else if (
-      (location.pathname.startsWith("/") &&
-        filterBiensReducer.typeAffaire === "louer") ||
-      filterBiensReducer.typeAffaire === "Louer"
-    ) {
-      nav("/louer");
-    } else {
-      nav("/consulter-bien");
-    }
     setIsloading(true);
     try {
       const response = await axios.post("/api/filterBiens", filterBiensReducer);
@@ -93,6 +79,21 @@ function FilterBar() {
           toast.error("Aucun bien trouvé avec ces critères.");
         } else {
           dispatch({ type: "GET_FILTRED_BIENS", payload: response.data.biens });
+        }
+        if (
+          (location.pathname.startsWith("/") &&
+            filterBiensReducer.typeAffaire === "acheter") ||
+          filterBiensReducer.typeAffaire === "Acheter"
+        ) {
+          nav("/acheter");
+        } else if (
+          (location.pathname.startsWith("/") &&
+            filterBiensReducer.typeAffaire === "louer") ||
+          filterBiensReducer.typeAffaire === "Louer"
+        ) {
+          nav("/louer");
+        } else {
+          nav("/consulter-bien");
         }
       }
     } catch (error) {
@@ -282,18 +283,19 @@ function FilterBar() {
                 Prévoir des recommandations
               </span>
             </button>
-            {messagesChatAi?.[messagesChatAi.length - 2]?.role === "ai" && (
-              <div className="h-4 w-4 bg-red-500"></div>
-            )}
           </div>
 
           {showChatAI && (
-            <div
-              className="fixed inset-0 bg-[#161a1d93] h-screen w-full flex items-center justify-center z-[9999]"
+            <motion.div
+              className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50"
               onClick={() => setShowChatAI(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ zIndex: 1006 }}
             >
               <ChatAI onClose={() => setShowChatAI(false)} />
-            </div>
+            </motion.div>
           )}
         </div>
       </div>

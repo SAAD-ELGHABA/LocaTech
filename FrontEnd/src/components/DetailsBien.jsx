@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import MapFromUrl from "./MapFormUrl";
 import {
   faCalendar,
   faChevronLeft,
@@ -19,6 +18,7 @@ import BienMap from "./BienMap";
 import {
   Bath,
   CircleCheckBig,
+  FileLock,
   Flag,
   Heart,
   LandPlot,
@@ -47,11 +47,12 @@ function DetailsBien() {
       (state.userReducer.userInfo && state.userReducer.userInfo.user) ||
       state.userReducer.userInfo
   );
+  const [BienDetails, setBienDetails] = useState(null);
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const filterBiensReducer = useSelector((state) => state.filterBiensReducer);
   const AllCourtiersReducer = useSelector((state) => state.AllCourtiersReducer);
   const users = useSelector((state) => state.usersReducer);
-  const BienDetails = Biens.find((b) => b.slag == slag);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const nav = useNavigate();
@@ -60,7 +61,23 @@ function DetailsBien() {
   const conversations = useSelector((state) => state.conversationsReducer);
   const [toggleSignalBien, setToggleSignalBien] = useState(false);
 
-  if (!BienDetails) {
+  const detailsBien = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`/api/get-bien-details/${slag}`);
+      console.log(response);
+      setBienDetails(response?.data?.detailsBien);
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    detailsBien();
+  }, [slag]);
+
+  if (isLoading) {
     return (
       <div className="my-24 flex flex-col items-center space-y-4 animate-pulse">
         <div className="flex justify-end w-full mx-auto container">
@@ -86,42 +103,19 @@ function DetailsBien() {
   }
 
   const owner = AllCourtiersReducer.find(
-    (courtier) => courtier.id === BienDetails.courtier_id
+    (courtier) => courtier.id === BienDetails?.courtier_id
   );
 
   const filteredBiens = Biens.filter(
     (bien) =>
-      (bien.id !== BienDetails.id && bien.type === BienDetails.type) ||
-      bien.ville === BienDetails.ville
+      (bien.id !== BienDetails?.id && bien.type === BienDetails?.type) ||
+      bien.ville === BienDetails?.ville
   );
 
-  //   toast("Êtes-vous sûr de vouloir supprimer ce bien ?", {
-  //     action: {
-  //       label: "Confirmer",
-  //       onClick: async () => {
-  //         try {
-  //           const response = await axios.post(`/api/delete-Bien/${id}`);
-  //           toast.success("Bien supprimé avec succès");
-  //           dispatch({
-  //             type: "SET_LOADING",
-  //             payload: true,
-  //           });
-  //           console.log(response);
-  //         } catch (error) {
-  //           toast.error("Erreur lors de la suppression");
-  //           console.error(error);
-  //         }
-  //       },
-  //     },
-  //     cancel: {
-  //       label: "Annuler",
-  //     },
-  //   });
-  // };
   const formattedBudget = new Intl.NumberFormat("de-DE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(BienDetails.budget);
+  }).format(BienDetails?.budget);
 
   const handleHeartClick = async (e, id) => {
     e.preventDefault();
@@ -163,9 +157,9 @@ function DetailsBien() {
       const response = await axios.post(
         `${import.meta.env.VITE_API_SOCKET}:5000/api/auth/start`,
         {
-          BienId: BienDetails.id,
+          BienId: BienDetails?.id,
           userId: user.id,
-          courtierId: BienDetails.courtier_id,
+          courtierId: BienDetails?.courtier_id,
         },
         {
           headers: {
@@ -203,7 +197,14 @@ function DetailsBien() {
     }
   };
 
-  return (
+  return !BienDetails ? (
+    <div className="min-h-screen flex text-gray-700 flex-col items-center justify-center">
+      <FileLock className="h-20 w-20" />
+      <p>
+        Ce bien immobilier n'est pas activé ou parce qu'il a été vendu ou loué
+      </p>
+    </div>
+  ) : (
     <div className={`flex flex-col space-y-4 my-20 lg:my-24`}>
       <div className="mx-auto w-[90%] flex items-center justify-between">
         <span>
@@ -246,7 +247,7 @@ function DetailsBien() {
               "bg-red-100"
             }
             `}
-            onClick={(e) => handleHeartClick(e, BienDetails.id)}
+            onClick={(e) => handleHeartClick(e, BienDetails?.id)}
           >
             <Heart
               className={`h-4 
@@ -270,13 +271,13 @@ function DetailsBien() {
       >
         <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden custom-scrollbar">
           <ImageZoomViewer
-            imageUrl={BienDetails.images[selectedIndex]}
+            imageUrl={BienDetails?.images[selectedIndex]}
             status={BienDetails?.status}
           />
         </div>
 
         <div className="overflow-y-auto flex lg:flex-col lg:space-y-2 space-x-2 lg:space-x-0 max-h-[550px] p-2 custom-scrollbar">
-          {BienDetails.images.map((img, index) => (
+          {BienDetails?.images.map((img, index) => (
             <img
               src={img}
               alt={`thumbnail-${index}`}
@@ -296,10 +297,10 @@ function DetailsBien() {
         <div className="lg:w-2/3 flex flex-col space-y-4">
           <div>
             <h1 className="text-lg lg:text-2xl font-semibold">
-              {BienDetails.title}
+              {BienDetails?.title}
             </h1>
             <div>
-              <p className=" text-xs lg:text-sm">{BienDetails.description}</p>
+              <p className=" text-xs lg:text-sm">{BienDetails?.description}</p>
             </div>
           </div>
           <div className="flex justify-between me-4">

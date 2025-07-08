@@ -253,6 +253,7 @@ const messages = [
     {
         role: "ai",
         data: "Bonjour, comment puis-je vous aider aujourd'hui 😊?",
+        suggestions:[]
     },
 ]
 

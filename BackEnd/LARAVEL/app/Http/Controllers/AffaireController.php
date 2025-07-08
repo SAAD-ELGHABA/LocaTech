@@ -11,11 +11,14 @@ class AffaireController extends Controller
     public function index()
     {
         $affaires = Affaire::with('accord.bien', 'accord.courtier.user', 'accord.user', 'assistant')
+            ->where('status', '!=', 'Transaction réussie')
             ->get();
+
         return response()->json([
             'affaires' => $affaires,
         ]);
     }
+
 
     public function getAffaire($courtierId, $clientId, $accordId)
     {

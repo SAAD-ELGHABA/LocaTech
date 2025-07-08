@@ -23,7 +23,7 @@ function IndexPage() {
   const [isEnd, setIsEnd] = useState(false);
   
   return (
-    <div className="w-full px-4 lg:flex justify-center items-center min-h-screen  ">
+    <div className="hidden w-full px-4 lg:flex justify-center items-center min-h-screen  ">
       {user.role === "user" ? (
         FavorisReducer.length > 0 && (
           <div className="w-full  max-w-7xl px-8 lg:px-4 h-100">

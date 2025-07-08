@@ -1,8 +1,10 @@
-import React from "react";
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import React, { useEffect } from "react";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import PhoneNav from "../../components/PhoneNav";
+import { fetchBiens } from "../../functions/fetchBiens";
+import { useDispatch } from "react-redux";
 
 function Index() {
   const location = useLocation();
@@ -16,14 +18,17 @@ function Index() {
     "/client-signup",
   ];
 
-  const shouldHide = hideNavBarInPages.some(path => location.pathname.startsWith(path));
+
+  const shouldHide = hideNavBarInPages.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   return (
     <div>
       {!shouldHide && <Navbar />}
-      
+
       <Outlet />
-      {!shouldHide && <PhoneNav/>}
+      {!shouldHide && <PhoneNav />}
       {!shouldHide && <Footer />}
     </div>
   );

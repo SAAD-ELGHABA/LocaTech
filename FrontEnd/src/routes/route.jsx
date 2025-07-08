@@ -53,6 +53,7 @@ import BlogDetails from "../components/BlogDetails";
 import Affaires from "../layouts/AdminLayout/adminPages/Affaires";
 import AccessRouteAdmin from "./accessRoute.jsx/AccessRouteAdmin";
 import AffaireDetails from "../layouts/AdminLayout/AdminComponents/AffaireDetails";
+import TransactionDetails from "../pages/TransactionDetails";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -188,6 +189,10 @@ const Router = createBrowserRouter([
       {
         path: "/blog-article-details/:slug",
         element: <BlogDetails />,
+      },
+      {
+        path: "/transactions/:transactionId",
+        element: <TransactionDetails />,
       },
     ],
   },

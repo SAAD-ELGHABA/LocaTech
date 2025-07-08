@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   BadgePercent,
   Barcode,
+  CircleOff,
   ListCheck,
   Trash,
   TrendingUp,
@@ -35,7 +36,7 @@ function Affaires() {
   };
   useEffect(() => {
     fetchAffaires();
-  }, []);
+  }, [selectedAffaire]);
   return isLoading ? (
     <div className="h-screen grid grid-cols-1 animate-pulse">
       <div className="bg-gray-300 h-16 w-1/4 rounded"></div>
@@ -185,7 +186,10 @@ function Affaires() {
       </div>
     </div>
   ) : (
-    <div>No affaires found</div>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <CircleOff className="h-20 w-20" />
+      <h3>No affaires found</h3>
+    </div>
   );
 }
 

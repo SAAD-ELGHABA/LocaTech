@@ -4,6 +4,7 @@ use App\Http\Controllers\AccordController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AffaireController;
 use App\Http\Controllers\AgenceController;
+use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BienController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\MyHistoryController;
 use App\Http\Controllers\notificationController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\SignalController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VilleController;
 use App\Models\Accord;
 use App\Models\Admin;
@@ -26,6 +28,7 @@ use App\Models\Ville;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -225,3 +228,45 @@ Route::post('/delete-user/{selectedUser}', [AdminController::class, 'deleteUser'
 Route::post('/delete-admin/{selectedAdminId}', [AdminController::class, 'deleteAdmin'])->name('delete.admin')->middleware('auth:sanctum');
 
 Route::get('/get-stats-last-month', [AdminController::class, 'lastMonthStats'])->name('get.stats')->middleware('auth:sanctum');
+
+Route::post('/register-transaction/{status}', [TransactionController::class, 'register'])->name('register')->middleware('auth:sanctum');
+
+Route::get('/get-bien-details/{slag}', [BienController::class, 'getDetailsBien'])->name('get.details.bien');
+
+Route::get('/get-courtier-biens/{courtierId}', [CourtierController::class, 'getCourtierBiens'])->name('get.courtier.biens')->middleware('auth:sanctum');
+
+Route::post('/ai-assistant', [AiAssistantController::class, 'handle'])->name('handle');
+
+
+Route::get('/verify-key', function () {
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
+    ])->get('https://openrouter.ai/api/v1/auth/key');
+
+    return $response->json();
+});
+
+Route::get('/check-models', function () {
+    return Http::withHeaders([
+        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
+    ])->get('https://openrouter.ai/api/v1/models')->json();
+});
+
+Route::get('/check-credits', function () {
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
+    ])->get('https://openrouter.ai/api/v1/auth/key');
+
+    return [
+        'credits_remaining' => $response->json()['data']['credits'] ?? null,
+        'subscription' => $response->json()['data']['subscription'] ?? null
+    ];
+});
+
+Route::get('/account-status', function () {
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
+    ])->get('https://openrouter.ai/api/v1/auth/status');
+
+    return $response->json();
+});

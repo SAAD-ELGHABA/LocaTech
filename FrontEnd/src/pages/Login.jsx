@@ -38,13 +38,6 @@ const LoginPage = () => {
         console.log(response.data.user);
         dispatch(login(response.data.token, response.data.user));
         localStorage.setItem("token", response.data.token);
-
-        // sendNotification(
-        //   `✅ ${
-        //     response.data.user.name || "Utilisateur"
-        //   } s'est connecté avec succès.`
-        // );
-
         setTimeout(() => {
           if (response.data.user.role === "user") {
             nav("/");
@@ -67,8 +60,8 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex ">
-      <div className="w-full md:w-1/3  flex mt-32 justify-center  ">
-        <div className="max-w-md w-4/6 space-y-2">
+      <div className="w-full md:w-1/3 flex justify-center">
+        <div className="sticky top-0 self-start mt-32 max-w-md w-4/6 space-y-2">
           <div className="text-center flex flex-col justify-center">
             <div className="flex items-center justify-center">
               <Logo />

@@ -11,14 +11,8 @@ function ConsulterBiens() {
   const [sortOption, setSortOption] = useState();
   const [visibleCount, setVisibleCount] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const dispatch = useDispatch();
   const Biens = useSelector((state) => state.BienReducer);
-  useEffect(() => {
-    async function fetchData() {
-      await fetchMyHistory(Biens, dispatch);
-    }
-    fetchData();
-  }, []);
+
 
   const filtredBiensReducer = useSelector((state) => state.filtredBiensReducer);
   const biensToRender =

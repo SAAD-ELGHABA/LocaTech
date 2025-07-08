@@ -329,4 +329,28 @@ class BienController extends Controller
         $quarties = Quartier::where('ville_id', $Ville->id)->get();
         return $quarties;
     }
+
+
+    public function getDetailsBien($slag)
+    {
+        $bien = Bien::where('slag', $slag)
+            ->with('courtier', 'status')
+            ->first();
+        if ($bien) {
+            if ($bien->status_id === 1 || $bien->status_id === 5 || $bien->status_id === 7) {
+                return response()->json([
+                    'message' => 'Voici les détails de la propriété',
+                    'detailsBien' => $bien
+                ]);
+            } else {
+                return response()->json([
+                    'message' => "cette bien n'est pas activé ."
+                ]);
+            }
+        } else {
+            return response()->json([
+                'message' => 'aucune bien trouvé !!'
+            ]);
+        }
+    }
 }

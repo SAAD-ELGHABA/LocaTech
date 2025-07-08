@@ -7,7 +7,6 @@ export const fetchMyHistory = async (Biens,dispatch) => {
             Authorization:`Bearer ${localStorage.getItem('token')}`
         }
     });
-    // console.log(response);
 const critics = response?.data?.critics;
 
 const bienEffectedHistory = Biens?.map(bien => {
@@ -25,7 +24,6 @@ const bienEffectedHistory = Biens?.map(bien => {
 bienEffectedHistory.sort((a, b) => {
   return (b.matchesCritics === true) - (a.matchesCritics === true);
 });
-// console.log(bienEffectedHistory);
 
   
       dispatch({

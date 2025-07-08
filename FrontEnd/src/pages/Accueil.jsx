@@ -69,6 +69,8 @@ const HeroSection = () => (
       </Link>
     </div>
     <FilterBar />
+      <MostRatedBiens />
+
   </motion.div>
 );
 
@@ -137,7 +139,6 @@ export default function Accueil() {
       )}
 
       <HeroSection />
-      <MostRatedBiens />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

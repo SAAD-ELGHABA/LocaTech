@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\NewCourtierNotification;
+use App\Models\Bien;
 
 use function Laravel\Prompts\error;
 
@@ -26,6 +28,7 @@ class CourtierController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $validation = $request->validate([
                 'step1.nom' => 'required',
                 'step1.prenom' => 'required',
@@ -63,6 +66,7 @@ class CourtierController extends Controller
                 'agence' => $request['step2']['agence'],
                 'Numéro_ICE' => $request['step2']['ICE'],
                 'RC' => $request['step2']['RC'],
+                'evaluation_id' => 1
             ]);
             if (!$Agence) {
                 return response()->json([
@@ -79,6 +83,7 @@ class CourtierController extends Controller
                     'message' => 'erreur quand courtier !!'
                 ], 500);
             }
+            DB::commit();
             return response()->json([
                 'message' => "votre compte a été crée .. aprés 24h va étre validé par l'administration"
             ], 201);
@@ -247,16 +252,20 @@ class CourtierController extends Controller
         }
     }
 
+
+
     public function addCourtiers(Request $request)
     {
         try {
+            $user = User::where('email', $request->input('email'))->first();
+
             $validation = $request->validate([
                 'nom' => 'required',
                 'prenom' => 'required',
                 'email' => [
                     'required',
                     'email',
-                    Rule::unique('users', 'email')->ignore($request->input('email'), 'email')
+                    Rule::unique('users', 'email')->ignore(optional($user)->id)
                 ],
                 'telephone' => 'required',
                 'agence_id' => 'required|exists:agences,id',
@@ -264,26 +273,28 @@ class CourtierController extends Controller
                 'email.unique' => 'L\'email est déjà utilisé.',
             ]);
 
-            $user = User::where('email', $request['email'])->first();
+            $isNewUser = false;
 
             if ($user) {
                 $user->update([
-                    "nom" => $request['nom'],
-                    "prenom" => $request['prenom'],
-                    "telephone" => $request['telephone'],
+                    "nom" => $validation['nom'],
+                    "prenom" => $validation['prenom'],
+                    "email" => $validation['email'],
+                    "telephone" => $validation['telephone'],
                     'role' => 'courtier',
                 ]);
             } else {
                 $user = User::create([
-                    "nom" => $request['nom'],
-                    "prenom" => $request['prenom'],
-                    "email" => $request['email'],
+                    "nom" => $validation['nom'],
+                    "prenom" => $validation['prenom'],
+                    "email" => $validation['email'],
                     "password" => Hash::make(Str::random(16)),
-                    "telephone" => $request['telephone'],
+                    "telephone" => $validation['telephone'],
                     'role' => 'courtier',
                     'email_verified_at' => now(),
                     'email_verified' => true
                 ]);
+                $isNewUser = true;
             }
 
             if (!$user) {
@@ -293,18 +304,24 @@ class CourtierController extends Controller
             }
 
             $courtier = Courtier::where('user_id', $user->id)
-                ->where('agence_id', $request['agence_id'])
                 ->first();
+
+            $isNewCourtier = false;
 
             if ($courtier) {
                 $courtier->status_id = 5;
+                $courtier->agence_id = $validation['agence_id'];
                 $courtier->save();
             } else {
                 $courtier = Courtier::create([
-                    'agence_id' => $request['agence_id'],
+                    'agence_id' => $validation['agence_id'],
                     'user_id' => $user->id,
                     'status_id' => 5
                 ]);
+                $isNewCourtier = true;
+                $token = $courtier->user->createToken('courtier-token')->plainTextToken;
+
+                Mail::to($courtier->user->email)->send(new CourtierActivated($courtier, $token));
             }
 
             if (!$courtier) {
@@ -313,14 +330,29 @@ class CourtierController extends Controller
                 ], 500);
             }
 
+            $message = '';
+            if ($isNewCourtier) {
+                $message = "Le courtier a été créé avec succès et un email a été envoyé.";
+            } else {
+                $message = "Le courtier existant a été mis à jour avec succès.";
+            }
+
             return response()->json([
-                'message' => "Le courtier a été ajouté ou mis à jour avec succès. Un email de confirmation sera envoyé à l'utilisateur."
+                'message' => $message
             ], 201);
-        } catch (Error $error) {
+        } catch (\Throwable $error) {
             return response()->json([
-                'message' => $error
+                'message' => $error->getMessage()
             ], 500);
         }
+    }
+
+    public function getCourtierBiens($courtierId)
+    {
+        $biens = Bien::where('courtier_id', $courtierId)->get();
+        return response()->json([
+            'biens' => $biens
+        ]);
     }
 
     public function deleteCourtier($selectedRow)
@@ -332,22 +364,27 @@ class CourtierController extends Controller
         }
 
         DB::beginTransaction();
+
         try {
-            $courtier->delete();
+            $courtier->status_id = 2;
+            $courtier->save();
 
             $user = User::find($courtier->user_id);
             if ($user) {
-                $user->delete();
+                $user->status_id = 2;
+                $user->save();
             }
+
+            Bien::where('courtier_id', $courtier->id)->update(['status_id' => 2]);
 
             DB::commit();
 
             return response()->json([
-                'message' => "Ce courtier a été supprimé avec succès"
+                'message' => "Ce courtier a été désactivé avec succès et ses biens ont été mis à jour."
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Erreur lors de la suppression'], 500);
+            return response()->json(['message' => 'Erreur lors de la désactivation'], 500);
         }
     }
 }

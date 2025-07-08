@@ -37,7 +37,7 @@ const ImageZoomViewer = ({ imageUrl, status }) => {
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center"
-          style={{ zIndex: 1004 }}
+          style={{ zIndex: 1006 }}
         >
           <div className="absolute top-4 right-6 flex gap-3 z-50">
             <button
@@ -81,9 +81,8 @@ const ImageZoomViewer = ({ imageUrl, status }) => {
           </div>
         </div>
       )}
-      <div className="absolute top-[5%] right-2 grid grid-cols-2 gap-4">
+      <div className="absolute top-[5%] right-2 flex gap-4">
         <div
-          onClick={() => setIsModalOpen(true)}
           style={{ backgroundColor: `${status?.["coleur-code"]}` }}
           className=" cursor-pointer  text-white px-2 py-1 rounded-full shadow hover:bg-gray-200"
         >
@@ -91,7 +90,7 @@ const ImageZoomViewer = ({ imageUrl, status }) => {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className=" cursor-pointer bg-white rounded-full shadow hover:bg-gray-200 flex items-center justify-center"
+          className=" cursor-pointer bg-white px-2 rounded-full shadow hover:bg-gray-200 flex items-center justify-center"
         >
           <Maximize2 className="h-4 w-4" />
         </button>

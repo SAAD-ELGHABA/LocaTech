@@ -1,28 +1,95 @@
-<div style="background: white; border-radius: 10px; color: green; width: 500px; margin: 0 auto; padding: 20px;">
-    <div style="text-align: center;">
-        <div>
-            <img src="https://drive.google.com/uc?id=1QLLmlJvRx0ZWLTZ-SmOnRKBXZRm--yq9" alt="logo-LocaTech" style="max-width: 100%; height: auto;">
-        </div>
-    </div>
-    <div style="width: 100%; text-align: center; padding: 20px;">
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <h1 style="color: green; font-size: 18px;">Veuillez Vérifier Votre Email</h1>
-        </div>
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <p class="font-bold" style="font-size: 14px;">Bonjour,</p>
-        </div>
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <p style="color: #6B7280; font-size: 12px;">Pour compléter votre inscription, veuillez vérifier votre adresse e-mail en cliquant sur le lien ci-dessous. Cela nous aide à garantir la sécurité de votre compte. Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer ce message.</p>
-        </div>
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <a href="{{$url}}" style="display: inline-block; background-color: green; color: white; border-radius: 5px; padding: 12px 25px; width: 50%; text-decoration: none; font-size: 15px;">Vérifier l'Email</a>
-        </div>
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <p style="font-size: 10px;">Merci, L'Équipe</p>
-        </div>
-        <div style="display: block; text-align: center; margin: 10px 0;">
-            <p style="font-size: 14px; color: #6B7280;">@LocaTech</p>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="fr">
 
-</div>
+<head>
+    <meta charset="UTF-8">
+    <title>Vérification de votre email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f9fafb;">
+
+    <!-- Container -->
+    <table align="center" width="600" cellpadding="0" cellspacing="0"
+        style="background: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden;">
+
+        <!-- Logo -->
+        <tr>
+            <td style="text-align: center; padding: 32px 24px 0 24px;">
+                <img src="https://res.cloudinary.com/dmiaxmuiy/image/upload/v1751898387/logo-locatech-v1_ztxfrg.png"
+                    alt="Locatech Logo" style="max-width: 100px; height: auto;">
+            </td>
+        </tr>
+
+        <tr>
+            <td style="background-color: #10b981; padding: 24px 40px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 700;">
+                    Veuillez vérifier votre adresse email
+                </h1>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding: 40px;">
+                <p style="font-size: 16px; color: #111827; margin: 0 0 16px 0;">
+                    Bonjour,
+                </p>
+
+                <p style="font-size: 16px; color: #374151; margin: 0 0 16px 0; line-height: 1.5;">
+                    Pour compléter votre inscription, merci de vérifier votre adresse email en cliquant sur le bouton ci-dessous.
+                </p>
+
+                <p style="font-size: 16px; color: #374151; margin: 0 0 24px 0;">
+                    Cela nous permet de garantir la sécurité de votre compte. Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer ce message.
+                </p>
+
+                <p style="text-align: center; margin: 32px 0;">
+                    <a href="{{ $url }}"
+                        style="background-color: #10b981; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                        Vérifier mon email
+                    </a>
+                </p>
+
+                <p style="font-size: 16px; color: #374151; margin: 0;">
+                    Merci,<br>
+                    L'équipe <span style="color: #10b981; font-weight: 600;">Locatech</span>.
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="background-color: #f3f4f6; text-align: center; padding: 24px;">
+                <p style="margin: 0 0 12px 0;">
+                    <a href="https://facebook.com" style="margin: 0 8px; display: inline-block;">
+                        <img src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000"
+                            width="24" alt="Facebook" style="vertical-align: middle; max-width: 25px;">
+                    </a>
+                    <a href="https://instagram.com" style="margin: 0 8px; display: inline-block;">
+                        <img src="https://img.icons8.com/?size=100&id=BrU2BBoRXiWq&format=png&color=000000"
+                            width="24" alt="Instagram" style="vertical-align: middle; max-width: 25px;">
+                    </a>
+                    <a href="https://linkedin.com" style="margin: 0 8px; display: inline-block;">
+                        <img src="https://img.icons8.com/?size=100&id=phOKFKYpe00C&format=png&color=000000"
+                            width="24" alt="LinkedIn" style="vertical-align: middle; max-width: 25px;">
+                    </a>
+                    <a href="https://twitter.com" style="margin: 0 8px; display: inline-block;">
+                        <img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000"
+                            width="24" alt="Twitter" style="vertical-align: middle; max-width: 25px;">
+                    </a>
+                </p>
+
+                <p style="font-size: 12px; color: #6b7280; margin: 8px 0;">
+                    <a href="#" style="color: #6b7280; text-decoration: none; margin: 0 8px;">Politique de confidentialité</a> |
+                    <a href="#" style="color: #6b7280; text-decoration: none; margin: 0 8px;">Conditions d'utilisation</a>
+                </p>
+
+                <p style="font-size: 12px; color: #6b7280; margin: 8px 0;">
+                    &copy; {{ date('Y') }} Locatech. Tous droits réservés.
+                </p>
+            </td>
+        </tr>
+
+    </table>
+</body>
+
+</html>

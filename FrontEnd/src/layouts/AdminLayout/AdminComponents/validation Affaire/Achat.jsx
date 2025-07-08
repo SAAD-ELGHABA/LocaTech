@@ -145,7 +145,7 @@ function Achat({ setValideAffaireData, valideAffaireData }) {
           onChange={(e) => {
             setValideAffaireData({
               ...valideAffaireData,
-              commentaire: e.target.value,
+              Commentaire: e.target.value,
             });
           }}
         ></textarea>

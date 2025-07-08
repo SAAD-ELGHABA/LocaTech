@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { LoaderCircle, Trash } from "lucide-react";
 import { fetchCourtiers } from "../../../../functions/fetchCourtiers";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Link } from "react-router-dom";
 function CourtierModal({
   setToggleCourtierModal,
   selectedRow,
@@ -32,9 +32,10 @@ function CourtierModal({
     }
   };
   const dispatch = useDispatch();
-
+  const [courtierBiens, setCourtierBiens] = useState([]);
   useEffect(() => {
     fetchAgences();
+    getCourtierBiens();
   }, []);
 
   const [info, setInfo] = React.useState({
@@ -44,6 +45,24 @@ function CourtierModal({
     telephone: selectedRow ? courtier?.user?.telephone : "",
     agence: selectedRow ? courtier.agence_id : "",
   });
+  const getCourtierBiens = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `/api/get-courtier-biens/${courtier?.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setCourtierBiens(response?.data?.biens);
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,7 +99,7 @@ function CourtierModal({
         fetchCourtiers(dispatch);
         toast.success(response.data.message);
         setToggleCourtierModal(false);
-        setSelectedRow(null)
+        setSelectedRow(null);
       }
     } catch (error) {
       console.log(error);
@@ -106,7 +125,7 @@ function CourtierModal({
       toast.success(response?.data?.message);
       fetchCourtiers(dispatch);
       setToggleCourtierModal(false);
-      setSelectedRow(null)
+      setSelectedRow(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -127,7 +146,7 @@ function CourtierModal({
         style={{ zIndex: 1006 }}
       >
         <motion.div
-          className="bg-white rounded-xl shadow-xl p-7 w-full max-w-lg"
+          className="bg-white rounded-xl shadow-xl p-7 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar"
           onClick={(e) => e.stopPropagation()}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -262,8 +281,10 @@ function CourtierModal({
                 <div className="flex items-center justify-center text-white">
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 </div>
+              ) : selectedRow ? (
+                "Modifier"
               ) : (
-                selectedRow ? "Modifier":"Ajouter"
+                "Ajouter"
               )}
             </button>
             {selectedRow && (
@@ -278,6 +299,45 @@ function CourtierModal({
               </button>
             )}
           </form>
+          <div className="py-4 border-t border-gray-300 ">
+            {isLoading ? (
+              <div className="grid gap-2 animate-pulse ">
+                <div className="h-12 bg-gray-300 w-1/3"></div>
+                <div className="h-14 bg-gray-300 w-full"></div>
+                <div className="h-14 bg-gray-300 w-full"></div>
+                <div className="h-14 bg-gray-300 w-full"></div>
+              </div>
+            ) : courtierBiens?.length > 0 ? (
+              <div>
+                <h1 className="text-xl font-semibold">Ses Biens</h1>
+                {courtierBiens?.map((b, index) => (
+                  <Link
+                    key={index}
+                    className="my-2 flex space-x-2 items-center hover:text-red-500"
+                    to={`/bien/${b?.ville}/${b?.slag}`}
+                  >
+                    <div>
+                      <img
+                        src={b?.images[0]}
+                        alt="img-bien"
+                        className="min-w-20 max-w-20"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold">{b?.title}</h4>
+                      <p className="text-xs text-gray-700">
+                        {b?.type + " à " + b?.ville + " pour " + b?.typeAffaire}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="min-h-40 flex items-center justify-center">
+                aucune bien
+              </div>
+            )}
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>

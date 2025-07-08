@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 import {
   faPaperPlane,
   faSpinner,
@@ -30,12 +32,30 @@ const ChatAI = ({ onClose }) => {
     "Comment je peux vendre un bien ?",
     "Comment je peux louer mon bien ?",
   ]);
+  useEffect(() => {
+    const stored = sessionStorage.getItem("chatMessages");
+    if (stored) {
+      JSON.parse(stored).forEach((msg) => {
+        console.log(msg);
+        
+        dispatch(msgChatAi(msg));
+      });
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
     }
   }, [messagesChatAi]);
+
+  const saveMessageToSession = (msg) => {
+    let stored = sessionStorage.getItem("chatMessages");
+    let messages = stored ? JSON.parse(stored) : [];
+    messages.push(msg);
+    const last10 = messages.slice(-10);
+    sessionStorage.setItem("chatMessages", JSON.stringify(last10));
+  };
 
   const sendMessage = async (suggestion = null) => {
     const userMessage = suggestion || input.trim();
@@ -45,51 +65,33 @@ const ChatAI = ({ onClose }) => {
     dispatch(msgChatAi({ data: userMessage, role: "user" }));
     setInput("");
     setThinking(true);
-
-    const prompt = generatePrompt(userMessage, Biens);
-    console.log("Prompt:", prompt);
-
+    saveMessageToSession({ data: userMessage, role: "user" });
     try {
-      const response = await fetch(
-        "https://openrouter.ai/api/v1/chat/completions",
+      const response = await axios.post(
+        `/api/ai-assistant`,
         {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_KEY}`,
-            "HTTP-Referer": "http://localhost:3000/",
-            "X-Title": "LocaTech",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "openai/gpt-3.5-turbo",
-            messages: [
-              ...messagesChatAi.map((msg) => ({
-                role: msg.role === "ai" ? "assistant" : msg.role,
-                content: msg.data,
-              })),
-              { role: "user", content: prompt },
-            ],
-            max_tokens: 100,
-          }),
-        }
+          message: userMessage,
+        },
+        { headers: { "Content-Type": "application/json" } }
       );
-
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(data.error?.message || "Failed to fetch");
-
+      console.log(response);
       dispatch(
         msgChatAi({
-          data: data.choices[0]?.message?.content || "No response",
+          data: response?.data?.reply || "No response",
           role: "ai",
+          suggestions: response?.data?.suggestions || [],
         })
       );
+      saveMessageToSession({
+        data: response?.data?.reply || "No response",
+        role: "ai",
+        suggestions: response?.data?.suggestions || [],
+      });
     } catch (error) {
-      console.error("API Error:", error);
-      toast.error(error.message);
+      console.log(error?.response?.data?.message);
     } finally {
-      setThinking(false);
       setIsSending(false);
+      setThinking(false);
     }
   };
 
@@ -98,12 +100,16 @@ const ChatAI = ({ onClose }) => {
   };
 
   return (
-    <div
+    <motion.div
       className="absolute lg:absolute bg-white border border-gray-200 lg:rounded-lg shadow-md w-full lg:w-1/2  h-[100vh] lg:h-[500px] flex flex-col "
       style={{ zIndex: 1003 }}
       onClick={(e) => e.stopPropagation()}
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200 ">
+      <div className="lg:static sticky top-0 w-full flex items-center justify-between py-3 px-4 border-b border-gray-200 bg-white">
         <div className="flex items-center space-x-2 ">
           <Sparkles className="text-purple-500 text-lg" />
           <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
@@ -120,10 +126,10 @@ const ChatAI = ({ onClose }) => {
 
       <div
         ref={conversationRef}
-        className="p-4 overflow-y-auto flex-1 space-y-2 "
+        className="p-4 overflow-y-auto flex-1 space-y-2 custom-scrollbar"
         id="conversation"
       >
-        <div className="flex flex-wrap gap-2 my-4">
+        <div className="flex flex-wrap gap-2 my-4 ">
           {suggestionQst.map((qst, index) => (
             <div>
               <button
@@ -144,39 +150,64 @@ const ChatAI = ({ onClose }) => {
               key={index}
               className={`flex ${
                 msg.role === "ai" ? "justify-start" : "justify-end"
-              }`}
+              } mb-4`}
             >
               <div
-                className={`rounded-lg p-3 text-sm break-words ${
-                  msg.role === "ai" ? " text-gray-800" : "bg-red-50 text-black"
-                } w-4/5`}
+                className={`max-w-[80%] rounded-xl p-4 text-sm break-words shadow ${
+                  msg.role === "ai"
+                    ? "bg-gray-100 text-gray-800"
+                    : "bg-red-100 text-gray-800"
+                }`}
               >
                 {msg.role === "ai" && (
-                  <Sparkles className="text-gray-400 inline-block mr-1 align-text-bottom h-4" />
-                )}
-                {msg.data
-                  .split(/<link>(.*?)<\/link>/)
-                  .map((part, partIndex) => {
-                    const linkMatch = part.match(/^(.*)\((.*?)\)$/);
-                    if (linkMatch) {
-                      const text = linkMatch[1];
-                      const to = linkMatch[2];
-                      return (
-                        <div className="block border rounded border-gray-400 px-2 py-1 hover:bg-red-100">
-                          <Link2 className="h-4" />
-                          <Link key={`link-${index}-${partIndex}`} to={to}>
-                            {text}
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <Sparkles className="text-gray-400 mr-2 h-4 w-4" />
+                      <span className="text-xs text-gray-500">Assistant</span>
+                    </div>
+                    <p className="leading-relaxed whitespace-pre-wrap">
+                      {msg.data}
+                    </p>
+
+                    {/* {biensSuggestions?.length > 0 && (
+                      <div className="mt-3">
+                        {biensSuggestions.map((b, idx) => (
+                          <Link
+                            to={`/bien/${b.ville}/${b.slag}`}
+                            key={idx}
+                            className="block font-medium text-sm text-blue-600 hover:underline hover:text-red-500"
+                          >
+                            <span>{idx + 1} - </span>
+                            {b.title} - {b.ville}
                           </Link>
-                        </div>
-                      );
-                    }
-                    return (
-                      <span key={`span-${index}-${partIndex}`}>{part}</span>
-                    );
-                  })}
+                        ))}
+                      </div>
+                    )} */}
+                    {msg?.suggestions?.length > 0 && (
+                      <div className="mt-3">
+                        {msg.suggestions.map((b, idx) => (
+                          <Link
+                            to={`/bien/${b.ville}/${b.slag}`}
+                            key={idx}
+                            className="block font-medium text-sm text-blue-600 hover:underline hover:text-blue-800"
+                          >
+                            <span>{idx + 1} - </span>
+                            {b.title} - {b.ville}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {msg.role === "user" && (
-                  <div className="text-red-600 font-semibold text-xs text-right mt-1">
-                    Vous
+                  <div>
+                    <p className="leading-relaxed whitespace-pre-wrap">
+                      {msg.data}
+                    </p>
+                    <div className="text-xs text-right mt-2 font-semibold opacity-80">
+                      Vous
+                    </div>
                   </div>
                 )}
               </div>
@@ -230,7 +261,7 @@ const ChatAI = ({ onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

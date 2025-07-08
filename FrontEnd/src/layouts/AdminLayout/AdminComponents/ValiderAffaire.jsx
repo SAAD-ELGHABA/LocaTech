@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { CaseUpper, TicketCheck, TicketX } from "lucide-react";
+import { CaseUpper, LoaderCircle, TicketCheck, TicketX } from "lucide-react";
 import writtenNumber from "written-number";
 import Achat from "./validation Affaire/Achat";
 import Louer from "./validation Affaire/Louer";
-
+import { toast } from "sonner";
 writtenNumber.defaults.lang = "fr";
 
 function ValiderAffaire({
@@ -29,6 +29,7 @@ function ValiderAffaire({
       );
       console.log(response.data);
       setAffaireDetails(response.data.affaire);
+      setSelectedAffaire(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -41,6 +42,8 @@ function ValiderAffaire({
   }, []);
 
   const [valideAffaireData, setValideAffaireData] = useState({
+    bienId: affaireDetails?.accord?.bien?.id,
+    affaire_id: affaireDetails?.id,
     budget_Numbre: affaireDetails?.accord?.bien?.budget,
     budget_Lettre: null,
     Commentaire: "",
@@ -58,11 +61,13 @@ function ValiderAffaire({
       budgetLettre =
         budgetLettre.charAt(0).toUpperCase() + budgetLettre.slice(1);
 
-      setValideAffaireData({
-        ...valideAffaireData,
+      setValideAffaireData((prev) => ({
+        ...prev,
+        bienId: affaireDetails.accord?.bien?.id,
+        affaire_id: affaireDetails.id,
         budget_Numbre: budget,
         budget_Lettre: budgetLettre,
-      });
+      }));
     }
   }, [affaireDetails]);
 
@@ -90,6 +95,28 @@ function ValiderAffaire({
       window.removeEventListener("mouseup", stopResizing);
     };
   }, [isResizing]);
+  const handleTransaction = async (e, status) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        `/api/register-transaction/${status}`,
+        valideAffaireData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response);
+      toast.success(response?.data?.message);
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -263,7 +290,8 @@ function ValiderAffaire({
                               (valideAffaireData?.impôts *
                                 valideAffaireData?.budget_Numbre) /
                                 100 +
-                              valideAffaireData?.budget_Numbre
+                              valideAffaireData?.budget_Numbre *
+                                valideAffaireData?.nombre_mois
                           )}{" "}
                           MAD
                         </span>
@@ -308,12 +336,24 @@ function ValiderAffaire({
                   </div>
                 </div>
                 <div className="w-full space-x-4 flex justify-end bg-white py-2 px-8 text-sm">
-                  <button className="px-10 py-2.5 rounded border border-red-500 hover:border-red-600 text-red-500 hover:text-red-600 flex items-center space-x-2 cursor-pointer">
+                  <button
+                    className="px-10 py-2.5 rounded border border-red-500 hover:border-red-600 text-red-500 hover:text-red-600 flex items-center space-x-2 cursor-pointer"
+                    onClick={(e) =>
+                      handleTransaction(e, "Transaction non réussie")
+                    }
+                  >
                     <TicketX className="h-5 w-5" />
                     <span>Refuser l'affaire</span>
                   </button>
-                  <button className="px-10 py-2.5 rounded bg-red-500 hover:bg-red-600 text-white flex items-center space-x-2 cursor-pointer">
-                    <TicketCheck className="h-5 w-5" />
+                  <button
+                    className="px-10 py-2.5 rounded bg-red-500 hover:bg-red-600 text-white flex items-center space-x-2 cursor-pointer"
+                    onClick={(e) => handleTransaction(e, "Transaction réussie")}
+                  >
+                    {isLoading ? (
+                      <LoaderCircle className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <TicketCheck className="h-5 w-5" />
+                    )}
                     <span>Valider l'affaire</span>
                   </button>
                 </div>

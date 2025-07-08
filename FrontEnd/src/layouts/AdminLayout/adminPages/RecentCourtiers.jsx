@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import dossierVide from "../../../assets/dossier-vide.png";
 import { fetchCourtiers } from "../../../functions/fetchCourtiers";
+import { Search } from "lucide-react";
 
 function RecentCourtiers() {
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,6 @@ function RecentCourtiers() {
 
   const statusReducer = useSelector((state) => state.statusReducer);
 
-  // Pagination logic
   const totalPages = Math.ceil(recentCourtiers.length / usersPerPage);
   const maxVisiblePages = 3;
   const half = Math.floor(maxVisiblePages / 2);
@@ -33,6 +33,7 @@ function RecentCourtiers() {
     endPage = totalPages;
     startPage = Math.max(endPage - maxVisiblePages + 1, 1);
   }
+  const [itemSearch, setItemSearch] = useState(null);
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -104,6 +105,18 @@ function RecentCourtiers() {
     <div className="w-full p-4">
       <div className="mb-2 flex justify-between">
         <h1 className="text-xl font-bold">Les Recents Courtiers</h1>
+        <div className="border rounded px-4 py-1.5 flex w-1/3 border-gray-400 text-sm">
+          <input
+            type="text"
+            className="w-[95%] h-full focus:outline-none"
+            placeholder="chercher des conversations .. "
+            value={itemSearch}
+            onChange={(e) => setItemSearch(e.target.value.toLowerCase())}
+          />
+          <div className="flex justify-end w-[5%] text-gray-400">
+            <Search className="h-5 w-5" />
+          </div>
+        </div>
       </div>
       <div>
         <table className="w-full mx-auto text-center text-sm border-collapse">
@@ -122,81 +135,108 @@ function RecentCourtiers() {
           </thead>
           <tbody>
             {currentRecenteCourtiers.length > 0 &&
-              currentRecenteCourtiers.map((courtier) => (
-                <tr
-                  key={courtier.id}
-                  style={{ border: "1px solid #d3d3d3" }}
-                  className="hover:bg-gray-100 cursor-pointer"
-                >
-                  <td className="py-2" style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.id}
-                  </td>
-                  <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier?.user?.nom + " " + courtier?.user?.prenom}
-                  </td>
-                  <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.user?.email}
-                  </td>
-                  <td style={{ border: "1px solid #d3d3d3" }}>
-                    {courtier.agence.agence}
-                  </td>
-                  <td style={{ border: "1px solid #d3d3d3" }}>
-                    {new Date(courtier.created_at).toLocaleString()}
-                  </td>
-                  <td
-                    // style={{ border: "1px solid #d3d3d3" }}
-                    className="flex justify-center items-center text-center"
+              currentRecenteCourtiers
+                .filter((courtier) => {
+                  if (!itemSearch || itemSearch.trim() === "") return true; 
+
+                  const search = itemSearch.toLowerCase();
+                  return (
+                    courtier?.user?.nom?.toLowerCase().includes(search) ||
+                    courtier?.user?.prenom?.toLowerCase().includes(search) ||
+                    courtier?.user?.email?.toLowerCase().includes(search) ||
+                    courtier?.agence?.agence?.toLowerCase().includes(search) ||
+                    courtier?.status?.nom?.toLowerCase().includes(search)
+                  );
+                })
+                .map((courtier) => (
+                  <tr
+                    key={courtier.id}
+                    style={{ border: "1px solid #d3d3d3" }}
+                    className="hover:bg-gray-100 cursor-pointer"
                   >
-                    <div className="w-full">
-                      {loading && selectedRow === courtier.id ? (
-                        <div className="w-full h-full mx-auto flex justify-center items-center p-1">
-                          <FontAwesomeIcon
-                            icon={faSpinner}
-                            className="animate-spin"
-                          />
-                        </div>
-                      ) : (
-                        <select
-                          className="p-1 border-none outline-none "
-                          onChange={(e) => handleStatus(e, courtier.id)}
-                        >
-                          <option value="">Modifier le status</option>
-                          {statusReducer.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {s.nom}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
-                  </td>
-                  <td style={{ border: "1px solid #d3d3d3" }}>
-                    <span className="text-[#f5f3f4] rounded text-xs">
-                      {statusReducer
-                        .filter((s) => s.id === courtier.status_id)
-                        .map((st) => (
-                          <div key={st.id}>
-                            <span
-                              style={{ backgroundColor: st["coleur-code"] }}
-                              className="text-white px-2 py-1 rounded"
-                            >
-                              {st.nom}
-                            </span>
+                    <td
+                      className="py-2"
+                      style={{ border: "1px solid #d3d3d3" }}
+                    >
+                      {courtier.id}
+                    </td>
+                    <td style={{ border: "1px solid #d3d3d3" }}>
+                      {courtier?.user?.nom + " " + courtier?.user?.prenom}
+                    </td>
+                    <td style={{ border: "1px solid #d3d3d3" }}>
+                      {courtier.user?.email}
+                    </td>
+                    <td style={{ border: "1px solid #d3d3d3" }}>
+                      {courtier.agence.agence}
+                    </td>
+                    <td style={{ border: "1px solid #d3d3d3" }}>
+                      {new Date(courtier.created_at).toLocaleString()}
+                    </td>
+                    <td className="flex justify-center items-center text-center">
+                      <div className="w-full">
+                        {loading && selectedRow === courtier.id ? (
+                          <div className="w-full h-full mx-auto flex justify-center items-center p-1">
+                            <FontAwesomeIcon
+                              icon={faSpinner}
+                              className="animate-spin"
+                            />
                           </div>
-                        ))}
-                    </span>
-                    {selectedRow === courtier.id && (
-                      <button
-                        className="flex space-x-2 items-center cursor-pointer hover:bg-[#d3d3d3] px-2 py-1 rounded mt-2"
-                        onClick={() => refreshCourtiers(courtier.id)}
-                      >
-                        <FontAwesomeIcon icon={faArrowsRotate} />
-                        <span>rafraîchir</span>
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                        ) : (
+                          <select
+                            className="p-1 border-none outline-none "
+                            onChange={(e) => handleStatus(e, courtier.id)}
+                          >
+                            <option value="">Modifier le status</option>
+                            {statusReducer
+                              .filter(
+                                (s) =>
+                                  s?.id === 2 ||
+                                  s?.id === 3 ||
+                                  s?.id === 8 ||
+                                  s.id === 5
+                              )
+                              .map((s) => (
+                                <option key={s.id} value={s.id}>
+                                  {s.id === 2
+                                    ? "supprimer"
+                                    : s.id === 3
+                                    ? "blocker"
+                                    : s.id === 8
+                                    ? "brouiller"
+                                    : "activer"}
+                                </option>
+                              ))}
+                          </select>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ border: "1px solid #d3d3d3" }}>
+                      <span className="text-[#f5f3f4] rounded text-xs">
+                        {statusReducer
+                          .filter((s) => s.id === courtier.status_id)
+                          .map((st) => (
+                            <div key={st.id}>
+                              <span
+                                style={{ backgroundColor: st["coleur-code"] }}
+                                className="text-white px-2 py-1 rounded"
+                              >
+                                {st.nom}
+                              </span>
+                            </div>
+                          ))}
+                      </span>
+                      {selectedRow === courtier.id && (
+                        <button
+                          className="flex space-x-2 items-center cursor-pointer hover:bg-[#d3d3d3] px-2 py-1 rounded mt-2"
+                          onClick={() => refreshCourtiers(courtier.id)}
+                        >
+                          <FontAwesomeIcon icon={faArrowsRotate} />
+                          <span>rafraîchir</span>
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
             {recentCourtiers.length === 0 && (
               <tr>
                 <td colSpan={7} className="py-10">

@@ -165,11 +165,11 @@ function Louer({ setValideAffaireData, valideAffaireData }) {
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-red-500"
           placeholder="Commentaire de l'administrateur"
           rows={10}
-          value={valideAffaireData?.commentaire}
+          value={valideAffaireData?.Commentaire}
           onChange={(e) => {
             setValideAffaireData({
               ...valideAffaireData,
-              commentaire: e.target.value,
+              Commentaire: e.target.value,
             });
           }}
         ></textarea>

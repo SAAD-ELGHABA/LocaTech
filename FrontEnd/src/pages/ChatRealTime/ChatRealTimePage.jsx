@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Aside from "./component/Aside";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { MessageCircleQuestion } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -17,10 +17,10 @@ function ChatRealTimePage() {
   useEffect(() => {
     const fetchData = async () => {
       const userId =
-        user.role === "user"
-          ? user.id
-          : user.role === "courtier"
-          ? currentCourtier.id
+        user?.role === "user"
+          ? user?.id
+          : user?.role === "courtier"
+          ? currentCourtier?.id
           : null;
       try {
         const ConversationsResponse = await axios.get(
@@ -68,11 +68,11 @@ function ChatRealTimePage() {
 
   let userId;
 
-  if (user.role === "user") {
-    userId = user.id;
-  } else if (user.role === "courtier") {
+  if (user?.role === "user") {
+    userId = user?.id;
+  } else if (user?.role === "courtier") {
     userId = currentCourtier?.id;
-  } else if (user.role === "assistant") {
+  } else if (user?.role === "assistant") {
     userId = 0;
   }
   useEffect(() => {
@@ -81,7 +81,7 @@ function ChatRealTimePage() {
       unsubscribe();
     };
   }, [currentConversation, dispatch, userId]);
-
+  const location = useLocation();
   return (
     <div>
       <div className="lg:flex">

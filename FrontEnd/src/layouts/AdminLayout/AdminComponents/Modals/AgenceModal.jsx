@@ -229,6 +229,7 @@ function AgenceModal({
                 <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
+                    className="accent-red-500"
                     name="check"
                     id="check"
                     checked={isChecked}

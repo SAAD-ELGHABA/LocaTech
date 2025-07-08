@@ -9,10 +9,12 @@ import { fetchCourtiers } from "../../functions/fetchCourtiers";
 import { fetchAgence } from "../../functions/fetchAgence";
 import { fetchAdmins } from "../../functions/fetchAdmins";
 import { fetchUsers } from "../../functions/fetchUsers";
+import { LoaderCircle } from "lucide-react";
 
 function IndexAdmin() {
   const dispatch = useDispatch();
   const LoadinfGlobal = useSelector((state) => state.loadingReducer);
+  const user = useSelector((state) => state.userReducer.userInfo);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,8 +55,12 @@ function IndexAdmin() {
     fetchAdmins(dispatch);
     fetchUsers(dispatch);
   }, []);
-
-  return (
+  
+  return !user?.id ? (
+    <div className="min-h-screen flex items-center justify-center">
+      <LoaderCircle className="h-8 w-8 animate-spin" />
+    </div>
+  ) : (
     <div>
       <header className="sticky top-0 w-full bg-[#161a1d] z-50 text-white">
         <NavBar />

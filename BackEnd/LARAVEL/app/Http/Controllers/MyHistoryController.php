@@ -15,47 +15,52 @@ class MyHistoryController extends Controller
     {
         $userId = Auth::id();
 
-        $getBiens = function ($model) use ($userId) {
+        $getInteractions = function ($model) use ($userId) {
             return $model::where('user_id', $userId)
                 ->with('bien')
                 ->get()
-                ->map(fn($item) => $item->bien);
+                ->filter(fn($item) => $item->bien)
+                ->map(fn($item) => [
+                    'bien' => $item->bien,
+                    'interaction_date' => $item->created_at,
+                ]);
         };
 
-        $views = $getBiens(BienView::class);
-        $favoris = $getBiens(Favori::class);
-        $ratings = $getBiens(Rating::class);
+        $views = $getInteractions(BienView::class);
+        $favoris = $getInteractions(Favori::class);
+        $ratings = $getInteractions(Rating::class);
 
-        $allBiens = $views->concat($favoris)->concat($ratings);
+        $allInteractions = $views->concat($favoris)->concat($ratings);
 
-        $uniqueBiens = $allBiens->unique('id')->values();
+        $grouped = $allInteractions->groupBy(fn($item) => $item['bien']->id);
 
-        $lastBiens = $uniqueBiens
-            ->sortByDesc('created_at') 
-            ->take(5)
-            ->values();
+        $latestPerBien = $grouped->map(function ($items) {
+            return collect($items)->sortByDesc('interaction_date')->first();
+        })->values();
 
+        $lastBiens = $latestPerBien->sortByDesc('interaction_date')->take(5)->values();
 
-        $types = $lastBiens->map(fn($item) => $item->type)->unique()->values();
-        $ville = $lastBiens->map(fn($item) => $item->ville)->unique()->values();
-        $typesAffaire = $lastBiens->map(
-            fn($item) => $item->typeAffaire
-        )->unique()->values();
-        $budgets = $lastBiens->map(fn($item) => $item->budget)->unique()->values();
+        $lastBiensOnly = $lastBiens->map(fn($item) => $item['bien']);
+
+        $types = $lastBiensOnly->map(fn($item) => $item->type)->unique()->values();
+        $ville = $lastBiensOnly->map(fn($item) => $item->ville)->unique()->values();
+        $typesAffaire = $lastBiensOnly->map(fn($item) => $item->typeAffaire)->unique()->values();
+        $budgets = $lastBiensOnly->map(fn($item) => $item->budget)->unique()->values();
         $budgetRange = [
             'min' => $budgets->min(),
-            'max' => $budgets->max()
+            'max' => $budgets->max(),
         ];
 
         $critics = [
             "types" => $types,
             "typeAffaires" => $typesAffaire,
             "ville" => $ville,
-            "budgetRange" => $budgetRange
+            "budgetRange" => $budgetRange,
         ];
 
         return response()->json([
-            'critics' => $critics
+            'critics' => $critics,
+            'biens' => $lastBiensOnly,
         ]);
     }
 }

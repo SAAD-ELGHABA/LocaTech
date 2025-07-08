@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import ToastWithLink from "./ToastWithLink";
 import { sendNotification } from "../functions/NotificationSender";
-
+import userLogo from '../assets/logo-user.png'
 function CommentaireSection({ bienId, isIntersactions = false }) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
@@ -243,7 +243,7 @@ function CommentaireSection({ bienId, isIntersactions = false }) {
               <div className="flex items-center space-x-4">
                 <div>
                   <img
-                    src={item?.user?.image}
+                    src={item?.user?.image || userLogo}
                     alt="user-image"
                     className="h-12 w-12 rounded-full"
                   />

@@ -18,7 +18,7 @@ function Favoris({ setShowFavoris }) {
         exit={{ y: -100, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         onClick={(e)=>{e.stopPropagation()}}
-        className="w-[85%] lg:w-[95%] h-[90%] bg-white rounded shadow-3xl  overflow-auto relative"
+        className="w-[85%] lg:w-[95%] h-[90%] bg-white rounded shadow-3xl  overflow-y-auto relative custom-scrollbar"
       >
         <div className="flex justify-between items-center px-4 py-2 lg:py-4 shadow-md mb-4 sticky z-10 top-0 bg-white left-0 right-0">
           <h1 className="text-xl font-semibold">
