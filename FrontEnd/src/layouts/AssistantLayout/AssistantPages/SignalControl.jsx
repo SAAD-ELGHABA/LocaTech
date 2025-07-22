@@ -32,119 +32,154 @@ function SignalControl() {
     fetchSignals();
   }, []);
   return isLoading ? (
-    <div className="h-[50vh] flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center">
       <LoaderCircle className="text-red-500 h-8 w-8 animate-spin" />
     </div>
   ) : signals?.length > 0 ? (
-    <div className="mx-8 my-4">
+    <div className="px-2 lg:mx-8 my-4 w-[95vw] lg:w-full overflow-hidden min-h-screen">
       <div>
         <div className="flex items-center space-x-2 mb-6">
-          <h1 className="text-xl font-bold">Nombre de signaux</h1>
-          <FlagTriangleLeft className="h-6" />
+          <h1 className="text-lg md:text-xl font-bold">Nombre de signaux</h1>
+          <FlagTriangleLeft className="h-5 md:h-6" />
         </div>
-        <table className="w-full text-center text-sm text-gray-600">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Signaler à</th>
-              <th>Par</th>
-              <th>Pour</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {signals?.map((s) => (
-              <tr key={s?.id}>
-                <td className="py-2">{s?.id}</td>
-                <td>{new Date(s?.created_at).toLocaleString()}</td>
-                <td className="flex items-center space-x-2 justify-center">
-                  <img
-                    src={s?.user?.image}
-                    alt="user-image"
-                    className="h-6 w-6 rounded-full"
-                  />
-                  <span>{s?.user?.nom}</span>
-                  <span>{s?.user?.prenom}</span>
-                </td>
-                <td>
-                  <Link
-                    to={`/bien/${s?.bien?.ville}/${s?.bien?.slag}`}
-                    className="hover:text-red-500 hover:underline line-clamp-1"
-                  >
-                    {s?.bien?.title}
-                  </Link>
-                </td>
-                <td className="flex justify-center items-center">
-                  <button
-                    className="flex items-center space-x-1 cursor-pointer hover:bg-gray-200 px-2 py-1"
-                    onClick={() => {
-                      setIdSignal(s?.id);
-                    }}
-                  >
-                    <WalletCards className="h-4 w-4" />
-                    <span>voir detail</span>
-                  </button>
-                </td>
+
+        <div className="overflow-x-auto ">
+          <table className="w-full text-center text-sm text-gray-600 min-w-[600px]">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="py-2 px-1">#</th>
+                <th className="py-2 px-1">Signaler à</th>
+                <th className="py-2 px-1">Par</th>
+                <th className="py-2 px-1">Pour</th>
+                <th className="py-2 px-1">Détails</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {signals?.map((s) => (
+                <tr key={s?.id} className="border-b border-gray-300">
+                  <td className="py-2 px-1">{s?.id}</td>
+                  <td className="px-1">
+                    {new Date(s?.created_at).toLocaleString()}
+                  </td>
+                  <td className="px-1">
+                    <div className="flex items-center space-x-2 justify-center">
+                      <img
+                        src={s?.user?.image}
+                        alt="user"
+                        className="h-6 w-6 rounded-full object-cover"
+                      />
+                      <span className="whitespace-nowrap">{s?.user?.nom}</span>
+                      <span className="whitespace-nowrap">
+                        {s?.user?.prenom}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-1 max-w-[150px] truncate">
+                    <Link
+                      to={`/bien/${s?.bien?.ville}/${s?.bien?.slag}`}
+                      className="hover:text-red-500 hover:underline"
+                    >
+                      {s?.bien?.title}
+                    </Link>
+                  </td>
+                  <td className="px-1">
+                    <button
+                      className="flex items-center space-x-1 hover:bg-gray-200 px-2 py-1 rounded mx-auto"
+                      onClick={() => setIdSignal(s?.id)}
+                    >
+                      <WalletCards className="h-4 w-4" />
+                      <span className="text-xs">Voir détail</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
       {idSignal && (
         <div
-          className="fixed inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center "
-          style={{ zIndex: 1006 }}
-          onClick={() => {
-            setIdSignal(null);
-          }}
+          className="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-[1006] animate-fade-in"
+          onClick={() => setIdSignal(null)}
         >
-          <div className="w-[30%] h-[70%] bg-white overflow-scroll custom-scrollbar flex flex-col justify-between">
-            <div className="flex flex-col justify-center items-center">
-              <div className="border-b border-gray-400 p-2 ">
-                <div className="flex items-center space-x-2">
-                  <img
-                    src={signals?.find((s) => s?.id === idSignal)?.user?.image}
-                    alt="user-image"
-                    className="h-16 w-16 rounded-full"
-                  />
-                  <div className="text-sm text-gray-600">
-                    <h3 className="font-medium">
-                      {signals?.find((s) => s?.id === idSignal)?.user?.nom}{" "}
-                      {signals?.find((s) => s?.id === idSignal)?.user?.prenom}
-                    </h3>
-                    <p className="text-xs">
-                      {signals?.find((s) => s?.id === idSignal)?.user?.email}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col space-y-4 mt-4 w-[90%]">
-                <h1 className="border p-2 rounded border-gray-300 w-full">
-                  Sujet :{" "}
-                  <span className="text-lg font-medium">
-                    {signals?.find((s) => s?.id === idSignal)?.subject}
-                  </span>
-                </h1>
-                <p className="border p-2 rounded border-gray-300 min-h-[100px] w-full">
-                  precision :{" "}
-                  {signals?.find((s) => s?.id === idSignal)?.precision}
+          <div
+            className="bg-white rounded-xl shadow-lg w-full max-w-xl md:max-w-2xl max-h-[80vh] overflow-y-auto p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-4 border-b pb-4 mb-4">
+              <img
+                src={signals?.find((s) => s?.id === idSignal)?.user?.image}
+                alt="user"
+                className="h-16 w-16 rounded-full object-cover border border-gray-300"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {signals?.find((s) => s?.id === idSignal)?.user?.nom}{" "}
+                  {signals?.find((s) => s?.id === idSignal)?.user?.prenom}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {signals?.find((s) => s?.id === idSignal)?.user?.email}
                 </p>
-                <Link
-                  to={`/bien/${
-                    signals?.find((s) => s?.id === idSignal)?.bien?.ville
-                  }/${signals?.find((s) => s?.id === idSignal)?.bien?.slag}`}
-                  className="hover:text-red-500 hover:underline line-clamp-1 flex items-center space-x-2"
-                >
-                  <Telescope />
-                  <span>Voir le bien</span>
-                </Link>
               </div>
             </div>
-            <div className="text-xs text-gray-400 w-full text-end">
+
+            <div className="space-y-5 text-gray-700">
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <span className="font-medium block text-sm text-gray-500 mb-1">
+                  Sujet :
+                </span>
+                <p className="text-base font-semibold text-gray-800">
+                  {signals?.find((s) => s?.id === idSignal)?.subject}
+                </p>
+              </div>
+
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 min-h-[120px]">
+                <span className="font-medium block text-sm text-gray-500 mb-1">
+                  Précision :
+                </span>
+                <p className="text-sm leading-relaxed">
+                  {signals?.find((s) => s?.id === idSignal)?.precision}
+                </p>
+              </div>
+
+              <Link
+                to={`/bien/${
+                  signals?.find((s) => s?.id === idSignal)?.bien?.ville
+                }/${signals?.find((s) => s?.id === idSignal)?.bien?.slag}`}
+                className="inline-flex items-center gap-2 text-red-600 hover:text-red-500 text-sm font-medium transition-colors"
+              >
+                <Telescope className="h-4 w-4" />
+                <span>Voir le bien associé</span>
+              </Link>
+            </div>
+
+            <div className="text-end text-xs text-gray-400 mt-6 border-t pt-3">
               {new Date(
                 signals?.find((s) => s?.id === idSignal)?.created_at
               ).toLocaleString()}
             </div>
+
+            <button
+              onClick={() => setIdSignal(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
+              title="Fermer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       )}

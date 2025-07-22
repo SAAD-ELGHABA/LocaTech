@@ -17,7 +17,7 @@ function BlogDetails() {
           },
         }
       );
-      //   console.log(res?.data);
+
       setArticle(res?.data[0]);
       if (res?.data[0].featured_media) {
         const imgRes = await axios.get(
@@ -30,10 +30,10 @@ function BlogDetails() {
             },
           }
         );
-        console.log(imgRes);
 
         setArticleImage(imgRes?.data?.source_url);
       }
+      console.log(article, articleImage);
     } catch (error) {
       console.log(error);
     }
@@ -70,10 +70,11 @@ function BlogDetails() {
             <span className="hover:underline">LocaTech</span>
           </Link>
         </div>
-        <div
-          className="wp-block"
-          dangerouslySetInnerHTML={{ __html: article?.content?.rendered }}
-        />
+        <div className="wp-content">
+          <div
+            dangerouslySetInnerHTML={{ __html: article?.content?.rendered }}
+          />
+        </div>
 
         <div className="w-full flex items-center justify-end mt-10 text-sm text-gray-500">
           <div>{new Date(article?.date).toDateString()}</div>

@@ -77,9 +77,9 @@ function MostRatedBiens() {
               ))
             ) : (
               <div className="text-center animate-pulse h-70 grid  grid-cols-1 lg:grid-cols-3 gap-4">
-                <div className="bg-gray-400 h-68 rounded"></div>
-                <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
-                <div className="bg-gray-400 h-68 rounded hidden lg:flex"></div>
+                <div className="bg-gray-300 h-68 rounded"></div>
+                <div className="bg-gray-300 h-68 rounded hidden lg:flex"></div>
+                <div className="bg-gray-300 h-68 rounded hidden lg:flex"></div>
               </div>
             )}
           </Swiper>

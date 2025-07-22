@@ -24,7 +24,7 @@ export default function StraightAnglePieChart() {
     <div className="animate-pulse h-full w-full bg-gray-300"></div>
   ) : (
     <ResponsiveContainer width="100%" height={300} className={"text-sm"}>
-      <div className="text-sm font-semibold flex items-center justify-between mb-4 mx-8">
+      <div className="text-sm font-semibold flex items-center justify-between lg:mb-4 mx-8">
         Le pourcentage des biens par type d'affaire %
       </div>
       <PieChart>

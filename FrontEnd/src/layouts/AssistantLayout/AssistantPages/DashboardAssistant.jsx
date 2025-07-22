@@ -5,11 +5,11 @@ import ConversationDashboard from "../charts/LineChart";
 function DashboardAssistant() {
 
   return (
-    <div className="flex space-x-2">
-      <div className="w-[70%] h-[calc(100vh-250px)] bg-gray-100 p-4 rounded">
+    <div className="flex lg:flex-row flex-col  space-x-2">
+      <div className="w-full lg:w-[70%] lg:h-[calc(100vh-100px)] min-h-[calc(100vh)] bg-gray-100 p-4 rounded">
         <ConversationDashboard/>
       </div>
-      <div className="w-[30%] h-[calc(100vh-100px)] bg-gray-100 p-4 rounded overflow-y-scroll overflow-x-scroll">
+      <div className="w-full lg:w-[30%] lg:h-[calc(100vh-100px)] min-h-[calc(100vh)] bg-gray-100 p-4 rounded overflow-auto">
         <ConversationsProcess/>
       </div>
     </div>

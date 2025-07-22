@@ -30,6 +30,8 @@ export const handleSendMessage = async (dispatch,currentConversation,userId,inpu
         sendMessageResponse.status >= 200 &&
         sendMessageResponse.status <= 300
       ) {
+
+        socketConfig.connect();
         socketConfig.emit("newMessage", {
           newMessage: newMessage,
         });

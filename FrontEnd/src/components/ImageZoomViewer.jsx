@@ -25,7 +25,7 @@ const ImageZoomViewer = ({ imageUrl, status }) => {
   const handleZoomOut = () => setZoom((z) => Math.max(0.1, z - 0.1));
 
   return (
-    <div className="relative h-[25vh] lg:h-[80vh]">
+    <div className="relative max-h-[25vh] lg:max-h-full ">
       <div className="w-fit ">
         <img
           src={imageUrl}

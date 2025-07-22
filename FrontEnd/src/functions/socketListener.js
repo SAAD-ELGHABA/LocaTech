@@ -1,13 +1,18 @@
 import axios from "axios";
 import socketConfig from "./socketConfig";
 
-export const socketListener = (dispatch,userId,currentConversation=null)=>{
-  console.log('outside',userId);
+export const socketListener = (dispatch, userId , role, currentConversation = null) => {
+  if (!userId) return () => {};
+
+  socketConfig.connect();
+
+  socketConfig.emit("register", { id: userId ,role:role});
+  console.log(`🔗 User ${userId} (${role}) connected `);
   
-  const handleIncomingMessage = async (newMessage) => {
-    console.log('inside',userId);
+  const handleIncomingMessage = async ({ newMessage }) => {
+    console.log("💬 Received new message (inside the listener function) :", newMessage);
+
     try {
-      // VITE_URL_SOCKET
       const conversationsResponse = await axios.get(
         `${import.meta.env.VITE_API_SOCKET}:5000/api/get-conversations/conversations/${userId}`,
         {
@@ -16,32 +21,31 @@ export const socketListener = (dispatch,userId,currentConversation=null)=>{
           },
         }
       );
-  
-      if (
-        conversationsResponse.status >= 200 &&
-        conversationsResponse.status <= 300
-      ) {
-        console.log(conversationsResponse);
-        if(userId === 0){
-          console.log('assistant',newMessage?.senderId);
-          
+
+      if (conversationsResponse.status >= 200 && conversationsResponse.status <= 300) {
+        const conversations = conversationsResponse.data;
+
+        if (userId === 0) {
+          console.log("🤖 Assistant mode");
           dispatch({
             type: "GET_CONVERSATION_ASSISTANT",
-            payload: conversationsResponse.data,
+            payload: conversations,
           });
-        }
-        else{
+        } else {
           dispatch({
             type: "SET_CONVERSATIONS",
-            payload: conversationsResponse.data,
+            payload: conversations,
           });
         }
-  
-        if (currentConversation && newMessage.conversationId === currentConversation?._id) {
-          const updatedConversation = conversationsResponse.data.find(
+
+        if (
+          currentConversation &&
+          newMessage.conversationId === currentConversation._id
+        ) {
+          const updatedConversation = conversations.find(
             (conv) => conv._id === currentConversation._id
           );
-          
+
           if (updatedConversation) {
             dispatch({
               type: "SET_CURRENT_CONVERSATION",
@@ -49,16 +53,18 @@ export const socketListener = (dispatch,userId,currentConversation=null)=>{
             });
           }
         }
-      }else{
-        console.log('test');
-        
       }
     } catch (error) {
-      console.error("Failed to fetch updated conversations:", error);
+      console.error("❌ Failed to fetch updated conversations:", error);
     }
   };
-  
+  socketConfig.connect();
+  socketConfig.emit("register", { id: userId ,role:role });
 
-    socketConfig.on("receiveMessage", handleIncomingMessage);
-    return () => socketConfig.off("receiveMessage", handleIncomingMessage);
-  }
+  socketConfig.on("newMessage", handleIncomingMessage);
+
+  return () => {
+    socketConfig.off("newMessage", handleIncomingMessage);
+    socketConfig.disconnect();
+  };
+};

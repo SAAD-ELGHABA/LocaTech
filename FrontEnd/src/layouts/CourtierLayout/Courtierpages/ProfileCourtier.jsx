@@ -118,24 +118,23 @@ function ProfileCourtier() {
   ];
 
   return (
-    <div>
-      <div className="mx-8 my-4 flex items-center space-x-2">
-        <ScanQrCode className="h-8 w-8" />
-        <h1 className="text-xl font-semibold">Mes données</h1>
+    <div className="px-4 md:px-8 my-4">
+      <div className="flex items-center space-x-2 mb-6">
+        <h1 className="text-lg md:text-xl font-semibold">Mes données</h1>
+        <ScanQrCode className="h-6 w-6 md:h-8 md:w-8" />
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-5xl mx-auto p-4 text-sm">
-        {
-          <div className="bg-red-100 text-red-950 mb-3 flex items-center space-x-2 p-2 rounded">
-            <CircleAlert />
-            <p>
-              veuillez compléter votre profil pour rendre votre compte et vos
-              annonces plus accessibles par les clients
-            </p>
-          </div>
-        }
-        <div className="lg:flex gap-6 items-start">
-          <div className="relative w-48 h-48">
+        <div className="bg-red-100 text-red-950 mb-3 flex items-start gap-2 p-3 rounded text-sm">
+          <CircleAlert className="mt-1" />
+          <p>
+            veuillez compléter votre profil pour rendre votre compte et vos
+            annonces plus accessibles par les clients
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          <div className="relative w-36 h-36 md:w-1/3 md:h-1/3 mx-auto lg:mx-0">
             <img
               src={imagePreview}
               alt="Profil"
@@ -144,9 +143,9 @@ function ProfileCourtier() {
             <button
               type="button"
               onClick={handleImageClick}
-              className="absolute top-3 right-3 bg-gray-100 p-2 cursor-pointer opacity-50 hover:opacity-100 rounded-full shadow"
+              className="absolute top-2 right-2 bg-gray-100 p-1.5 md:p-2 opacity-50 hover:opacity-100 rounded-full shadow"
             >
-              <Pencil className="w-5 h-5 text-gray-600" />
+              <Pencil className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
             </button>
             <input
               type="file"
@@ -158,38 +157,41 @@ function ProfileCourtier() {
             />
           </div>
 
-          <div className=" w-2/3 mx-auto">
+          {/* Form Fields */}
+          <div className="w-full">
             <table className="w-full table-auto">
               <tbody>
                 {fields.map((field) => (
-                  <tr key={field.name}>
-                    <td className="pr-4 py-2.5 font-medium w-40">
+                  <tr key={field.name} className="block md:table-row">
+                    <td className="pr-4 py-2.5 font-medium w-full md:w-40 block md:table-cell">
                       {field.placeholder}
                     </td>
-                    <td className="py-2">
+                    <td className="py-2 block md:table-cell">
                       <input
                         type={field.type || "text"}
                         name={field.name}
                         placeholder={field.placeholder}
                         value={formData[field.name] || ""}
                         onChange={handleChange}
-                        className={`w-full border border-gray-400 focus:outline-none rounded p-2 ${
+                        className={`w-full border border-gray-400 focus:outline-none rounded p-2 mt-1 md:mt-0 ${
                           !formData[field.name] && "border-red-500"
                         }`}
                       />
                     </td>
                   </tr>
                 ))}
-                <tr>
-                  <td className="pr-4 py-2 font-medium">
+
+                {/* Licence */}
+                <tr className="block md:table-row">
+                  <td className="pr-4 py-2 font-medium block md:table-cell">
                     Licence professionnelle
                   </td>
-                  <td className="py-2">
+                  <td className="py-2 block md:table-cell">
                     <div className="py-2">
                       <div
-                        className={`flex items-center rounded space-x-4 ${
+                        className={`flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 rounded ${
                           !formData.Licence_professionnelle &&
-                          "border border-red-500"
+                          "border border-red-500 p-2"
                         }`}
                       >
                         <button
@@ -201,7 +203,7 @@ function ProfileCourtier() {
                         >
                           Choisir un fichier
                         </button>
-                        <span className="text-sm text-gray-600 truncate max-w-xs">
+                        <span className="text-sm text-gray-600 truncate max-w-full">
                           {formData.Licence_professionnelle?.name ||
                             "Aucun fichier sélectionné"}
                         </span>
@@ -217,19 +219,20 @@ function ProfileCourtier() {
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td className="pr-4 py-2 font-medium align-top">
+
+                {/* Presentation */}
+                <tr className="block md:table-row">
+                  <td className="pr-4 py-2 font-medium align-top block md:table-cell">
                     Brève présentation
                   </td>
-                  <td className="py-2">
+                  <td className="py-2 block md:table-cell">
                     <textarea
                       name="Brève_présentation"
-                      rows="4"
+                      rows={4}
                       placeholder="Brève présentation"
                       onChange={handleChange}
                       className={`w-full border border-gray-400 focus:outline-none rounded p-2 ${
-                        !formData?.Brève_présentation &&
-                        "border border-red-500 rounded"
+                        !formData?.Brève_présentation && "border border-red-500"
                       }`}
                       value={formData?.Brève_présentation}
                     />
@@ -238,10 +241,10 @@ function ProfileCourtier() {
               </tbody>
             </table>
 
-            <div className="text-right mt-4">
+            <div className="text-center md:text-right mt-6">
               <button
                 type="submit"
-                className={`w-1/3 mt-4 px-6 py-2.5 rounded-lg text-white text-sm font-medium ${
+                className={`w-full md:w-1/3 px-6 py-2.5 rounded-lg text-white text-sm font-medium ${
                   isLoadaing
                     ? "bg-red-400"
                     : "bg-red-600 hover:bg-red-700 cursor-pointer"

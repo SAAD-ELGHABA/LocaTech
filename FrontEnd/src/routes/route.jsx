@@ -54,6 +54,7 @@ import Affaires from "../layouts/AdminLayout/adminPages/Affaires";
 import AccessRouteAdmin from "./accessRoute.jsx/AccessRouteAdmin";
 import AffaireDetails from "../layouts/AdminLayout/AdminComponents/AffaireDetails";
 import TransactionDetails from "../pages/TransactionDetails";
+import BlogPosts from "../layouts/AdminLayout/adminPages/BlogPosts";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -287,6 +288,10 @@ const Router = createBrowserRouter([
       {
         path: "affaire/:courtierId/:clientId/:accordId",
         element: <AffaireDetails />,
+      },
+      {
+        path: "blog-posts",
+        element: <BlogPosts />,
       },
     ],
   },

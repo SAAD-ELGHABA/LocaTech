@@ -26,13 +26,13 @@ function BarChartComponent() {
 
   return (
     courtiers.length === 0 ? (
-      <div className="animate-pulse h-96 w-full flex gap-2">
+      <div className="animate-pulse h-96 w-full flex flex-col lg:flex-row gap-2">
         <div className="w-4/6 bg-gray-300 h-full"></div>
         <div className="w-2/6 bg-gray-300 h-full"></div>
       </div>
     ) : (
-    <div className="flex justify-center">
-      <div className="h-[400px] w-2/3 overflow-y-auto overflow-x-scroll custom-scrollbar">
+    <div className="flex flex-col lg:flex-row justify-center gap-4">
+      <div className="h-[400px] w-full  lg:w-2/3 overflow-y-auto overflow-x-scroll custom-scrollbar">
         <table className="w-[1000px] text-center text-sm">
           <thead>
             <tr className="border-b border-gray-300 py-2">
@@ -73,7 +73,7 @@ function BarChartComponent() {
           </tbody>
         </table>
       </div>
-      <div className="w-1/3">
+      <div className="lg:w-1/3">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

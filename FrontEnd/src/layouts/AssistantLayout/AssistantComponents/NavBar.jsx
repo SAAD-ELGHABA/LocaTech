@@ -30,7 +30,7 @@ function NavBar() {
   }, []);
 
   return (
-    <nav className="container mx-auto">
+    <nav className="container w-[90%] mx-auto lg:w-full">
       <div className="flex justify-between items-center relative">
         <div className="flex items-center justify-center">
           <Logo />

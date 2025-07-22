@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "../../../index.css";
@@ -16,12 +16,24 @@ function IndexPage() {
   const favoriteBiens = Biens.filter((bien) =>
     FavorisReducer.includes(bien.id)
   );
+  const currentConversation = useSelector(
+    (state) => state.currentConversationReducer
+  );
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer.userInfo);
-
+  useEffect(() => {
+    if (!currentConversation && Object.keys(currentConversation).length === 0) {
+      localStorage.removeItem("currentConversationId");
+      dispatch({
+        type: "SET_CURRENT_CONVERSATION",
+        payload: {},
+      });
+    }
+  }, []);
   const swiperRef = useRef(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  
+
   return (
     <div className="hidden w-full px-4 lg:flex justify-center items-center min-h-screen  ">
       {user.role === "user" ? (
@@ -68,10 +80,12 @@ function IndexPage() {
             <div className="flex justify-center items-center gap-4 mt-0">
               <div
                 className={`custom-prev bg-white text-red-500 rounded-full shadow-md flex items-center justify-center ${
-                  isBeginning ? "cursor-not-allowed opacity-40" : "cursor-pointer"
+                  isBeginning
+                    ? "cursor-not-allowed opacity-40"
+                    : "cursor-pointer"
                 }`}
               >
-                <ChevronLeft  className="w-12 h-12"/>
+                <ChevronLeft className="w-12 h-12" />
               </div>
               <div className="custom-pagination flex gap-2" />
               <div
@@ -79,7 +93,7 @@ function IndexPage() {
                   isEnd ? "cursor-not-allowed opacity-40" : "cursor-pointer"
                 }`}
               >
-                <ChevronRight className="w-12 h-12"/>
+                <ChevronRight className="w-12 h-12" />
               </div>
             </div>
           </div>
@@ -92,9 +106,7 @@ function IndexPage() {
             className="w-20 h-20"
           />
           <span className="text-center hover:underline">
-            <Link to="/dashboard/courtier/ajouter-bien">
-              Aller et déposer une bien
-            </Link>
+            <Link to="/courtier-index">Aller et déposer une bien</Link>
           </span>
         </div>
       ) : (

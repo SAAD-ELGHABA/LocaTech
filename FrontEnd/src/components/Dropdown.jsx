@@ -2,11 +2,14 @@ import axios from "axios";
 import { Check, LoaderCircle, Trash } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
+import { sendNotification } from "../functions/NotificationSender";
+import { useSelector } from "react-redux";
 const Dropdown = ({ idAccord, placeholder, setAccordUpdated }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
   const [selected, setSelected] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector((state) => state.userReducer.userInfo);
   const onValidate = async () => {
     setIsLoading(true);
     if (selected) {
@@ -23,6 +26,15 @@ const Dropdown = ({ idAccord, placeholder, setAccordUpdated }) => {
         );
         console.log(response.data);
         toast.success("Accord a été traité avec succès");
+        await sendNotification(
+          user?.id,
+          -1,
+          "Validation d'un accord",
+          `Le status de cet accord devient ${selected} par l'assistant !`,
+          {
+            link: "/admin/affaires",
+          }
+        );
         setAccordUpdated((prev) => !prev);
       } catch (error) {
         console.log(error);

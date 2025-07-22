@@ -15,13 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import brocheDeLocalisation from "../../../assets/broche-de-localisation.gif";
-// import locationIcon from "../../../assets/location-icon.png";
 import axios from "axios";
 import { ChartNoAxesCombined, ClockAlert, Hourglass } from "lucide-react";
 import Interactions from "../CourtierComponent/Interactions";
 
 function MesBiens() {
-  // const MesBiens = useSelector((state) => state.BienReducer);
   const ActuelCourtierReducer = useSelector(
     (state) => state.ActuelCourtierReducer
   );
@@ -137,10 +135,10 @@ function MesBiens() {
       <div className="lg:h-[800px] w-full bg-gray-300 rounded"></div>
     </div>
   ) : (
-    <div>
+    <div className="my-8">
       <div className="flex justify-between mx-8 mt-3">
         <h1 className="text-lg font-semibold flex items-center space-x-2">
-          <span>Mes Biens ({MesBiens?.length > 0 && MesBiens?.length})</span>
+          <span>Mes Biens {MesBiens?.length > 0 && MesBiens?.length}</span>
           <FontAwesomeIcon icon={faScroll} />
         </h1>
         <button
@@ -168,10 +166,10 @@ function MesBiens() {
               >
                 <div className="mx-4 flex justify-between my-2 relative">
                   <h1 className="text-lg font-bold">.{bien.title}</h1>
-                  <div className="relative">
+                  <div className="">
                     <button
                       ref={buttonRef}
-                      className=" px-4 py-2 cursor-pointer hover:bg-red-50"
+                      className="relative  px-4 py-2 cursor-pointer hover:bg-red-50"
                       onClick={() =>
                         setActiveDropdownIndex(
                           activeDropdownIndex === index ? null : index
@@ -184,7 +182,7 @@ function MesBiens() {
                     {activeDropdownIndex === index && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-3 top-full w-50 bg-[#f5f3f4] border border-[#b1a7a669] rounded shadow z-10"
+                        className="absolute right-3 lg:top-full top-10 lg:w-50 w-60 bg-[#f5f3f4] border border-[#b1a7a669] rounded shadow z-10"
                       >
                         <ul className="text-sm text-gray-700">
                           <Link
@@ -253,8 +251,8 @@ function MesBiens() {
                   </div>
                 </div>
 
-                <div className="flex">
-                  <div className="w-1/2 h-72 relative group overflow-hidden rounded">
+                <div className="flex lg:flex-row flex-col ">
+                  <div className="lg:w-1/2 h-72 relative group overflow-hidden rounded">
                     <img
                       src={bien.images && bien.images[0]}
                       alt="image indice 0"
@@ -272,22 +270,25 @@ function MesBiens() {
                     </div>
                   </div>
 
-                  <div className="w-1/2 p-4 flex flex-col place-content-around">
+                  <div className="lg:w-1/2 p-4 flex flex-col place-content-around">
                     <div>
                       <p className="text-sm">
                         {bien.description.length > 400
                           ? bien.description.substring(0, 400) + "..."
                           : bien.description}
                         {bien.description.length > 400 && (
-                          <Link to="/details" className="text-red-500">
-                            {" "}
+                          <Link
+                            to={`/bien/${bien.ville}/${bien.slag}`}
+                            className="text-red-500"
+                          >
+                            {"  "}
                             voir plus
                           </Link>
                         )}
                       </p>
                     </div>
                     <div className="flex flex-col space-y-4">
-                      <div className="flex justify-between">
+                      <div className="flex lg:flex-row flex-col  justify-between">
                         <div className="flex space-x-2 items-center font-semibold">
                           <img
                             src={brocheDeLocalisation}
@@ -337,7 +338,7 @@ function MesBiens() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end ">
+                    <div className="flex justify-end mt-2">
                       <p className="text-xs">
                         {new Date(bien.created_at).toLocaleString()}
                       </p>
@@ -351,7 +352,7 @@ function MesBiens() {
               bien.courtier_id === ActuelCourtierReducer.id && bien.status !== 2
           ).length === 0 ? (
           <div className="flex justify-center items-center h-96">
-            <h1 className="text-lg font-semibold text-gray-500">
+            <h1 className="text-lg font-semibold text-gray-500 w-[80%]  text-center">
               Vous n'avez pas encore de biens. Veuillez en ajouter un.
             </h1>
           </div>

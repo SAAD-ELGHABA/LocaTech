@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Star,
   BadgePercent,
+  Newspaper,
 } from "lucide-react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -77,10 +78,15 @@ function Aside({ isOpen = true }) {
       icon: <BadgePercent className="h-4" />,
       label: "Affaires",
     },
+    {
+      to: "/admin/blog-posts",
+      icon: <Newspaper  className="h-4" />,
+      label: "Articles de blog",
+    },
   ];
 
   return (
-    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed">
+    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed lg:block hidden">
       <div className="my-4 text-center">
         <h1 className="text-lg font-semibold text-white">Bienvenue Admin</h1>
       </div>

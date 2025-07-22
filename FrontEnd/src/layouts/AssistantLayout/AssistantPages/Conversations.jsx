@@ -4,6 +4,7 @@ import {
   CheckCircle,
   ClockAlert,
   ExternalLink,
+  MessagesSquare,
   MouseOff,
   MousePointerBan,
   Pin,
@@ -17,10 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import ConversationInterface from "../AssistantComponents/ConversationInterface";
-import { socketListener } from "../../../functions/socketListener";
 import axios from "axios";
 import { toast } from "sonner";
-import { handleSendMessage } from "../../../functions/handleSendMsg";
 import { sendNotification } from "../../../functions/NotificationSender";
 function Conversations() {
   const allConversationsReducer = useSelector(
@@ -36,16 +35,6 @@ function Conversations() {
   const dispatch = useDispatch();
   const [selectedConversation, setSelectedConversation] = useState(null);
   const userId = 0;
-
-  useEffect(() => {
-    const unsubscribe = socketListener(dispatch, 0);
-    return () => {
-      unsubscribe();
-    };
-  }, [userId]);
-
-  const cleanup = socketListener(dispatch, 0);
-  cleanup();
 
   const user = useSelector((state) => state.userReducer.userInfo);
 
@@ -97,7 +86,7 @@ function Conversations() {
           "Changement de status",
           `Le status de votre conversation devient ${actionType} par l'assistant !`,
           {
-            link: "/chat/conversation",
+            link: `/chat/conversation/${choosedconversation?._id}`,
           }
         );
 
@@ -114,11 +103,17 @@ function Conversations() {
       setSelectedConversation(null);
     }
   };
-
+  if (allConversationsReducer?.length <= 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <MessagesSquare className="h-20 w-20 animate-bounce" />
+      </div>
+    );
+  }
   return (
-    <div>
-      <div>
-        <div className="border rounded px-4 py-2 flex w-1/3 border-gray-400 mb-4">
+    <div className="min-h-screen w-full  overflow-hidden">
+      <div className="mt-4">
+        <div className="border rounded px-4 py-2 flex lg:w-1/3 w-5/6 mx-auto lg:mx-0 border-gray-400 mb-4">
           <input
             type="text"
             className="w-[95%] h-full focus:outline-none"
@@ -137,7 +132,7 @@ function Conversations() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="mb-4 rounded p-2 text-sm text-gray-700"
+              className="mb-4 rounded p-2 text-sm text-gray-700 w-[97%]"
             >
               <p className="font-semibold mb-1">
                 Conversation sélectionnée : {selectedConversation}
@@ -175,7 +170,6 @@ function Conversations() {
                       </Link>
                     </span>
                     <div className="flex space-x-1 items-center">
-                      {/* Handle 'brouillant' or 'supprimé' status */}
                       {conv.status === "activé" ||
                       conv.status === "en cours.." ? (
                         <>
@@ -231,8 +225,8 @@ function Conversations() {
           )}
         </AnimatePresence>
 
-        <div>
-          <table className="w-full bg-gray-50 p-4 my-4 text-sm text-gray-600 text-center">
+        <div className="overflow-auto custom-scrollbar max-w-[95%] lg:min-w-full ">
+          <table className="lg:w-full min-w-[1000px] bg-gray-50 p-4 my-4 text-sm text-gray-600 text-center">
             <tbody>
               {allConversationsReducer
                 .filter((c) => {

@@ -29,7 +29,7 @@ function ValiderAffaire({
       );
       console.log(response.data);
       setAffaireDetails(response.data.affaire);
-      setSelectedAffaire(null);
+      // setSelectedAffaire(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -128,7 +128,7 @@ function ValiderAffaire({
         >
           <motion.div
             ref={modalRef}
-            className="bg-white p-8 rounded-t-xl shadow-2xl w-[98%] max-w-[98%] overflow-y-auto custom-scrollbar relative"
+            className="bg-white p-8 rounded-t-xl shadow-2xl w-[98%] max-w-[98%] overflow-y-auto custom-scrollbar relative "
             style={{ height: `${height}px`, maxHeight: "95vh" }}
             onClick={(e) => e.stopPropagation()}
             initial={{ y: 100, opacity: 0 }}
@@ -143,14 +143,14 @@ function ValiderAffaire({
             />
 
             {isLoading ? (
-              <div className="h-full grid grid-cols-2 gap-4 animate-pulse">
+              <div className="h-full grid lg:grid-cols-2 gap-4 animate-pulse">
                 <div className="bg-gray-300 h-full w-full rounded"></div>
                 <div className="bg-gray-300 h-full w-full rounded"></div>
               </div>
             ) : (
               <div className="space-y-6 ">
                 <div className="text-center mb-4">
-                  <h1 className="text-2xl font-extrabold uppercase">
+                  <h1 className="text-xl lg:text-2xl font-extrabold uppercase">
                     Validation de Transaction Immobilière
                   </h1>
                   <p className="text-sm text-gray-500">
@@ -158,8 +158,8 @@ function ValiderAffaire({
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-sm sticky top-0 self-start">
+                <div className="flex lg:flex-row flex-col-reverse gap-2">
+                  <div className="text-sm lg:sticky top-0 self-start">
                     {affaireDetails?.accord?.bien?.typeAffaire === "acheter" ? (
                       <Achat
                         setValideAffaireData={setValideAffaireData}
@@ -173,7 +173,7 @@ function ValiderAffaire({
                     )}
                   </div>
                   <div className="text-base text-gray-700 ">
-                    <div className="grid grid-cols-2 gap-6 border border-gray-300 rounded-lg p-4 mb-2">
+                    <div className="grid lg:grid-cols-2 gap-6 border border-gray-300 rounded-lg p-4 mb-2">
                       <div>
                         <h3 className="font-bold mb-2">Courtier</h3>
                         <p>
@@ -335,7 +335,7 @@ function ValiderAffaire({
                     </p>
                   </div>
                 </div>
-                <div className="w-full space-x-4 flex justify-end bg-white py-2 px-8 text-sm">
+                <div className="w-full space-x-4 flex justify-between lg:justify-end bg-white py-2 px-8 text-xs lg:text-sm">
                   <button
                     className="px-10 py-2.5 rounded border border-red-500 hover:border-red-600 text-red-500 hover:text-red-600 flex items-center space-x-2 cursor-pointer"
                     onClick={(e) =>
@@ -343,7 +343,7 @@ function ValiderAffaire({
                     }
                   >
                     <TicketX className="h-5 w-5" />
-                    <span>Refuser l'affaire</span>
+                    <span>Refuser </span>
                   </button>
                   <button
                     className="px-10 py-2.5 rounded bg-red-500 hover:bg-red-600 text-white flex items-center space-x-2 cursor-pointer"
@@ -354,7 +354,7 @@ function ValiderAffaire({
                     ) : (
                       <TicketCheck className="h-5 w-5" />
                     )}
-                    <span>Valider l'affaire</span>
+                    <span>Valider </span>
                   </button>
                 </div>
               </div>

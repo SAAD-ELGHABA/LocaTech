@@ -12,14 +12,13 @@ function Aside({ isOpen = true }) {
   const links = [
     { to: "/courtier-index", icon: faHouse, label: "Home" },
     { to: "/MesBiens", icon: faScroll, label: "Mes Biens" },
-    //   { to: "/courtiers", icon: faHandshake, label: "Recent Courtiers" },
   ];
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
   const location = useLocation();
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
 
   return (
-    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed flex flex-col justify-between z-40">
+    <aside className="lg:flex hidden h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed flex-col justify-between z-40">
       <div>
         <div className="my-4 text-center">
           {currentCourtier.length !== 0 && (

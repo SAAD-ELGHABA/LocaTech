@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { toast } from "sonner";
-import { LoaderCircle, Trash } from "lucide-react";
+import { LoaderCircle, Trash, X } from "lucide-react";
 import { fetchCourtiers } from "../../../../functions/fetchCourtiers";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -154,6 +154,17 @@ function CourtierModal({
           transition={{ duration: 0.4, ease: "easeOut" }}
           style={{ zIndex: 1006 }}
         >
+          <div className="flex justify-end lg:hidden mb-2">
+            <button
+              className="bg-gray-200 rounded-full p-1"
+              onClick={() => {
+                setToggleCourtierModal(false);
+                setSelectedRow(null);
+              }}
+            >
+              <X />
+            </button>
+          </div>
           <div className=" flex items-center justify-between">
             <h2 className="text-xl font-bold ">
               {selectedRow ? "Modifier un Courtier" : " Ajouter un Courtier"}

@@ -116,7 +116,7 @@ const ResetPassword = () => {
           <div className="text-center w-full mt-3">
             <Link
               to={"/login"}
-              className="cursor-pointer text-green-400 text-sm hover:text-green-500"
+              className="cursor-pointer text-red-400 text-sm hover:text-red-500"
             >
               return et s'inscrir
             </Link>

@@ -4,6 +4,7 @@ import {
   LoaderCircle,
   MessageCircleMore,
   MessagesSquare,
+  X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ViewTrackingChart from "../charts/ViewTrackingChart";
@@ -53,8 +54,8 @@ function Interactions({ setToggleInteractions, toggleInteractions, BienId }) {
       <div
         className={`flex flex-col bg-white rounded-lg shadow-xl overflow-hidden custom-scrollbar ${
           toggleInteractions === "waiting"
-            ? "w-[20%] h-[30%]"
-            : "w-[80%] max-w-[80%] h-[90%] max-h-[90vh]"
+            ? "w-[20%] lg:h-[30%] h-[10%]"
+            : "lg:w-[80%] w-full lg:max-w-[80%] h-[90%] max-h-[90vh]"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -64,8 +65,16 @@ function Interactions({ setToggleInteractions, toggleInteractions, BienId }) {
           </div>
         ) : (
           <div className="h-full w-full overflow-y-scroll custom-scrollbar">
-            <div className="mx-8 my-4">
+            <div className="mx-8 my-4 flex items-center justify-between">
               <h1 className="text-xl font-medium">{bien?.title}</h1>
+              <button
+                className="bg-gray-300 rounded-full p-2"
+                onClick={() => {
+                  setToggleInteractions(false);
+                }}
+              >
+                <X className="h-6 w-6" />
+              </button>
             </div>
             <div className="mx-8 my-4">
               <h1 className="text-sm text-gray-500 font-medium flex items-center space-x-2">
@@ -84,7 +93,7 @@ function Interactions({ setToggleInteractions, toggleInteractions, BienId }) {
                 <span>{convs}</span>
               </h1>
             </div>
-            <div className="h-[50%] w-[95%] mx-8  my-4 flex items-center justify-between">
+            <div className="h-[50%] w-[95%] lg:mx-8 mx-auto  my-4 flex lg:flex-row flex-col items-center lg:justify-between ">
               <ViewTrackingChart views={views} />
               <CommentsTrackingChart comments={comments} />
             </div>

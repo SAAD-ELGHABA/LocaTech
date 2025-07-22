@@ -1,5 +1,5 @@
 import { Pencil, UserRoundPen } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadToCloudinary } from "../../../lib/cloudinary";
 import axios from "axios";
@@ -89,6 +89,10 @@ function Profile() {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <div className="bg-gray-100 py-5 lg:py-10">

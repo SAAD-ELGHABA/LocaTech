@@ -20,7 +20,7 @@
         </tr>
 
         <tr>
-            <td style="background-color: #10b981; padding: 24px 40px;">
+            <td style="background-color: #ef4444; padding: 24px 40px;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 700;">
                     Réinitialisez votre mot de passe
                 </h1>
@@ -43,14 +43,14 @@
 
                 <p style="text-align: center; margin: 32px 0;">
                     <a href="{{ $url }}"
-                        style="background-color: #10b981; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                        style="background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">
                         Réinitialiser mon mot de passe
                     </a>
                 </p>
 
                 <p style="font-size: 16px; color: #374151; margin: 0;">
                     Merci,<br>
-                    L'équipe <span style="color: #10b981; font-weight: 600;">Locatech</span>.
+                    L'équipe <span style="color: #ef4444; font-weight: 600;">Locatech</span>.
                 </p>
             </td>
         </tr>

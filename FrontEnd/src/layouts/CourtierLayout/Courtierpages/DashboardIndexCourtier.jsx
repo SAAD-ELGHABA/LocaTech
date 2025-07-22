@@ -26,8 +26,8 @@ function DashboardIndexCourtier() {
 
   return (
     <div className="min-h-screen">
-      {currentCourtier.length === 0  ? (
-        <div className="grid grid-cols-4 gap-4 my-4 animate-pulse">
+      {currentCourtier.length === 0 ? (
+        <div className="grid lg:grid-cols-4 gap-4 my-4 animate-pulse">
           <div className="h-25 bg-gray-300 rounded"></div>
           <div className="h-25 bg-gray-300 rounded"></div>
           <div className="h-25 bg-gray-300 rounded"></div>
@@ -47,15 +47,6 @@ function DashboardIndexCourtier() {
             <h1 className="text-sm text-gray-600 ">Mes Conversations</h1>
             <span className="text-2xl font-bold">{conversations?.length}</span>
           </div>
-          <div className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4">
-            <Star className="h-6 w-6" />
-            <div>
-              <h1 className="text-sm text-gray-600 ">Mon évaluation</h1>
-              <span className="text-xl font-bold">
-                {currentCourtier?.agence?.evaluation?.evaluation}
-              </span>
-            </div>
-          </div>
           <div className="bg-white shadow-md rounded-lg p-4 flex items-center justify-between">
             <MonitorCheck className="h-6 w-6" />
             <h1 className="text-sm text-gray-600 ">Mes Biens Actives</h1>
@@ -66,6 +57,15 @@ function DashboardIndexCourtier() {
                 ).length}
               /{currentCourtier?.biens?.length}
             </span>
+          </div>
+          <div className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4">
+            <Star className="h-6 w-6" />
+            <div>
+              <h1 className="text-sm text-gray-600 ">Mon évaluation</h1>
+              <span className="text-xl font-bold">
+                {currentCourtier?.agence?.evaluation?.evaluation}
+              </span>
+            </div>
           </div>
         </div>
       )}

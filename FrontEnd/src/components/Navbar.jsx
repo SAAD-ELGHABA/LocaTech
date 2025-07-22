@@ -9,8 +9,6 @@ import { toast } from "sonner";
 import Logo from "./Logo";
 import Favoris from "./Favoris";
 import logoUser from "../assets/logo-user.png";
-import { fetchInitialData } from "../functions/fetchInitialData";
-import { socketListener } from "../functions/socketListener";
 import { fetchConversations } from "../functions/fetchConversations";
 import Notifications from "./Notifications";
 import { motion } from "framer-motion";
@@ -48,12 +46,8 @@ const Navbar = () => {
   }, []);
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    const unsubscribe = socketListener(dispatch, userId);
-    return () => {
-      unsubscribe();
-    };
-  }, [userId]);
+
+  
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -79,7 +73,6 @@ const Navbar = () => {
     };
   }, []);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
 
   const loc = useLocation();
   return (

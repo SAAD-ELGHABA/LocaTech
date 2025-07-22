@@ -251,7 +251,7 @@ export const filtredBiensReducer = (state=filtredBiens,action)=>{
 
 const messages = [
     {
-        role: "ai",
+        role: "assistant",
         data: "Bonjour, comment puis-je vous aider aujourd'hui 😊?",
         suggestions:[]
     },
@@ -263,6 +263,8 @@ export const ChatAiReducer = (state=messages,action)=>{
             return [
                 ...state,action.payload
             ]
+                case "LOAD_MESSAGES_HISTORY":
+      return [...action.payload];
         default:
             return messages;
     }

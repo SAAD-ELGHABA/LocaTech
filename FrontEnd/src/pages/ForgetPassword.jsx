@@ -22,7 +22,7 @@ function ForgetPassword() {
     };
     setLoading(true);
     try {
-      const toastLoading = toast.loading("wait for it ...");
+      const toastLoading = toast.loading("Attends-le ...");
       const response = await axios.post("/api/forgot-password", info);
       if (response.status >= 200) {
         toast.dismiss(toastLoading);
@@ -104,10 +104,10 @@ function ForgetPassword() {
 
               <button
                 type="submit"
-                className={`cursor-pointer text-sm w-full py-3 px-4 bg-green-500 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-200 flex items-center justify-center ${
+                className={`cursor-pointer text-sm w-full py-3 px-4 bg-red-500 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200 flex items-center justify-center ${
                   loading
                     ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-green-600"
+                    : "hover:bg-red-600"
                 }`}
               >
                 {loading ? (
@@ -118,11 +118,10 @@ function ForgetPassword() {
               </button>
             </form>
 
-            {/* Footer Links */}
             <div className="text-center mt-4">
               <p className="text-sm text-gray-600">
                 Vous avez déjà un compte?{" "}
-                <Link to="/login" className="text-green-500 hover:underline">
+                <Link to="/login" className="text-red-500 hover:underline">
                   Se connecter
                 </Link>
               </p>
@@ -132,7 +131,7 @@ function ForgetPassword() {
         <div
           className="hidden md:block w-2/3 bg-cover bg-center"
           style={{
-            backgroundImage: "url(accueil 1.png)", // Replace with actual path
+            backgroundImage: "url(accueil 1.png)", 
           }}
         >
           <img src={asideimg} alt="aside image" className="w-full" />

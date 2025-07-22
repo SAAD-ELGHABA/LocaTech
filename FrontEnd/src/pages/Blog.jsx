@@ -57,16 +57,15 @@ const Blog = () => {
   return countLoading >= 2 ? (
     <div className="min-h-screen bg-white pt-28 lg:pt-36 px-4 sm:px-12">
       <div className="mx-4">
-      <h1 className="text-2xl lg:text-4xl font-bold lg:text-center mb-10 ">
-        Blog Immobilier de <span className="text-black-600">LocaTech</span>
-      </h1>
-      <p className="lg:text-center text-lg text-black-500 mb-12">
-        Bienvenue sur notre espace de partage ! Chez <strong>LocaTech</strong>,
-        nous croyons en une information accessible et utile pour tous les
-        acteurs de l'immobilier. Retrouvez ici nos articles sur le marché, nos
-        conseils d'experts et notre vision de l'avenir du logement au Maroc.
-      </p>
-
+        <h1 className="text-2xl lg:text-4xl font-bold lg:text-center mb-10 ">
+          Blog Immobilier de <span className="text-black-600">LocaTech</span>
+        </h1>
+        <p className="lg:text-center text-lg text-black-500 mb-12">
+          Bienvenue sur notre espace de partage ! Chez <strong>LocaTech</strong>
+          , nous croyons en une information accessible et utile pour tous les
+          acteurs de l'immobilier. Retrouvez ici nos articles sur le marché, nos
+          conseils d'experts et notre vision de l'avenir du logement au Maroc.
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-24 w-[95%] mx-auto">
@@ -77,7 +76,7 @@ const Blog = () => {
             transition={{ duration: 0.3 }}
           >
             <Link
-              className="rounded-2xl shadow-md p-4 hover:shadow-lg border border-gray-100 bg-white flex flex-col cursor-pointer"
+              className="rounded-2xl shadow-md hover:shadow-lg border border-gray-100 bg-white flex flex-col cursor-pointer"
               to={`/blog-article-details/${article?.slug}`}
             >
               {article._embedded &&
@@ -90,24 +89,30 @@ const Blog = () => {
                     "Article Image"
                   }
                   width={300}
-                  className="rounded-lg object-cover mb-4 h-48 w-full"
+                  className="rounded-t-lg object-cover mb-2 h-48 w-full"
                 />
               ) : (
                 <img
-                  src="https://a3bf-41-141-112-151.ngrok-free.app/wp-content/uploads/2025/06/LocaTech-icon.png"
+                  src={`${
+                    import.meta.env.VITE_API_WP_URL
+                  }/wp-content/uploads/2025/06/LocaTech-icon.png`}
                   alt=""
                   width={300}
-                  className="rounded-lg object-cover mb-4 h-48 w-full"
+                  className="rounded-t-lg object-cover mb-2 h-48 w-full"
                 />
               )}
-              <h2
-                className="text-xl font-semibold mb-3"
-                dangerouslySetInnerHTML={{ __html: article?.title?.rendered }}
-              />
-              <div
-                className="text-gray-700 text-sm flex-grow line-clamp-4"
-                dangerouslySetInnerHTML={{ __html: article?.excerpt?.rendered }}
-              />
+              <div className="p-4">
+                <h2
+                  className="text-xl font-semibold mb-3"
+                  dangerouslySetInnerHTML={{ __html: article?.title?.rendered }}
+                />
+                <div
+                  className="text-gray-700 text-sm flex-grow line-clamp-4"
+                  dangerouslySetInnerHTML={{
+                    __html: article?.excerpt?.rendered,
+                  }}
+                />
+              </div>
             </Link>
           </motion.div>
         ))}

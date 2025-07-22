@@ -98,7 +98,7 @@ function CreateBien() {
   return (
     <div
       className="absolute inset-0 bg-[#161a1d93] h-screen w-full top-0 left-0 flex items-center justify-center z-50"
-      style={{zIndex:1008}}
+      style={{zIndex:1007}}
       onClick={() =>
         dispatch({
           type: "SHOW_CREATEBIENTOGGLE",
@@ -111,7 +111,7 @@ function CreateBien() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -100, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-[90%] h-[90%] bg-white rounded shadow-3xl"
+        className="lg:w-[90%] w-full h-full lg:h-[90%] bg-white rounded shadow-3xl relative"
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -166,7 +166,7 @@ function CreateBien() {
             <Images />
           )}
         </div>
-        <div className="flex justify-end mt-4 mx-8 text-sm">
+        <div className="absolute bottom-10 lg:bottom-5 right-5 flex justify-end mx-8 text-sm">
           <div className="flex space-x-4 text-white">
             <button
               onClick={() => {

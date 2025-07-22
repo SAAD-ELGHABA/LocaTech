@@ -69,13 +69,13 @@ const ConversationDashboard = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4 flex items-center space-x-2">
-        <ChartNoAxesCombined className="h-6 w-6" />
+    <div className="lg:p-4 ">
+      <h2 className="text-xl lg:text-2xl font-semibold mb-4 flex items-start lg:items-center space-x-2">
+        <ChartNoAxesCombined className="lg:h-6 lg:w-6 w-10 h-10" />
         <span>Statistiques des Conversations entre Courtiers et Clients</span>
       </h2>
 
-      <div className="flex space-x-2 mb-4 text-sm">
+      <div className="flex space-x-2 mb-4 lg:text-sm text-xs">
         <button
           onClick={() => setView("courtier")}
           className={`px-3 py-2 rounded ${

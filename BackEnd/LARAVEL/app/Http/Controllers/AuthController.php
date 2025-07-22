@@ -258,12 +258,12 @@ class AuthController extends Controller
         $email = $request->input('email');
         if (!$user) {
             return response()->json([
-                'message' => "we can't find a user with that email address."
+                'message' => "Nous ne trouvons pas d'utilisateur avec cette adresse e-mail."
             ], 404);
         }
         $user->notify(new ResetPasswordNotification($user));
         return response()->json([
-            'message' => "we sent an email to $email"
+            'message' => "Nous avons envoyé un e-mail à $email"
         ]);
     }
 

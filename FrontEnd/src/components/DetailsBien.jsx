@@ -198,11 +198,19 @@ function DetailsBien() {
   };
 
   return !BienDetails ? (
-    <div className="min-h-screen flex text-gray-700 flex-col items-center justify-center">
+    <div className="min-h-screen flex space-y-4 text-gray-700 flex-col items-center justify-center">
       <FileLock className="h-20 w-20" />
-      <p>
+      <p className="w-[80%] text-center">
         Ce bien immobilier n'est pas activé ou parce qu'il a été vendu ou loué
       </p>
+      <button
+        to={""}
+        onClick={() => navigate(-1)}
+        className="bg-red-500 hover:bg-red-600 py-2 w-1/2 lg:w-1/4 rounded-3xl text-white"
+      >
+        {" "}
+        <span>Retour</span>
+      </button>
     </div>
   ) : (
     <div className={`flex flex-col space-y-4 my-20 lg:my-24`}>
@@ -267,7 +275,7 @@ function DetailsBien() {
         </div>
       </div>
       <div
-        className={`flex flex-col lg:flex-row items-start justify-between mx-8`}
+        className={`flex flex-col lg:flex-row items-start justify-between mx-8 `}
       >
         <div className="relative flex-1 flex justify-center items-center max-h-[550px] overflow-hidden custom-scrollbar">
           <ImageZoomViewer
@@ -282,7 +290,7 @@ function DetailsBien() {
               src={img}
               alt={`thumbnail-${index}`}
               key={index}
-              className={`h-[50px] lg:h-[150px] w-auto object-contain cursor-pointer rounded ${
+              className={` max-h-[50px] lg:max-h-[150px] w-auto object-contain cursor-pointer rounded ${
                 index === selectedIndex ? "ring-2 ring-[#a4161a]" : ""
               }`}
               onClick={() => setSelectedIndex(index)}
@@ -342,12 +350,22 @@ function DetailsBien() {
                   <p className="text-xs lg:text-sm text-gray-500">
                     {owner.Brève_présentation
                       ? owner.Brève_présentation
-                      : "sans expérience"}
+                      : owner?.Années_expérience
+                      ?
+                      owner?.Années_expérience+" ans d'expérience":
+                      "sans expérience"
+                    }
                   </p>
                 </div>
               </div>
             ) : (
-              "Courtier introuvable"
+              <div className="animate-pulse flex items-center space-x-3 py-4">
+                <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                <div className="flex flex-col space-y-2">
+                  <div className="w-30 h-4 bg-gray-300"></div>
+                  <div className="w-40 h-4 bg-gray-300"></div>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -477,7 +495,7 @@ function DetailsBien() {
 
       <hr className="border-[#b1a7a6]" />
       {user && user.role === "courtier" ? (
-        <div className="w-[90%] mx-auto">
+        <div className="w-[95%] mx-auto overflow-y-auto custom-scrollbar">
           <MesBiens />
         </div>
       ) : (

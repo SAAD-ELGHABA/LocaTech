@@ -58,52 +58,53 @@ export default function MaisonRadialChart() {
   ];
 
   return (
-    <div
-      style={{ width: "100%", height: 300 }}
-      className="flex justify-center flex-col relative"
-    >
-      <div>
-        <div className="text-xl font-semibold flex items-center justify-between mt-20 mx-8">
-          Le pourcentage des biens type maison  / villa / appartement (%)
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-4 mb-4 mx-8">
-        {data.map((item, index) => (
-          <div key={index} className="relative">
-            <ResponsiveContainer width="100%" height={300}>
-              <RadialBarChart
-                cx="50%"
-                cy="50%"
-                innerRadius="40%"
-                outerRadius="90%"
-                barSize={15}
-                data={item}
-              >
-                <RadialBar minAngle={15} background clockWise dataKey="uv" />
-              </RadialBarChart>
-            </ResponsiveContainer>
-            <div
-              className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center text-sm font-semibold"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <span>
-                {index === 0
-                  ? `${maisonPercentage}%`
-                  : index === 1
-                  ? `${villaPercentage}%`
-                  : `${appartementPercentage}%`}
-              </span>
+    <div className="w-full my-10 px-4">
+      <h2 className="text-lg md:text-xl font-semibold text-center mb-6">
+        Le pourcentage des biens : Maison / Villa / Appartement (%)
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {data.map((item, index) => {
+          const percentage =
+            index === 0
+              ? maisonPercentage
+              : index === 1
+              ? villaPercentage
+              : appartementPercentage;
+
+          const label =
+            index === 0 ? "Maison" : index === 1 ? "Villa" : "Appartement";
+
+          return (
+            <div key={index} className="flex flex-col items-center">
+              <div className="relative w-full h-[200px] sm:h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadialBarChart
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="40%"
+                    outerRadius="90%"
+                    barSize={15}
+                    data={item}
+                  >
+                    <RadialBar
+                      minAngle={15}
+                      background
+                      clockWise
+                      dataKey="uv"
+                    />
+                  </RadialBarChart>
+                </ResponsiveContainer>
+
+                <div className="absolute inset-0 flex items-center justify-center text-base font-bold text-gray-800">
+                  {percentage}%
+                </div>
+              </div>
+
+              <p className=" text-sm font-medium text-gray-600">{label}</p>
             </div>
-            <div className="absolute top-50 left-0 right-0 bottom-0 flex items-center justify-center text-sm font-semibold">
-              {index === 0 ? "Maison" : index === 1 ? "Villa" : "Appartement"}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

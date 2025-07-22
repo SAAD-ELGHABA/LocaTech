@@ -37,8 +37,8 @@ function AllCourtiers() {
       <div className="text-xl font-bold flex items-center justify-between">
         <h1 className="font-bold text-xl">Tous les Courtiers Activés</h1>
       </div>
-      <div className="">
-        <table className="w-full mx-auto text-center text-sm border-collapse mt-2">
+      <div className="overflow-auto custom-scrollbar">
+        <table className="lg:w-full min-w-[1000px] mx-auto text-center text-sm border-collapse mt-2">
           <thead>
             <tr className="bg-gray-200">
               <th className="border border-gray-300 py-2">#</th>

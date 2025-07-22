@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Accord;
 use App\Models\Affaire;
 use App\Models\Bien;
+use App\Models\Courtier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,7 +57,22 @@ class AccordController extends Controller
 
     public function index()
     {
-        $accords = Accord::with(['user', 'bien'])->get();
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+        }
+
+        $courtier = Courtier::where('user_id', $user->id)->first();
+
+        if (!$courtier) {
+            return response()->json(['error' => 'Aucun courtier trouvé pour cet utilisateur'], 404);
+        }
+
+        $accords = Accord::where('courtierId', $courtier->id)
+            ->with(['user', 'bien'])
+            ->get();
+
         return response()->json([
             'accords' => $accords
         ]);
@@ -107,12 +123,12 @@ class AccordController extends Controller
                 'assistant_id' => $userId,
                 'status' => $status,
             ]);
+        }
+        $accord = Accord::find($idAccord);
 
-            $accord = Accord::find($idAccord);
-            if ($accord) {
-                $accord->status = "validé";
-                $accord->save();
-            }
+        if ($accord) {
+            $accord->status = $status;
+            $accord->save();
         }
     }
 }

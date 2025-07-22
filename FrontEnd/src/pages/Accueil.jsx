@@ -1,12 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { LoaderCircle, Quote } from "lucide-react";
 import Navbar from "../components/Navbar";
-import image1 from "../assets/image1.png";
-import image2 from "../assets/image2.png";
-import image3 from "../assets/image3.png";
-import infoCard1 from "../assets/infoCard1.png";
-import infoCard2 from "../assets/infoCard2.png";
-import infoCard3 from "../assets/infoCard3.png";
 import { Link } from "react-router-dom";
 import "../index.css";
 import { useSelector } from "react-redux";

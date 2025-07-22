@@ -10,7 +10,9 @@ import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import "./styles/CustomMapControls.css";
 import { Hourglass } from "lucide-react";
-
+import Logo from "../components/Logo";
+import logoImg from "/LocaTech-icon.png";
+import MapOverlay from "../components/MapOverlay";
 const VITE_OPENCAGEDATA_KEY = import.meta.env.VITE_OPENCAGEDATA_KEY;
 
 const ZoomToCenter = ({ center }) => {
@@ -72,9 +74,9 @@ const BienMap = ({ ville, quartier }) => {
         style={{
           width: "100%",
           height: "500px",
-          border: `2px solid #ced4da`,
+          // border: `2px solid #ced4da`,
           borderRadius: `10px`,
-          boxShadow:`2px 2px 5px #ced4da`
+          // boxShadow:`2px 2px 5px #ced4da`
         }}
         zoomControl={false}
         attributionControl={false}
@@ -92,7 +94,13 @@ const BienMap = ({ ville, quartier }) => {
             fillColor: "red",
             fillOpacity: 0.3,
           }}
+          className="relative"
         />
+        <MapOverlay center={center}>
+          <div className="bg-white p-3 rounded-full">
+            <img src={logoImg} alt="" className="h-7 w-7" />
+          </div>
+        </MapOverlay>
         <ZoomControl position="topright" />
       </MapContainer>
     </div>

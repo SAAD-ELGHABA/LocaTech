@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, BellOff, ConciergeBell, Eye, Trash } from "lucide-react";
+import { Bell, BellOff, BellRing, ConciergeBell, Eye, Trash } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -32,42 +32,49 @@ const NotificationBell = () => {
       </button>
 
       {open && (
-        <div className="absolute right-1 top-full w-90 bg-white shadow-lg rounded-md overflow-hidden z-50 min-h-[80vh] max-h-[80vh] overflow-y-scroll border border-gray-300 custom-scrollbar">
+        <div className="absolute right-1 top-full w-70 lg:w-90 bg-white shadow-lg rounded-md overflow-hidden z-50 lg:min-h-[80vh] max-h-[80vh] overflow-y-auto border border-gray-300 custom-scrollbar">
           {notifications?.length > 0 ? (
             notifications?.map((n) => (
               <Link
                 to={n?.data?.link}
                 key={n?.id}
-                className={`block mx-3 my-1 p-2 hover:bg-red-100 rounded text-black`}
+                className={`flex items-center space-x-5 mx-3 my-1 p-2 hover:bg-red-50 rounded text-black`}
               >
-                <h2 className="text-sm font-bold ">{n?.object}</h2>
-                <p className=" text-xs">{n?.body}</p>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-gray-500 text-xs mt-2">
-                      {n?.created_at ? (
-                        n?.created_at &&
-                        new Date(n.created_at).toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      ) : (
-                        <div className="flex items-center space-x-1">
-                          <ConciergeBell className="h-3 w-3" />
-                          <p>Juste maintenant</p>
-                        </div>
-                      )}
-                    </p>
+                <div>
+                  <BellRing />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold ">{n?.object}</h2>
+                  <p className=" text-xs">{n?.body}</p>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-500 text-xs mt-2">
+                        {n?.created_at ? (
+                          n?.created_at &&
+                          new Date(n.created_at).toLocaleString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        ) : (
+                          <div className="flex items-center space-x-1">
+                            <ConciergeBell className="h-3 w-3" />
+                            <p>Juste maintenant</p>
+                          </div>
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Link>
             ))
           ) : (
             <div className="flex flex-col justify-center items-center space-y-3 h-100 w-full ">
-              <h1>Aucune notification pour le moment</h1>
-              <BellOff className="w-10 h-10 text-gray-500" />
+              <BellOff className="lg:w-10 lg:h-10" />
+              <h1 className="text-black w-1/2 text-center mx-auto">
+                Aucune notification pour le moment
+              </h1>
             </div>
           )}
         </div>

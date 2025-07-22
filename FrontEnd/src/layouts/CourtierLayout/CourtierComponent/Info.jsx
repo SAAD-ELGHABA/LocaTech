@@ -19,8 +19,8 @@ function Info() {
     fetchQuartiersVille(createBien?.ville);
   }, [createBien?.ville]);
   return (
-    <div className="mx-8 my-2 flex space-x-6 overflow-y-auto">
-      <div className="w-1/3 flex flex-col space-y-4">
+    <div className="lg:mx-6 mx-4 my-2 flex flex-col lg:flex-row space-y-4 lg:space-x-6 overflow-y-auto h-full py-4">
+      <div className="lg:w-1/3 w-[95%] flex flex-col space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">
             Titre d'annonce
@@ -30,7 +30,7 @@ function Info() {
             name="titre"
             placeholder="Veuillez entrer le titre d'annonce"
             value={createBien.title || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -46,10 +46,10 @@ function Info() {
           <textarea
             name=""
             id=""
-            rows={12}
             placeholder="Veuillez entrer la description d'annonce"
             value={createBien.description || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500 
+             h-24 md:h-64"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -59,7 +59,7 @@ function Info() {
           ></textarea>
         </div>
       </div>
-      <div className="w-1/3 flex flex-col space-y-6 ">
+      <div className="lg:w-1/3 w-[95%] flex flex-col space-y-6 ">
         <div>
           <label className="block text-sm font-medium mb-1">
             Budget d'annonce
@@ -69,7 +69,7 @@ function Info() {
             name="budget"
             placeholder="Veuillez entrer le budget d'annonce"
             value={createBien.budget || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -87,7 +87,7 @@ function Info() {
             name="superficier"
             placeholder="Veuillez entrer la superficier d'annonce"
             value={createBien.superficier || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -104,7 +104,7 @@ function Info() {
             name=""
             id=""
             value={createBien.ville || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -129,7 +129,7 @@ function Info() {
             name=""
             id=""
             value={createBien.type || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -151,7 +151,7 @@ function Info() {
             name=""
             id=""
             value={createBien.typeAffaire || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -165,7 +165,7 @@ function Info() {
           </select>
         </div>
       </div>
-      <div className="w-1/3 flex flex-col  space-y-6">
+      <div className="lg:w-1/3 w-[95%] flex flex-col  space-y-6">
         <div>
           <label className="block text-sm font-medium mb-1">
             Nombre de chambres
@@ -175,7 +175,7 @@ function Info() {
             name="chambres"
             placeholder="Veuillez entrer le Nombre de chambres"
             value={createBien.chambres || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -193,7 +193,7 @@ function Info() {
             name="salles_de_bain"
             placeholder="Veuillez entrer le Nombre de salles de bain"
             value={createBien.salles_de_bain || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -211,7 +211,7 @@ function Info() {
             name="etage"
             placeholder="Veuillez entrer le Nombre d'Étage"
             value={createBien.etage || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -227,7 +227,7 @@ function Info() {
             name="Quartier"
             placeholder="Veuillez entrer la Quartier de bien"
             value={createBien.quartier || ""}
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
@@ -238,18 +238,25 @@ function Info() {
           <select
             id=""
             name="Quartier"
-            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300"
+            className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-500"
             onChange={(e) => {
               dispatch({
                 type: "SET_CREATE_BIEN",
                 payload: { quartier: e.target.value },
               });
             }}
-            value={quartiesVille?.find(q=>q?.nom===createBien.quartier)?.nom}
+            value={
+              quartiesVille?.find((q) => q?.nom === createBien.quartier)?.nom
+            }
           >
             {quartiesVille?.length > 0 ? (
               quartiesVille?.map((q) => (
-                <option value={q?.nom} selected={createBien.quartier=== q?.nom && true}>{q?.nom}</option>
+                <option
+                  value={q?.nom}
+                  selected={createBien.quartier === q?.nom && true}
+                >
+                  {q?.nom}
+                </option>
               ))
             ) : (
               <option value="">vous devez d'abord choisir la ville</option>

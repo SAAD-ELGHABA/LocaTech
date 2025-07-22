@@ -1,59 +1,15 @@
-import {
-  BadgeCheck,
-  Building2,
-  ContactRound,
-  Handshake,
-  LayoutDashboard,
-  MailPlus,
-  ShieldCheck,
-  Users,
-  ChevronDown,
-  ChevronRight,
-  MessagesSquare,
-  GitGraph,
-  FlagTriangleLeft,
-  HandshakeIcon,
-} from "lucide-react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-function Aside({ isOpen = true }) {
+function Aside({ isOpen = true, links = [] }) {
   const location = useLocation();
   const recentCourtiers = useSelector((state) => state.RecentCourtiers);
   const [isCourtierOpen, setIsCourtierOpen] = useState(false);
   const user = useSelector((state) => state.userReducer.userInfo);
 
-  const links = [
-    {
-      to: "/assistant-index",
-      icon: <LayoutDashboard className="h-4" />,
-      label: "Tableau de bord",
-    },
-    {
-      to: "/control-courtiers",
-      icon: <GitGraph className="h-4" />,
-      label: "Contrôle les biens",
-    },
-    {
-      to: "/all-conversations",
-      icon: <MessagesSquare className="h-4" />,
-      label: "Conversations",
-    },
-    {
-      to: "/signal-control",
-      icon: <FlagTriangleLeft className="h-4" />,
-      label: "Signalements",
-    },
-    {
-      to: "/accord-control",
-      icon: <HandshakeIcon className="h-4" />,
-      label: "Accords",
-    },
-  ];
-
   return (
-    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed text-white">
+    <aside className="h-screen w-1/6 top-20 left-0 bg-[#161a1d] fixed text-white lg:block hidden">
       <div className="my-4 text-center">
         <h1 className="text-xs font-semibold mx-1">
           <span className="font-light">Bienvenue</span>{" "}

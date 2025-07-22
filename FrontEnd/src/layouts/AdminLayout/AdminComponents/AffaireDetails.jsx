@@ -58,13 +58,13 @@ function AffaireDetails() {
 
       <div className="bg-white shadow rounded-lg p-4">
         {activeTab === "courtier" && (
-          <div className="flex space-x-4">
+          <div className="flex lg:flex-row flex-col space-x-4 gap-4">
             <img
               src={affaireDetails?.accord?.courtier?.user?.image}
               alt="courtier-img"
               className="w-40 h-40 rounded-full"
             />
-            <div className="grid lg:grid-cols-2">
+            <div className="grid gap-4 lg:grid-cols-2">
               <div>
                 <h2 className="text-xl font-bold mb-2">Courtier Information</h2>
                 <div>
@@ -131,7 +131,7 @@ function AffaireDetails() {
         )}
 
         {activeTab === "client" && (
-          <div className="flex space-x-4">
+          <div className="flex lg:flex-row flex-col space-x-4 gap-4">
             <img
               src={affaireDetails?.accord?.user?.image}
               alt="client-img"
@@ -151,7 +151,7 @@ function AffaireDetails() {
         )}
 
         {activeTab === "assistant" && (
-          <div className="flex space-x-4">
+          <div className="flex lg:flex-row flex-col space-x-4 gap-4">
             <img
               src={affaireDetails?.assistant?.image}
               alt="assistant-img"

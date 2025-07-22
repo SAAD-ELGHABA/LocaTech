@@ -44,9 +44,9 @@ const CourtierDropdown = ({ bienId, user_id }) => {
       });
       await sendNotification(
         user?.id,
-        "",
+        0,
         "Rapport d'acccord",
-        `Le rapport d’accord a été validé. Vous pouvez consulter les détails et les prochaines étapes.`,
+        `Le rapport de l'accord a été validé. Vous pouvez consulter les détails et les prochaines étapes.`,
         {
           link: "/control-accord",
         }
@@ -80,7 +80,7 @@ const CourtierDropdown = ({ bienId, user_id }) => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="px-4 py-2 rounded cursor-pointer flex items-center space-x-3 hover:bg-gray-800 text-sm text-white bg-gray-700"
+        className="px-4 py-2 rounded cursor-pointer flex items-center lg:space-x-3 hover:bg-gray-800 lg:text-sm text-xs text-white bg-gray-700"
       >
         <TrendingUp
           className={`h-4 w-4 ${
@@ -95,7 +95,7 @@ const CourtierDropdown = ({ bienId, user_id }) => {
         />
         {accordBien ? (
           <span
-            className={` ${
+            className={`lg:block hidden ${
               accordBien && accordBien === "rejected"
                 ? "text-red-500"
                 : accordBien && accordBien === "accepted"
@@ -103,10 +103,14 @@ const CourtierDropdown = ({ bienId, user_id }) => {
                 : "text-yellow-500"
             }`}
           >
-            {accordBien}
+            {accordBien && accordBien === "rejected"
+              ? "rejeté"
+              : accordBien && accordBien === "accepted"
+              ? "accepté"
+              : "autre"}
           </span>
         ) : (
-          <span>Le status d'accord</span>
+          <span className="hidden lg:block">Le status d'accord</span>
         )}
       </button>
 
@@ -117,7 +121,7 @@ const CourtierDropdown = ({ bienId, user_id }) => {
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="bg-white text-gray-900 rounded-lg w-[30%] h-auto shadow-lg z-50 p-6"
+            className="bg-white text-gray-900 rounded-lg lg:w-[30%] w-[90%] h-auto shadow-lg z-50 p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg font-semibold mb-4">

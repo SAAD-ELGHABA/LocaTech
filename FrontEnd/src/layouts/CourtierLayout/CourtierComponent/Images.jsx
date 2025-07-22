@@ -102,7 +102,7 @@ function Images() {
 
   return (
     <div>
-      <div className="mx-8 my-2 bg-[#f5f3f4] p-1">
+      <div className="lg:mx-8 mx-4 my-2 bg-[#f5f3f4] p-1">
         <h1 className="flex space-x-1 text-xs text-gray-700 items-center">
           <FontAwesomeIcon icon={faCircleInfo} />
           <p>
@@ -114,7 +114,7 @@ function Images() {
 
       <div
         {...getRootProps()}
-        className="w-1/2 mx-auto border-2 border-dashed border-[#a4161a] p-6 my-4 rounded cursor-pointer text-center hover:bg-[#a4161a11] transition"
+        className="lg:w-1/2 w-[95%] mx-auto border-2 border-dashed border-[#a4161a] p-6 my-4 rounded cursor-pointer text-center hover:bg-[#a4161a11] transition"
       >
         <input {...getInputProps()} />
         {isDragActive ? (

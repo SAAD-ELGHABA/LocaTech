@@ -29,7 +29,7 @@ function MesProcessAccord({ isAssistant = false }) {
     <div>
       <div>
         {!isAssistant && (
-          <div className="mx-8 my-4 flex space-x-2 items-center">
+          <div className="mx-8 my-8 flex space-x-2 items-center">
             <ChartCandlestick className="h-6 w-6" />
             <h1 className="text-xl font-semibold ">Mes processus</h1>
           </div>
@@ -37,7 +37,7 @@ function MesProcessAccord({ isAssistant = false }) {
 
         {accords.length > 0 ? (
           <div className="overflow-x-auto mx-8">
-            <table className="w-full text-center border border-purple-200 shadow-md rounded-lg">
+            <table className="min-w-[1000px] text-center border border-purple-200 shadow-md rounded-lg">
               <thead>
                 <tr className="">
                   <th className="py-2 px-4">#</th>
@@ -94,7 +94,7 @@ function MesProcessAccord({ isAssistant = false }) {
                         className="flex items-center space-x-2 justify-center hover:text-red-500 hover:underline"
                         to={`/bien/${accord?.bien?.ville}/${accord?.bien?.slag}`}
                       >
-                        <Telescope className="h-4 w-4" />
+                        <Telescope className="h-4 w-4 lg:block hidden" />
                         <span>{accord?.bien?.title}</span>
                       </Link>
                     </td>

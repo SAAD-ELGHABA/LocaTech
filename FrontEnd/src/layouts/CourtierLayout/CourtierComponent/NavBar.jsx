@@ -28,12 +28,12 @@ function NavBar() {
         Number(cnv.messages?.slice(-1)[0]?.senderId) !== user?.id
     );
   return (
-    <nav className="container mx-auto">
+    <nav className="container w-[90%] mx-auto lg:w-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center justify-center">
           <Logo />
         </div>
-        <div className="text-[#ba181b] flex items-center space-x-4">
+        <div className="text-[#ba181b] flex items-center space-x-2 lg:space-x-4">
           <div>
             <button
               onClick={() => {
@@ -43,10 +43,10 @@ function NavBar() {
                 });
               }}
               to="/block"
-              className="bg-[#ba181b] text-white px-4 py-2 rounded-full hover:bg-red-600 transition text-xs flex items-center gap-2 cursor-pointer"
+              className="bg-[#ba181b] text-white lg:px-4 px-2 py-2 rounded-full hover:bg-red-600 transition text-xs flex items-center gap-2 cursor-pointer"
             >
               <FaPlusCircle />
-              <span>Déposer une annonce</span>
+              <span className="lg:block hidden">Déposer une annonce</span>
             </button>
           </div>
           <NotificationBell />

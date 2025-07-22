@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import Aside from "./component/Aside";
 import { Outlet, useLocation } from "react-router";
-import { MessageCircleQuestion } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
 import axios from "axios";
 import { socketListener } from "../../functions/socketListener";
 
@@ -76,11 +74,14 @@ function ChatRealTimePage() {
     userId = 0;
   }
   useEffect(() => {
-    const unsubscribe = socketListener(dispatch, userId, currentConversation);
+    console.log(`🔗 User ${userId} (${user?.role}) connected in the chat page ...`);
+    
+    const unsubscribe = socketListener(dispatch, userId,user?.role, currentConversation);
     return () => {
       unsubscribe();
     };
   }, [currentConversation, dispatch, userId]);
+
   const location = useLocation();
   return (
     <div>

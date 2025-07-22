@@ -53,90 +53,96 @@ function Step2({ setStep }) {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 px-4">
       <form
         onSubmit={handleStep2}
-        className="w-2/3 mx-auto flex justify-center flex-col  space-y-4"
+        className="w-full max-w-2xl mx-auto flex flex-col space-y-4"
       >
-        <p className="text-center font-medium">Informations d'agence </p>
+        <p className="text-center font-medium text-lg mb-2">
+          Informations d'agence
+        </p>
 
-        <div className="flex items-center space-x-2 justify-center">
-          <label htmlFor="" className="w-1/6">
-            Agence :{" "}
+        <div className="flex flex-col md:flex-row md:items-center gap-2">
+          <label htmlFor="agence" className="md:w-1/4 font-medium">
+            Agence :
           </label>
           <input
-            placeholder="entrer votre nom d'agence"
+            id="agence"
+            placeholder="Entrer votre nom d'agence"
             type="text"
             name="agence"
-            id=""
-            onChange={(e) => {
+            value={step2.step2.agence || ""}
+            onChange={(e) =>
               dispatch({
                 type: "STEP2",
                 payload: {
                   ...step2.step2,
                   agence: e.target.value,
                 },
-              });
-            }}
-            value={step2.step2.agence && step2.step2.agence}
-            className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
+              })
+            }
+            className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
-        <div className="flex items-center space-x-2 justify-center">
-          <label htmlFor="" className="w-1/6">
-            Numero ICE :{" "}
+
+        <div className="flex flex-col md:flex-row md:items-center gap-2">
+          <label htmlFor="ice" className="md:w-1/4 font-medium">
+            Numéro ICE :
           </label>
           <input
-            placeholder="entrer le ICE d'agence"
+            id="ice"
+            placeholder="Entrer le numéro ICE"
             type="text"
             name="ICE"
-            id=""
-            onChange={(e) => {
+            value={step2.step2.ICE || ""}
+            onChange={(e) =>
               dispatch({
                 type: "STEP2",
                 payload: {
                   ...step2.step2,
                   ICE: e.target.value,
                 },
-              });
-            }}
-            value={step2.step2.ICE && step2.step2.ICE}
-            className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
+              })
+            }
+            className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
-        <div className="flex items-center space-x-2 justify-center">
-          <label htmlFor="" className="w-1/6">
-            Registre Commerce :{" "}
+
+        <div className="flex flex-col md:flex-row md:items-center gap-2">
+          <label htmlFor="rc" className="md:w-1/4 font-medium">
+            Registre Commerce :
           </label>
           <input
-            placeholder="entrer le Registre de Commerce"
+            id="rc"
+            placeholder="Entrer le registre de commerce"
             type="text"
             name="RC"
-            id=""
-            onChange={(e) => {
+            value={step2.step2.RC || ""}
+            onChange={(e) =>
               dispatch({
                 type: "STEP2",
                 payload: {
                   ...step2.step2,
                   RC: e.target.value,
                 },
-              });
-            }}
-            value={step2.step2.RC && step2.step2.RC}
-            className="w-3/6 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
+              })
+            }
+            className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400"
           />
         </div>
-        <div className="flex justify-center my-4 w-1/2 mx-auto space-x-2 gap-2">
-          <span
-            className="w-1/2 mx-auto bg-[#ef233c] hover:bg-red-600 py-2 rounded text-white text-sm cursor-pointer text-center"
+
+        <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
+          <button
+            type="button"
             onClick={() => setStep(1)}
+            className="w-full md:w-1/2 bg-[#ef233c] hover:bg-red-600 py-2 rounded text-white text-sm text-center"
           >
             Précédent
-          </span>
+          </button>
+
           <button
-            className={`w-1/2 mx-auto bg-[#d90429] hover:bg-red-600 py-2 rounded text-white text-sm cursor-pointer  ${
-              loading ? "" : ""
-            }`}
+            type="submit"
+            className="w-full md:w-1/2 bg-[#d90429] hover:bg-red-600 py-2 rounded text-white text-sm text-center flex items-center justify-center"
           >
             {loading ? (
               <FontAwesomeIcon icon={faSpinner} className="animate-spin" />

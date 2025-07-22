@@ -17,9 +17,9 @@ function ConversationInterface({ setShowConversationInterface, conversation }) {
   );
   const dispatch = useDispatch();
   return (
-    <div className="w-[100%] h-[100vh] bg-[#2125296b] flex items-center justify-center fixed z-50 top-0 left-0">
-      <div className="w-[95%] h-[95%] bg-white">
-        <div className="flex mx-8 justify-between my-2">
+    <div className="w-screen h-full bg-[#2125296b] flex items-center justify-center fixed z-50 top-0 left-0 overflow-y-auto custom-scrollbar">
+      <div className="lg:w-[95%] w-full h-[100%]  lg:h-[95%] bg-white overflow-y-auto custom-scrollbar relative">
+        <div className="flex mx-8 justify-between my-2 ">
           <h1 className="text-lg">
             Conversation :{" "}
             <span className="font-semibold">
@@ -31,22 +31,22 @@ function ConversationInterface({ setShowConversationInterface, conversation }) {
             onClick={() => setShowConversationInterface(false)}
           />
         </div>
-        <div className="flex  h-[90%]">
-          <div className="w-2/3 h-[100%]">
+        <div className="flex flex-col-reverse lg:flex-row h-[90%]">
+          <div className="lg:w-2/3  h-[100%]">
             <Conversation isAssistant={true} conversation={conversation} />
           </div>
-          <div className="w-1/3 border-s h-[100%] border-gray-400 relative p-1">
-            <div className="mx-4">
+          <div className="lg:w-1/3 border-s h-[100%] border-gray-400 relative p-1 ">
+            <div className="mx-4 lg:block hidden">
               <MySlider items={selectedBien?.images} slidesPerView={1} />
               <div>
                 <h1 className="text-lg font-semibold">{selectedBien?.title}</h1>
-                <p className="text-sm text-gray-600 h-[190px] overflow-y-auto custom-scrollbar">
+                <p className="text-sm text-gray-600 h-[190px] lg:h-[150px] overflow-y-auto custom-scrollbar lg:block hidden">
                   {selectedBien?.description}
                 </p>
               </div>
             </div>
-            <div className="absolute -bottom-3 left-0 px-2 py-1 right-0 w-full z-50">
-              <div className="py-3 px-4 flex items-center justify-between w-full">
+            <div className="absolute -bottom-3 left-0 lg:px-2 py-1 right-0 lg:w-full w-[90%] z-50 flex items-center justify-center mx-auto">
+              <div className="py-3 lg:px-4 flex items-center justify-center lg:w-full w-full  ">
                 <ChatInput
                   dispatch={dispatch}
                   currentConversation={conversation}

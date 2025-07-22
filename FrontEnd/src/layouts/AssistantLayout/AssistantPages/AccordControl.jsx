@@ -47,7 +47,7 @@ function AccordControl() {
       <LoaderCircle className="text-red-500 h-8 w-8 animate-spin" />
     </div>
   ) : accords?.length > 0 ? (
-    <div className="mx-8 my-4">
+    <div className="mx-8 my-4 min-h-screen">
       <div className="flex items-center space-x-2 mb-6">
         <h1 className="text-xl font-bold">Accords</h1>
         <HandshakeIcon />
@@ -66,13 +66,13 @@ function AccordControl() {
                 </span>
               )}
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex lg:flex-row flex-col lg:items-center lg:space-x-4 space-y-4 lg:space-y-0">
               <div>
                 <Link to={`/bien/${a?.bien?.ville}/${a?.bien?.slag}`}>
                   <img
                     src={a?.bien?.images[0]}
                     alt="bien-index-image"
-                    className="w-36 h-22 rounded"
+                    className="w-full lg:w-36 lg:h-22 rounded"
                   />
                 </Link>
               </div>
@@ -113,7 +113,7 @@ function AccordControl() {
               <div
                 className={`py-2 px-4 flex items-center justify-center space-x-2
                       ${
-                        a?.status === "accepted"
+                        a?.status === "accepted" || a?.status === "validé"
                           ? "text-green-500"
                           : a?.status === "rejected"
                           ? "text-red-500"
@@ -122,17 +122,17 @@ function AccordControl() {
                       `}
               >
                 <span>
-                  {a?.status === "accepted"
+                  {a?.status === "accepted" || a?.status === "validé"
                     ? "accepté"
-                    : a?.status === "rejected"
+                    : a?.status === "rejected" || a?.status === "refuser"
                     ? "rejeté"
                     : a?.status}
                 </span>
                 <TrendingUp
                   className={`${
-                    a?.status === "accepted"
+                    a?.status === "accepted" || a?.status === "validé"
                       ? "rotate-0"
-                      : a?.status === "rejected"
+                      : a?.status === "rejected" || a?.status === "refuser"
                       ? "rotate-180"
                       : "hidden"
                   }`}
@@ -143,7 +143,7 @@ function AccordControl() {
               </div>
               <div className="text-xs ">
                 <button
-                  className="flex items-center space-x-2 hover:text-red-500 cursor-pointer"
+                  className="flex items-center space-x-2 lg:bg-transparent bg-gray-100 lg:w-auto w-full justify-center py-2  hover:text-red-500 cursor-pointer"
                   onClick={async () => {
                     await dispatch({
                       type: "SET_CURRENT_CONVERSATION",
@@ -162,7 +162,7 @@ function AccordControl() {
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between w-full">
+            <div className="flex lg:flex-row flex-col-reverse items-center justify-between w-full">
               <div className="text-xs text-gray-500  mt-2">
                 {new Date(a?.created_at).toLocaleString()}
               </div>

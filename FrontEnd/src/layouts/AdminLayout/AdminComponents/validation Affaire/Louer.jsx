@@ -4,7 +4,7 @@ import writtenNumber from "written-number";
 function Louer({ setValideAffaireData, valideAffaireData }) {
   return (
     <form action="" className="w-[90%] grid gap-3">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid  gap-2">
         <div className="flex-1 mb-4 md:mb-0 ">
           <label className="block text-sm font-medium mb-1 text-gray-700">
             Budget final en nombre par mois
@@ -27,17 +27,6 @@ function Louer({ setValideAffaireData, valideAffaireData }) {
               });
             }}
           />
-
-          <div className="mt-2">
-            <span>Le prix final en nombre : </span>
-            <span className="text-[#f56565] font-bold text-xs">
-              {new Intl.NumberFormat("de-DE", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }).format(valideAffaireData?.budget_Numbre*valideAffaireData?.nombre_mois)}{" "}
-              MAD
-            </span>
-          </div>
         </div>
         <div className="flex-1 mb-4 md:mb-0 ">
           <label
@@ -59,6 +48,18 @@ function Louer({ setValideAffaireData, valideAffaireData }) {
               });
             }}
           />
+        </div>
+        <div className="mt-2">
+          <span>Le prix final en nombre : </span>
+          <span className="text-[#f56565] font-bold text-xs">
+            {new Intl.NumberFormat("de-DE", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(
+              valideAffaireData?.budget_Numbre * valideAffaireData?.nombre_mois
+            )}{" "}
+            MAD
+          </span>
         </div>
       </div>
       <div className="flex-1 mb-4 md:mb-0 ">
@@ -85,7 +86,7 @@ function Louer({ setValideAffaireData, valideAffaireData }) {
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-1 items-center">
+      <div className="grid lg:grid-cols-2 gap-1 items-center">
         <div className="flex-1 mb-4 md:mb-0 ">
           <label className="block text-sm font-medium mb-1 text-gray-700">
             Commission %
@@ -164,7 +165,7 @@ function Louer({ setValideAffaireData, valideAffaireData }) {
           type="number"
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-red-500"
           placeholder="Commentaire de l'administrateur"
-          rows={10}
+          rows={5}
           value={valideAffaireData?.Commentaire}
           onChange={(e) => {
             setValideAffaireData({

@@ -140,7 +140,7 @@ function Achat({ setValideAffaireData, valideAffaireData }) {
           type="number"
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-red-500"
           placeholder="Commentaire de l'administrateur"
-          rows={10}
+          rows={5}
           value={valideAffaireData?.commentaire}
           onChange={(e) => {
             setValideAffaireData({

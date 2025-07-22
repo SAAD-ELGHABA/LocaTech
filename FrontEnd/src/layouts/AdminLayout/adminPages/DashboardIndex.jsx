@@ -11,7 +11,7 @@ function DashboardIndex() {
 
   return biens.length === 0 ? (
     <div className="animate-pulse h-full w-full ">
-      <div className="grid grid-cols-4 gap-4 my-4 animate-pulse">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 my-4 animate-pulse">
         <div className="h-25 bg-gray-300 rounded"></div>
         <div className="h-25 bg-gray-300 rounded"></div>
         <div className="h-25 bg-gray-300 rounded"></div>
@@ -23,29 +23,26 @@ function DashboardIndex() {
       </div>
     </div>
   ) : (
-    <div className="flex flex-col space-y-1 ">
+    <div className="min-h-screen w-full flex flex-col space-y-1 ">
       <div>
         <h1 className="text-xl font-semibold">Tableau de bord</h1>
       </div>
       <div>
         <Statistiques />
       </div>
-      <div className=" h-80 my-8 flex gap-2 ">
-        <div className="w-2/3 h-full">
+      <div className="h-[80vh] lg:h-80 my-8 flex lg:flex-row flex-col lg:gap-2 gap-12">
+        <div className="w-full lg:w-2/3 lg:h-full h-1/2">
           <LineChart />
         </div>
-        <div className="w-1/3 h-full">
-          <div>
-            <h1></h1>
-          </div>
+        <div className="w-full lg:w-1/3 lg:h-full h-1/2 ">
           <StraightAnglePieChart />
         </div>
       </div>
-      <div className="h-80 my-12 flex gap-2 ">
+      <div className="lg:h-80 h-[100vh] my-12 flex gap-2 ">
         <SimpleRadialBarChart />
       </div>
       <hr className="border border-gray-300" />
-      <div className="h-80 my-12">
+      <div className="lg:h-80 h-auto my-12">
         <BarChartComponent />
       </div>
     </div>

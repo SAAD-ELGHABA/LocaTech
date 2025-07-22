@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Trash } from "lucide-react";
+import { Loader2, Trash, X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { fetchAgence } from "../../../../functions/fetchAgence";
@@ -126,6 +126,17 @@ function AgenceModal({
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
+          <div className="flex justify-end lg:hidden mb-2">
+            <button
+              className="bg-gray-200 rounded-full p-1"
+              onClick={() => {
+                setToggleModal(false);
+                setSelectedAgenceId(null);
+              }}
+            >
+              <X />
+            </button>
+          </div>
           <div>
             <h2 className="text-xl font-bold mb-4">
               {selectedAgenceId ? "Modifier une Agence" : "Ajouter une Agence"}
@@ -241,7 +252,7 @@ function AgenceModal({
                   </label>
                 </div>
               )}
-              <div className={`${selectedAgenceId && "flex"}`}>
+              <div className={`${selectedAgenceId && "flex"} lg:flex-row flex-col-reverse `}>
                 {selectedAgenceId && (
                   <button
                     className={`w-full  py-3 rounded   transition-colors flex items-center space-x-2 justify-center ${
@@ -268,8 +279,10 @@ function AgenceModal({
                     <>
                       <Loader2 className="animate-spin mr-2 h-5 w-5" /> Envoi...
                     </>
+                  ) : selectedAgenceId ? (
+                    "Modifier"
                   ) : (
-                    selectedAgenceId ? "Modifier":"Ajouter"
+                    "Ajouter"
                   )}
                 </button>
               </div>

@@ -170,7 +170,7 @@ Route::post('/rating-bien', [RatingController::class, 'addComment'])->name('add.
 
 Route::post('/accord-rapport', [AccordController::class, 'metterAccord'])->name('put.accord');
 
-Route::get('/get-mes-accords', [AccordController::class, 'index'])->name('accords');
+Route::get('/get-mes-accords', [AccordController::class, 'index'])->name('accords')->middleware('auth:sanctum');
 
 Route::get('/get-rates-biens/{limit}', [RatingController::class, 'getMostRated'])->name('most.rated');
 
@@ -235,38 +235,6 @@ Route::get('/get-bien-details/{slag}', [BienController::class, 'getDetailsBien']
 
 Route::get('/get-courtier-biens/{courtierId}', [CourtierController::class, 'getCourtierBiens'])->name('get.courtier.biens')->middleware('auth:sanctum');
 
-Route::post('/ai-assistant', [AiAssistantController::class, 'handle'])->name('handle');
+Route::post('/ai-assistant', [AiAssistantController::class, 'handle'])->name('handle')->middleware('auth:sanctum');
 
-
-Route::get('/verify-key', function () {
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
-    ])->get('https://openrouter.ai/api/v1/auth/key');
-
-    return $response->json();
-});
-
-Route::get('/check-models', function () {
-    return Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
-    ])->get('https://openrouter.ai/api/v1/models')->json();
-});
-
-Route::get('/check-credits', function () {
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
-    ])->get('https://openrouter.ai/api/v1/auth/key');
-
-    return [
-        'credits_remaining' => $response->json()['data']['credits'] ?? null,
-        'subscription' => $response->json()['data']['subscription'] ?? null
-    ];
-});
-
-Route::get('/account-status', function () {
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY')
-    ])->get('https://openrouter.ai/api/v1/auth/status');
-
-    return $response->json();
-});
+Route::get('/ai-assistant-messages-history', [AiAssistantController::class, 'getMessagesHistory'])->middleware('auth:sanctum')->name('get.messages.history');

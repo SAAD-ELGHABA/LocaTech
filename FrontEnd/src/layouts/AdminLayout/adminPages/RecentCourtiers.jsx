@@ -103,9 +103,9 @@ function RecentCourtiers() {
 
   return (
     <div className="w-full p-4">
-      <div className="mb-2 flex justify-between">
+      <div className="mb-2 flex flex-col lg:flex-row justify-between gap-4">
         <h1 className="text-xl font-bold">Les Recents Courtiers</h1>
-        <div className="border rounded px-4 py-1.5 flex w-1/3 border-gray-400 text-sm">
+        <div className="border rounded px-4 py-1.5 flex lg:w-1/3 border-gray-400 text-sm">
           <input
             type="text"
             className="w-[95%] h-full focus:outline-none"
@@ -118,8 +118,8 @@ function RecentCourtiers() {
           </div>
         </div>
       </div>
-      <div>
-        <table className="w-full mx-auto text-center text-sm border-collapse">
+      <div className="overflow-auto custom-scrollbar">
+        <table className="lg:w-full min-w-[1000px] mx-auto text-center text-sm border-collapse">
           <thead>
             <tr style={{ border: "1px solid #d3d3d3" }} className="bg-gray-200">
               <th className="py-2" style={{ border: "1px solid #d3d3d3" }}>

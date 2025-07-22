@@ -25,7 +25,7 @@ function ViewTrackingChart({ views }) {
   chartData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
   return (
-    <div className="w-[50%] h-[50%]">
+    <div className="lg:w-[50%] w-full h-[50%]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={chartData}

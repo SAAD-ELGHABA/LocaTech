@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
 import { sendNotification } from "../../../functions/NotificationSender";
+import userLogo from '../../../assets/logo-user.png'
 
 function Control() {
   const courtiers = useSelector((state) => state.AllCourtiersReducer);
@@ -114,32 +115,33 @@ function Control() {
   };
 
   return isLoading ? (
-    <div className="h-[50vh] flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center">
       <LoaderCircle className="text-red-500 h-8 w-8 animate-spin" />
     </div>
   ) : (
     <div className="p-2">
-      <div className="flex items-center justify-between mb-6 relative">
-        <h1 className="text-xl font-bold text-gray-800">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 mb-6 relative">
+        <h1 className="text-lg md:text-xl font-bold text-gray-800">
           Contrôler les biens et les courtiers ({filteredBiens.length})
         </h1>
-        <div className="flex items-center space-x-2 relative">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto relative">
           <input
             type="text"
-            className="border border-gray-400 rounded px-3 py-2 w-80 focus:outline-none"
+            className="border border-gray-400 rounded px-3 py-2 w-full sm:w-80 focus:outline-none"
             placeholder="Rechercher un bien..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button
-            className="p-2 hover:bg-gray-300 cursor-pointer"
+            className="p-2 hover:bg-gray-300 bg-gray-100 cursor-pointer rounded flex items-center justify-center space-x-2 lg:space-x-0 w-full lg:w-auto"
             onClick={() => setShowFilter(!showFilter)}
           >
             <SlidersVertical className="h-4 w-4" />
+            <span className="lg:hidden text-sm">Filtrer par niveau de l'agence</span>
           </button>
 
           {showFilter && (
-            <div className="absolute top-12 right-0 bg-white border border-gray-200 rounded shadow z-10 w-64">
+            <div className="absolute top-full lg:top-14 right-0 bg-white border border-gray-200 rounded shadow z-10 lg:w-64 w-full text-sm">
               <div
                 className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
                   evaluationFilter === "" ? "bg-gray-100" : ""
@@ -165,22 +167,11 @@ function Control() {
           )}
         </div>
       </div>
-      {/* <div className="grid grid-cols-5 my-2">
-            {
-              status?.length > 0 &&
 
-              status?.map(s=>
-
-                <button className="p-1.5 rounded hover:bg-gray-200">
-                  #{s?.nom}
-                </button>
-              )
-            }
-          </div> */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         {filteredBiens.slice(0, visibleCount).map((bien, index) => {
           const imageUrl = bien.images?.length
-            ? `${bien.images[0]}`
+            ? bien.images[0]
             : "https://via.placeholder.com/400x250?text=No+Image";
 
           const isLast = index === visibleCount - 1;
@@ -189,19 +180,24 @@ function Control() {
             <div
               key={bien.id}
               ref={isLast ? lastBienRef : null}
-              className="bg-white shadow rounded-lg overflow-hidden flex flex-col md:flex-row text-sm max-h-[300px]"
+              className="bg-white shadow rounded-lg overflow-hidden flex flex-col md:flex-row text-sm max-h-full"
             >
-              <img
-                src={imageUrl}
-                alt="bien"
-                className="w-full object-cover md:w-1/2"
-              />
-              <div className="p-4 flex-1">
-                <div className="flex space-x-2 items-center">
+              <Link
+                to={`/bien/${bien.ville}/${bien.slag}`}
+                className="lg:w-1/2"
+              >
+                <img
+                  src={imageUrl}
+                  alt="bien"
+                  className="w-full h-48 md:h-auto object-cover"
+                />
+              </Link>
+              <div className="p-4 flex-1 space-y-2">
+                <div className="flex items-center space-x-2">
                   <img
-                    src={bien?.courtier?.user?.image}
+                    src={bien?.courtier?.user?.image || userLogo}
                     alt="courtier-image"
-                    className="h-8 w-8 rounded-full"
+                    className="h-8 w-8 rounded-full object-cover"
                   />
                   <div className="text-sm">
                     <p className="font-medium">
@@ -215,29 +211,21 @@ function Control() {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-semibold text-left text-gray-800">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center">
+                  <h2 className="text-base font-semibold text-gray-800">
                     {bien.title.length > 40
                       ? bien.title.substring(0, 40) + ".."
                       : bien.title}
                   </h2>
-                  <div>
-                    <Link
-                      to={`/bien/${bien.ville}/${bien.slag}`}
-                      className="hover:text-red-500"
-                    >
-                      voir annonce
-                    </Link>
-                  </div>
                 </div>
 
-                <p className="text-gray-700 mb-1">
+                <p className="text-gray-700">
                   <strong>Ville:</strong> {bien.ville}
                 </p>
-                <p className="text-gray-700 mb-1">
+                <p className="text-gray-700">
                   <strong>Type:</strong> {bien.type || "—"}
                 </p>
-                <p className="text-gray-700 mb-1 flex space-x-2 items-center">
+                <p className="text-gray-700 flex space-x-2 items-center">
                   <strong>Budget:</strong>
                   <span className="text-[#f56565] font-bold text-sm">
                     {new Intl.NumberFormat("de-DE", {
@@ -247,72 +235,33 @@ function Control() {
                     MAD
                   </span>
                 </p>
-
-                <p className="text-gray-700 mb-1">
+                <p className="text-gray-700">
                   <strong>Évaluation agence:</strong>{" "}
                   {getCourtierById(bien.courtier_id)?.agence?.evaluation
                     ?.evaluation || "Non spécifiée"}
                 </p>
 
-                <div className="flex justify-between items-center">
-                  {/* <div className="flex space-x-2 items-center text-sm">
-                    <button
-                      onClick={() => {
-                        (bien?.status?.nom === "brouillée" ||
-                          bien?.status?.nom === "désactivé") &&
-                          handleStatusBien("activé", bien?.id);
-                      }}
-                      className={`px-3 py-1.5 rounded ${
-                        bien?.status?.nom === "activé"
-                          ? "bg-green-500 animate-pulse text-white"
-                          : "border border-green-500 text-green-500 hover:bg-green-50 cursor-pointer"
-                      }`}
-                    >
-                      {bien?.status?.nom === "activé" ? "activé" : "activer"}
-                    </button>
-                    <button
-                      onClick={() => {
-                        bien?.status?.nom === "activé" &&
-                          handleStatusBien("désactivé", bien?.id);
-                      }}
-                      className={`px-3 py-1.5 rounded ${
-                        bien?.status?.nom === "désactivé" ||
-                        bien?.status?.nom === "brouillée"
-                          ? "bg-red-500 text-white animate-pulse"
-                          : "border border-red-500 text-red-500 hover:bg-red-50 cursor-pointer"
-                      }`}
-                    >
-                      {bien?.status?.nom === "désactivé"
-                        ? "désactivé"
-                        : "désactiver"}
-                    </button>
-                  </div> */}
-                  <div className="grid lg:grid-cols-5 mt-2 gap-2 text-xs">
-                    {status?.length &&
-                      status?.map((s) => (
-                        <button
-                          className={`
-                            px-2 py-1 rounded text-white
-                            ${
-                              bien?.status?.nom === s?.nom
-                                ? "cursor-not-allowed"
-                                : "cursor-pointer bg-[#9CA3AF] hover:bg-gray-500"
-                            }
-                          `}
-                          style={{
-                            backgroundColor:
-                              bien?.status?.nom === s?.nom
-                                ? s?.["coleur-code"]
-                                : "",
-                          }}
-                          onClick={() => {
-                            handleStatusBien(s?.nom, bien?.id);
-                          }}
-                        >
-                          {s?.nom}
-                        </button>
-                      ))}
-                  </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mt-2 text-xs">
+                  {status?.length &&
+                    status.map((s) => (
+                      <button
+                        key={s.nom}
+                        className={`px-2 py-1 rounded text-white ${
+                          bien?.status?.nom === s?.nom
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer bg-gray-400 hover:bg-gray-500"
+                        }`}
+                        style={{
+                          backgroundColor:
+                            bien?.status?.nom === s?.nom
+                              ? s?.["coleur-code"]
+                              : undefined,
+                        }}
+                        onClick={() => handleStatusBien(s?.nom, bien?.id)}
+                      >
+                        {s?.nom}
+                      </button>
+                    ))}
                 </div>
                 <p className="text-gray-500 text-xs mt-2">
                   {new Date(bien?.created_at).toLocaleString()}

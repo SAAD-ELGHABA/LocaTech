@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -40,13 +41,13 @@ class NotificationController extends Controller
         }
     }
 
+
     public function store(Request $request)
     {
         try {
-            // Validate request
             $validator = Validator::make($request->all(), [
                 'sender'   => 'nullable|exists:users,id',
-                'receiver' => 'required|exists:users,id',
+                'receiver' => 'required|integer',
                 'object'   => 'required|string|max:255',
                 'body'     => 'nullable|string',
                 'data'     => 'nullable|array',
@@ -60,19 +61,49 @@ class NotificationController extends Controller
                 ], 422);
             }
 
-            // Create notification
-            $notification = Notification::create([
-                'sender'   => $request->sender,
-                'receiver' => $request->receiver,
-                'object'   => $request->object,
-                'body'     => $request->body,
-                'data'     => $request->data,
-                'time'     => $request->time ?? now(),
-            ]);
+            $receiver = $request->receiver;
+            $notifications = [];
+
+            if ($receiver == 0) {
+                $assistants = User::where('role', 'assistant')->get();
+
+                foreach ($assistants as $assistant) {
+                    $notifications[] = Notification::create([
+                        'sender'   => $request->sender,
+                        'receiver' => $assistant->id,
+                        'object'   => $request->object,
+                        'body'     => $request->body,
+                        'data'     => $request->data,
+                        'time'     => $request->time ?? now(),
+                    ]);
+                }
+            } elseif ($receiver == -1) {
+                $admins = User::where('role', 'admin')->get();
+
+                foreach ($admins as $admin) {
+                    $notifications[] = Notification::create([
+                        'sender'   => $request->sender,
+                        'receiver' => $admin->id,
+                        'object'   => $request->object,
+                        'body'     => $request->body,
+                        'data'     => $request->data,
+                        'time'     => $request->time ?? now(),
+                    ]);
+                }
+            } else {
+                $notifications[] = Notification::create([
+                    'sender'   => $request->sender,
+                    'receiver' => $receiver,
+                    'object'   => $request->object,
+                    'body'     => $request->body,
+                    'data'     => $request->data,
+                    'time'     => $request->time ?? now(),
+                ]);
+            }
 
             return response()->json([
-                'message' => 'Notification stored successfully',
-                'notification' => $notification
+                'message' => 'Notification(s) stored successfully',
+                'notifications' => $notifications
             ], 201);
         } catch (\Exception $e) {
             return response()->json([

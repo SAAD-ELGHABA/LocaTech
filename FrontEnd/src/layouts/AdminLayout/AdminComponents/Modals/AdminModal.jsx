@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { Loader2, Trash } from "lucide-react";
+import { Loader2, Trash, X } from "lucide-react";
 import { toast } from "sonner";
 import { fetchAdmins } from "../../../../functions/fetchAdmins";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,6 +98,17 @@ function AdminModal({ setToggleModal, selectedAdminId, setSelectedAdminId }) {
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
+          <div className="flex justify-end lg:hidden mb-2">
+            <button
+              className="bg-gray-200 rounded-full p-1"
+              onClick={() => {
+                setToggleModal(false);
+                setSelectedAdminId(null);
+              }}
+            >
+              <X />
+            </button>
+          </div>
           <h2 className="text-xl font-bold mb-4">
             {selectedAdminId ? "Modifier un Admin" : "Ajouter un Admin"}
           </h2>

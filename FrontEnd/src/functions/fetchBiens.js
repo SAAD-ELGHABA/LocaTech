@@ -7,7 +7,6 @@ export const fetchBiens = async (dispatch,limit=10)=>{
         type: "ALLBIENS",
         payload: biensResponse.data.Biens,
       });
-      console.log(biensResponse);
       
     }
 }

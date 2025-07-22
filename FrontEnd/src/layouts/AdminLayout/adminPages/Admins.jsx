@@ -31,8 +31,8 @@ function Admins() {
           <Plus className="h-5 w-5" />
         </button>
       </div>
-      <div className="w-full ">
-        <table className="text-sm w-full text-center border-collapse border border-gray-300">
+      <div className="w-full overflow-auto custom-scrollbar">
+        <table className="text-sm lg:w-full min-w-[1000px] text-center border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
               <th className="py-2">ID</th>

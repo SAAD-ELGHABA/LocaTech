@@ -15,7 +15,6 @@ import generatePrompt from "./prompt";
 import { Link } from "react-router-dom";
 import { GoogleGenAI } from "@google/genai";
 const ChatAI = ({ onClose }) => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_OPENAI_KEY });
   const messagesChatAi = useSelector((state) => state.ChatAiReducer);
   const [thinking, setThinking] = useState(false);
   const [input, setInput] = useState("");
@@ -32,16 +31,36 @@ const ChatAI = ({ onClose }) => {
     "Comment je peux vendre un bien ?",
     "Comment je peux louer mon bien ?",
   ]);
+  function mapApiMessagesToChatState(apiMessages) {
+    return apiMessages.map((msg) => ({
+      role: msg.role,
+      data: msg.content || "",
+      suggestions: Array.isArray(msg.data) ? msg.data : [],
+    }));
+  }
+
   useEffect(() => {
-    const stored = sessionStorage.getItem("chatMessages");
-    if (stored) {
-      JSON.parse(stored).forEach((msg) => {
-        console.log(msg);
-        
-        dispatch(msgChatAi(msg));
-      });
-    }
-  }, [dispatch]);
+    const fetchMessagesHistory = async () => {
+      try {
+        const response = await axios.get(`/api/ai-assistant-messages-history`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const chatMessages = mapApiMessagesToChatState(
+          response?.data?.messages
+        );
+
+        dispatch({
+          type: "LOAD_MESSAGES_HISTORY",
+          payload: chatMessages,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchMessagesHistory();
+  }, []);
 
   useEffect(() => {
     if (conversationRef.current) {
@@ -62,31 +81,30 @@ const ChatAI = ({ onClose }) => {
     if (userMessage === "" || isSending) return;
 
     setIsSending(true);
-    dispatch(msgChatAi({ data: userMessage, role: "user" }));
+    dispatch(msgChatAi({ data: userMessage, role: "user", suggestions: [] }));
     setInput("");
     setThinking(true);
-    saveMessageToSession({ data: userMessage, role: "user" });
     try {
       const response = await axios.post(
         `/api/ai-assistant`,
         {
           message: userMessage,
         },
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       console.log(response);
       dispatch(
         msgChatAi({
           data: response?.data?.reply || "No response",
-          role: "ai",
+          role: "assistant",
           suggestions: response?.data?.suggestions || [],
         })
       );
-      saveMessageToSession({
-        data: response?.data?.reply || "No response",
-        role: "ai",
-        suggestions: response?.data?.suggestions || [],
-      });
     } catch (error) {
       console.log(error?.response?.data?.message);
     } finally {
@@ -109,7 +127,7 @@ const ChatAI = ({ onClose }) => {
       exit={{ scale: 0.8, opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <div className="lg:static sticky top-0 w-full flex items-center justify-between py-3 px-4 border-b border-gray-200 bg-white">
+      <div className="lg:static sticky top-0 w-full flex items-center justify-between py-3 px-4 border-b border-gray-200 bg-white rounded">
         <div className="flex items-center space-x-2 ">
           <Sparkles className="text-purple-500 text-lg" />
           <h2 className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-red-500">
@@ -130,36 +148,36 @@ const ChatAI = ({ onClose }) => {
         id="conversation"
       >
         <div className="flex flex-wrap gap-2 my-4 ">
-          {suggestionQst.map((qst, index) => (
-            <div>
-              <button
-                key={index}
-                className="cursor-pointer bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm hover:bg-gray-200"
-                onClick={() => {
-                  sendMessage(qst);
-                }}
-              >
-                {qst}
-              </button>
+          {!messagesChatAi.some((msg) => msg.role === "user") && (
+            <div className="flex flex-wrap gap-2 my-4 ">
+              {suggestionQst.map((qst, index) => (
+                <button
+                  key={index}
+                  className="cursor-pointer bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm hover:bg-gray-200"
+                  onClick={() => sendMessage(qst)}
+                >
+                  {qst}
+                </button>
+              ))}
             </div>
-          ))}
+          )}
         </div>
         {messagesChatAi && messagesChatAi.length > 0 ? (
           messagesChatAi.map((msg, index) => (
             <div
               key={index}
               className={`flex ${
-                msg.role === "ai" ? "justify-start" : "justify-end"
-              } mb-4`}
+                msg.role === "assistant" ? "justify-start" : "justify-end"
+              } mb-4 pb-12`}
             >
               <div
-                className={`max-w-[80%] rounded-xl p-4 text-sm break-words shadow ${
-                  msg.role === "ai"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-red-100 text-gray-800"
+                className={`lg:max-w-[80%] min-w-[50%] rounded-xl p-4 text-sm break-words  ${
+                  msg.role === "assistant"
+                    ? " text-gray-800"
+                    : "bg-gray-100 text-gray-800 shadow"
                 }`}
               >
-                {msg.role === "ai" && (
+                {msg.role === "assistant" && (
                   <div>
                     <div className="flex items-center mb-2">
                       <Sparkles className="text-gray-400 mr-2 h-4 w-4" />
@@ -168,28 +186,13 @@ const ChatAI = ({ onClose }) => {
                     <p className="leading-relaxed whitespace-pre-wrap">
                       {msg.data}
                     </p>
-
-                    {/* {biensSuggestions?.length > 0 && (
-                      <div className="mt-3">
-                        {biensSuggestions.map((b, idx) => (
-                          <Link
-                            to={`/bien/${b.ville}/${b.slag}`}
-                            key={idx}
-                            className="block font-medium text-sm text-blue-600 hover:underline hover:text-red-500"
-                          >
-                            <span>{idx + 1} - </span>
-                            {b.title} - {b.ville}
-                          </Link>
-                        ))}
-                      </div>
-                    )} */}
                     {msg?.suggestions?.length > 0 && (
                       <div className="mt-3">
                         {msg.suggestions.map((b, idx) => (
                           <Link
                             to={`/bien/${b.ville}/${b.slag}`}
                             key={idx}
-                            className="block font-medium text-sm text-blue-600 hover:underline hover:text-blue-800"
+                            className="block font-medium text-sm text-red-500 hover:underline hover:text-red-800"
                           >
                             <span>{idx + 1} - </span>
                             {b.title} - {b.ville}
@@ -230,7 +233,7 @@ const ChatAI = ({ onClose }) => {
         )}
       </div>
 
-      <div className="p-3 border-t fixed bottom-0 w-full lg:static border-gray-200 mb-2">
+      <div className="p-3 border-t fixed bottom-0 w-full bg-white lg:static border-gray-200 mb-2">
         <div className="flex items-center">
           <textarea
             className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"

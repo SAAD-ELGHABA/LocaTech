@@ -30,8 +30,7 @@ function Aside() {
       ? currentCourtier.id
       : 0;
 
-  const cleanup = socketListener(dispatch, userId, currentConversation);
-  cleanup();
+
 
   const handleConversationClick = (id) => {
     nav(`/chat/conversation/${id}`);
@@ -55,7 +54,7 @@ function Aside() {
       </div>
 
       <div className="w-full flex flex-col justify-start items-start overflow-y-auto custom-scrollbar">
-        {conversations.length > 0 ? (
+        {conversations?.length > 0 ? (
           conversations
             .sort(
               (a, b) =>

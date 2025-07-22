@@ -43,7 +43,7 @@ export const handleNegocier = async (user,toast,dispatch,BienDetails,nav) => {
           payload: response.data.chats,
         });
         toast.success("Négociation démarrée avec succès !");
-        nav("/chat/conversation", { state: { BienDetails } });
+        nav(`/chat/conversation/${response.data.conversation._id}`, { state: { BienDetails } });
       }
     } catch (error) {
       console.log(error);

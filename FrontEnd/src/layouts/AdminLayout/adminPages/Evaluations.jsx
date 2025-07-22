@@ -107,126 +107,149 @@ function Evaluations() {
   }, [showPopover]);
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className=" mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold flex items-center space-x-2">
-          <span>Évaluation d'agences</span>
-          <Star/>
-        </h1>
-        <div className="my-2">
-          <input
-            type="text"
-            className="border border-gray-400 rounded px-2 py-1.5 w-80 focus:outline-none"
-            placeholder="Rechercher une agence..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="max-w-screen overflow-auto custom-scrollbar">
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="mb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <h1 className="text-xl font-bold flex items-center space-x-2">
+            <span>Évaluation d'agences</span>
+            <Star className="h-6 w-6 text-red-500" />
+          </h1>
+          <div className="my-2">
+            <input
+              type="text"
+              className="border border-gray-400 rounded px-3 py-2 w-full max-w-xs focus:outline-none"
+              placeholder="Rechercher une agence..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
-      <div className="flex space-x-4 w-full">
-        {Object.entries(columns).map(([status, agences]) => (
-          <Droppable droppableId={status} key={status}>
-            {(provided, snapshot) => (
-              <div
-                className={`relative border bg-gray-100 p-4 w-1/3 rounded ${
-                  snapshot.isDragging && "border-2"
-                } ${
-                  status === "débutante"
-                    ? " border-red-500"
+        <div className="max-w-screen overflow-auto custom-scrollbar">
+          <div className="lg:w-full min-w-[1000px] overflow-x-auto custom-scrollbar">
+            <div className="flex space-x-4">
+              {Object.entries(columns).map(([status, agences]) => (
+                <Droppable droppableId={status} key={status}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`relative border rounded bg-gray-100 p-4 w-1/3
+                ${
+                  snapshot.isDraggingOver
+                    ? "border-4 border-blue-400"
+                    : status === "débutante"
+                    ? "border-red-500"
                     : status === "intermédiaire"
-                    ? " border-yellow-500"
+                    ? "border-yellow-500"
                     : "border-green-500"
                 }`}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                <h2 className="font-bold capitalize mb-2">{status}</h2>
-                {agences.map((agence, index) => (
-                  <Draggable
-                    key={agence.id}
-                    draggableId={agence.id.toString()}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        className={`bg-white p-2 mb-2 rounded shadow relative transition-all duration-200 ${
-                          snapshot.isDragging ? "border-2 border-blue-500" : ""
-                        }`}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <div>
-                          <h2 className="font-medium flex space-x-2 items-center">
-                            <span>{agence.agence}</span>
-                            <BadgeCheck className="h-4 w-4 text-blue-500" />
-                          </h2>
-                          <div className="flex justify-between">
-                            <div className="flex  flex-col text-sm">
-                              <span>
-                                Numéro ICE :{" "}
-                                <span className="text-gray-500 ">
-                                  {agence.Numéro_ICE}
-                                </span>
-                              </span>
-                              <span>
-                                RC :{" "}
-                                <span className="text-gray-500 ">
-                                  {agence.RC}
-                                </span>
-                              </span>
-                            </div>
+                    >
+                      <h2 className="font-bold capitalize mb-4 text-center">
+                        {status}
+                      </h2>
+
+                      {agences.map((agence, index) => (
+                        <Draggable
+                          key={agence.id}
+                          draggableId={agence.id.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshotDraggable) => (
                             <div
-                              className="flex space-x-1 items-end cursor-pointer"
-                              onClick={(e) =>
-                                handlePopoverToggle(e, agence?.id)
-                              }
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-white p-3 mb-3 rounded shadow transition-all duration-200 cursor-grab
+                        ${
+                          snapshotDraggable.isDragging
+                            ? "border-2 border-blue-500"
+                            : "border border-transparent"
+                        }`}
                             >
-                              <Handshake className="h-4" />
-                              <span>courtiers : </span>
-                              <span>{agence?.courtier?.length}</span>
+                              <div>
+                                <h3 className="font-medium flex items-center space-x-2">
+                                  <span>{agence.agence}</span>
+                                  <BadgeCheck className="h-4 w-4 text-blue-500" />
+                                </h3>
+                                <div className="flex justify-between mt-2 text-sm">
+                                  <div className="flex flex-col space-y-1">
+                                    <span>
+                                      Numéro ICE:{" "}
+                                      <span className="text-gray-500">
+                                        {agence.Numéro_ICE}
+                                      </span>
+                                    </span>
+                                    <span>
+                                      RC:{" "}
+                                      <span className="text-gray-500">
+                                        {agence.RC}
+                                      </span>
+                                    </span>
+                                  </div>
+                                  <div
+                                    className="flex items-end space-x-1 cursor-pointer select-none"
+                                    onClick={(e) =>
+                                      handlePopoverToggle(e, agence?.id)
+                                    }
+                                  >
+                                    <Handshake className="h-5 w-5" />
+                                    <span>courtiers:</span>
+                                    <span className="font-semibold">
+                                      {agence?.courtier?.length || 0}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Popover */}
+                              {showPopover && agence?.id === agencePop && (
+                                <div
+                                  className="absolute z-50 mt-2 w-64 max-h-64 overflow-auto bg-white border rounded shadow-lg p-4"
+                                  style={{
+                                    top: `${popoverPosition.top}px`,
+                                    left: `${popoverPosition.left}px`,
+                                  }}
+                                >
+                                  <ul className="space-y-3">
+                                    {agence?.courtier?.length > 0 ? (
+                                      agence.courtier.map((c) => (
+                                        <li
+                                          key={c.id}
+                                          className="flex items-center space-x-3"
+                                        >
+                                          <img
+                                            src={c?.user?.image}
+                                            alt="user"
+                                            className="h-8 w-8 rounded-full object-cover"
+                                          />
+                                          <p className="text-sm truncate">
+                                            {c?.user?.email}
+                                          </p>
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <p className="text-sm text-gray-500">
+                                        Aucun courtier
+                                      </p>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
                             </div>
-                          </div>
-                        </div>
-                        {showPopover && agence?.id === agencePop && (
-                          <div
-                            className="absolute bg-white border p-4 rounded shadow-md z-50"
-                            style={{
-                              top: `${popoverPosition.top}px`,
-                              left: `${popoverPosition.left}px`,
-                            }}
-                          >
-                            <div>
-                              <ul>
-                                {agence?.courtier?.length > 0 &&
-                                  agence?.courtier?.map((c) => (
-                                    <div
-                                      key={c.id}
-                                      className="flex items-center space-x-2"
-                                    >
-                                      <img
-                                        src={c?.user?.image}
-                                        alt="image"
-                                        className="h-8 w-8 rounded-full"
-                                      />
-                                      <p>{c?.user?.email}</p>
-                                    </div>
-                                  ))}
-                              </ul>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
-      </div>
-    </DragDropContext>
+                          )}
+                        </Draggable>
+                      ))}
+
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              ))}
+            </div>
+          </div>
+        </div>
+      </DragDropContext>
+    </div>
   );
 }
 

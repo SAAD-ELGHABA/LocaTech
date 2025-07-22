@@ -4,9 +4,6 @@ import {
   BadgeCheck,
   ChevronLeft,
   ClockAlert,
-  MessageCircleQuestion,
-  PanelLeftClose,
-  Send,
   ShieldCheck,
   Trash,
   Vault,
@@ -19,18 +16,47 @@ import socketConfig from "../../../functions/socketConfig.js";
 import { socketListener } from "../../../functions/socketListener.js";
 import ChatInput from "../component/ChatInput.jsx";
 import CourtierDropdown from "../../../components/CourtierDropdown.jsx";
-
+import axios from "axios";
 function Conversation({ isAssistant = false }) {
+  const currentConversation = useSelector(
+    (state) => state.currentConversationReducer
+  );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getConversation = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_SOCKET}:5000/api/conversation/${
+            currentConversation._id
+          }`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        dispatch({
+          type: "SET_CURRENT_CONVERSATION",
+          payload: response?.data,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (currentConversation && currentConversation._id) {
+      getConversation();
+    }
+  }, [currentConversation._id]);
+
   const nav = useNavigate();
   const lastMessageRef = useRef(null);
 
   const currentCourtier = useSelector((state) => state.ActuelCourtierReducer);
   const biens = useSelector((state) => state.BienReducer);
   const courtiers = useSelector((state) => state.AllCourtiersReducer);
-  const currentConversation = useSelector(
-    (state) => state.currentConversationReducer
-  );
+
   const users = useSelector((state) => state.usersReducer);
   const user = useSelector((state) => state.userReducer.userInfo);
 
@@ -54,18 +80,15 @@ function Conversation({ isAssistant = false }) {
   }, [currentConversation]);
 
   useEffect(() => {
-    console.log(userId);
-    const unsubscribe = socketListener(dispatch, userId, currentConversation);
-    return () => {
-      unsubscribe();
-    };
-  }, [currentConversation, dispatch, userId]);
-
-  useEffect(() => {
     if (!currentConversation && Object.keys(currentConversation).length === 0) {
       nav("/chat/negocier");
+      localStorage.removeItem("currentConversationId");
+      dispatch({
+        type: "SET_CURRENT_CONVERSATION",
+        payload: {},
+      });
     }
-  }, [currentConversation, nav]);
+  }, [currentConversation, dispatch, nav]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -73,14 +96,42 @@ function Conversation({ isAssistant = false }) {
     }
   }, [currentConversation?.messages]);
 
+  if (
+    !currentConversation ||
+    Object.keys(currentConversation).length === 0 ||
+    biens.length === 0 ||
+    users.length === 0 ||
+    courtiers.length === 0
+  ) {
+    return (
+      <div className="p-4 space-y-4 animate-pulse w-full min-h-screen overflow-y-auto custom-scrollbar">
+        <div className="h-20 bg-gray-300 w-full "></div>
+        {[...Array(12)].map((_, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              index % 2 === 0 ? "justify-start" : "justify-end"
+            }`}
+          >
+            <div
+              className="bg-gray-300 rounded-lg w-2/3 h-16"
+              style={{ width: `${60 + Math.random() * 20}%` }}
+            ></div>
+          </div>
+        ))}
+        <div className="h-20 bg-gray-300 w-full "></div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${
         isAssistant ? "h-full" : "h-full min-h-[90vh] lg:h-screen"
-      }  flex flex-col justify-between bg-white relative`}
+      }  flex flex-col justify-between relative`}
     >
       {!isAssistant && (
-        <div className="fixed lg:relative w-full flex items-center justify-between bg-[#161a1d] text-white px-2 lg:px-4 lg:py-1 py-2 ">
+        <div className="fixed lg:relative w-full flex items-center justify-between bg-[#161a1d] text-white px-2 lg:px-4 lg:py-1 py-2">
           <div className="flex items-center space-x-2">
             <Link to={"/chat/negocier"} className="lg:hidden">
               <ChevronLeft />
@@ -207,8 +258,12 @@ function Conversation({ isAssistant = false }) {
           </div>
         )}
 
-      <div className="flex-1 overflow-y-auto mt-16 lg:mt-4 px-4 space-y-4 custom-scrollbar py-4">
-        <div className="flex w-5/6 text-center bg-red-100 text-red-500  rounded-lg p-4 text-sm mx-auto">
+      <div
+        className={`flex-1 overflow-y-auto  px-4 space-y-4 custom-scrollbar py-4 ${
+          !isAssistant && "mt-16 lg:mt-4"
+        }`}
+      >
+        <div className="flex min-w-5/6 text-center bg-red-100 text-gray-900  rounded-lg p-4 text-sm mx-auto">
           <ShieldCheck className="h-8 w-8 mr-2" />
           <p>
             Salut ! Nous, on est là pour t’aider à gérer ta conversation. Si tu
@@ -274,7 +329,7 @@ function Conversation({ isAssistant = false }) {
                             user?.role === "courtier"
                           ? "bg-gray-300 border border-gray-100  "
                           : Number(msg?.senderId) == 0
-                          ? "bg-red-100 text-red-500"
+                          ? "bg-red-100 text-gray-900"
                           : "bg-[#161a1d11] "
                       }`}
                     >
