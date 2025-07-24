@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('biens', function (Blueprint $table) {
-            $table->string('slag')->unique();
+        Schema::table('ratings', function (Blueprint $table) {
+            $table->enum('status', ['active','inactive'])
+                ->default('active');
         });
     }
 
@@ -21,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('biens', function (Blueprint $table) {
+        Schema::table('ratings', function (Blueprint $table) {
             //
         });
     }

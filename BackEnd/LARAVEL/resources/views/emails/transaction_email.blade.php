@@ -97,7 +97,7 @@
                 </table>
 
                 <p style="text-align: center; margin: 32px 0;">
-                    <a href="{{ $frontUrl }}transactions/{{ $transaction->id }}"
+                    <a href="{{ $frontUrl }}transactions/{{ $transaction->slag }}"
                         style="background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">
                         Consulter ma transaction
                     </a>
@@ -142,7 +142,6 @@
                     <a href="#" style="color: #6b7280; text-decoration: none; margin: 0 8px;">Conditions d'utilisation</a>
                 </p>
 
-                <!-- Copyright -->
                 <p style="font-size: 12px; color: #6b7280; margin: 8px 0;">
                     &copy; {{ date('Y') }} Locatech. Tous droits réservés.
                 </p>

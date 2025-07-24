@@ -16,4 +16,16 @@ class Transaction extends Model
         'frauis_dossier',
         'nombre_mois'
     ];
+    protected static function booted()
+    {
+        static::creating(function ($transaction) {
+            if (empty($transaction->slag)) {
+                $transaction->slag = 'transaction-' . uniqid();
+            }
+        });
+    }
+    public function affaire()
+    {
+        return $this->belongsTo(Affaire::class);
+    }
 }

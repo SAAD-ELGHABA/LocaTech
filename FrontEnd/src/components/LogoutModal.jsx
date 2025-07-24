@@ -40,7 +40,7 @@ const LogoutModal = ({ isOpen, onConfirm, onCancel }) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-40 flex items-center justify-center lg:z-50"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-40 flex items-center justify-center lg:z-50 z-[1007]"
           onClick={onCancel}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

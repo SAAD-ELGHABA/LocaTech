@@ -6,6 +6,8 @@ import writtenNumber from "written-number";
 import Achat from "./validation Affaire/Achat";
 import Louer from "./validation Affaire/Louer";
 import { toast } from "sonner";
+import { sendNotification } from "../../../functions/NotificationSender";
+import { useSelector } from "react-redux";
 writtenNumber.defaults.lang = "fr";
 
 function ValiderAffaire({
@@ -29,7 +31,6 @@ function ValiderAffaire({
       );
       console.log(response.data);
       setAffaireDetails(response.data.affaire);
-      // setSelectedAffaire(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -95,6 +96,8 @@ function ValiderAffaire({
       window.removeEventListener("mouseup", stopResizing);
     };
   }, [isResizing]);
+  const user = useSelector((state) => state.userReducer.userInfo);
+
   const handleTransaction = async (e, status) => {
     e.preventDefault();
     setIsLoading(true);
@@ -109,6 +112,24 @@ function ValiderAffaire({
         }
       );
       console.log(response);
+      await sendNotification(
+        user?.id,
+        affaireDetails?.accord?.courtier?.user?.id,
+        "Validation de Transaction",
+        `La transaction pour l'affaire ${affaireId} a été ${status.toLowerCase()}.`,
+        {
+          link: `/transactions/${response?.data?.transaction?.slug}`,
+        }
+      );
+      await sendNotification(
+        user?.id,
+        affaireDetails?.accord?.user?.id,
+        "Validation de Transaction",
+        `La transaction pour l'affaire ${affaireId} a été ${status.toLowerCase()}.`,
+        {
+          link: `/transactions/${response?.data?.transaction?.slug}`,
+        }
+      );
       toast.success(response?.data?.message);
     } catch (error) {
       console.log(error);

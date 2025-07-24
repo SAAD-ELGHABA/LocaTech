@@ -55,6 +55,8 @@ import AccessRouteAdmin from "./accessRoute.jsx/AccessRouteAdmin";
 import AffaireDetails from "../layouts/AdminLayout/AdminComponents/AffaireDetails";
 import TransactionDetails from "../pages/TransactionDetails";
 import BlogPosts from "../layouts/AdminLayout/adminPages/BlogPosts";
+import Comments from "../layouts/AssistantLayout/AssistantPages/Comments";
+import NotFound from "../pages/NotFoundPage";
 const REGISTER = "/register";
 const LOGIN = "/login";
 const FORGOT_PASSWORD = "/forgot-password";
@@ -86,7 +88,7 @@ const GET_COURTIER = "activate-courtier";
 
 const ADMIN_INDEX = "/admin-index";
 
-const ASSISTANT_INDEX = "/assistant-index";
+const ASSISTANT_INDEX = "assistant-index";
 
 const HOME = "/";
 const Router = createBrowserRouter([
@@ -192,7 +194,7 @@ const Router = createBrowserRouter([
         element: <BlogDetails />,
       },
       {
-        path: "/transactions/:transactionId",
+        path: "/transactions/:transactionSlag",
         element: <TransactionDetails />,
       },
     ],
@@ -296,6 +298,7 @@ const Router = createBrowserRouter([
     ],
   },
   {
+    path: "/assistant",
     element: (
       <AccessRouteAssistant>
         <AssistantIndex />
@@ -312,27 +315,35 @@ const Router = createBrowserRouter([
         element: <DashboardAssistant />,
       },
       {
-        path: "/all-conversations",
+        path: "all-conversations",
         element: <Conversations />,
       },
       {
-        path: "/control-courtiers",
+        path: "control-courtiers",
         element: <Control />,
       },
       {
-        path: "/control-accord",
+        path: "control-accord",
         element: <ControlAccord />,
       },
       {
-        path: "/signal-control",
+        path: "signal-control",
         element: <SignalControl />,
       },
       {
-        path: "/accord-control",
+        path: "commentaires",
+        element: <Comments/>,
+      },
+      {
+        path: "accord-control",
         element: <AccordControl />,
       },
     ],
   },
+  {
+    path:"*",
+    element: <NotFound/>
+  }
 ]);
 
 export default Router;

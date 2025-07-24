@@ -22,11 +22,6 @@ class BienController extends Controller
      */
     public function index($limit)
     {
-        // $Biens = Cache::remember('biens_cache', 3600, function () use ($limit) {
-        //     return Bien::with(['status', 'courtier'])
-        //         ->whereIn('status_id', [1, 5, 7])
-        //         ->get();
-        // });
         $Biens = Bien::with(['status', 'courtier'])
             ->whereIn('status_id', [1, 5, 7])
             ->get();
@@ -351,6 +346,57 @@ class BienController extends Controller
             return response()->json([
                 'message' => 'aucune bien trouvé !!'
             ]);
+        }
+    }
+
+    public function getBiensConversations(Request $request)
+    {
+        try {
+            $conversations = $request->input('conversations');
+            $user = Auth::user();
+            $bienIds = collect($conversations)
+                ->pluck('BienId')
+                ->map(fn($id) => (int) $id)
+                ->values();
+
+            $biens = Bien::with(['status', 'courtier.agence.evaluation', 'courtier.user'])
+                ->whereIn('id', $bienIds)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'biens' => $biens
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getBienConversation($BienId)
+    {
+        try {
+            $bien = Bien::with(['status', 'courtier.agence.evaluation', 'courtier.user'])
+                ->where('id', $BienId)
+                ->first();
+
+            if (!$bien) {
+                return response()->json([
+                    'message' => 'Bien non trouvé.'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'bien' => $bien
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 }

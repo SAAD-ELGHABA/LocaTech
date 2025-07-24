@@ -31,7 +31,7 @@ function ConversationsProcess() {
                     <img
                       src={
                         courtiers.find((crt) => crt.id === Number(c.courtierId))
-                          ?.user?.image
+                          ?.user?.image 
                       }
                       className="w-6 h-6 rounded-full cursor-pointer"
                       alt="courtier"
@@ -71,13 +71,12 @@ function ConversationsProcess() {
                         `}
                     />
                   </td>
-                  <td> </td>
                   <td>
                     {" "}
                     <img
                       src={
                         biens.find((bien) => bien.id === Number(c.BienId))
-                          ?.images[0]
+                          ?.images[0] || '/LocaTech-icon.png'
                       }
                       className="w-6 h-6 rounded cursor-pointer"
                       alt="user"

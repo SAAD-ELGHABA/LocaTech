@@ -238,3 +238,13 @@ Route::get('/get-courtier-biens/{courtierId}', [CourtierController::class, 'getC
 Route::post('/ai-assistant', [AiAssistantController::class, 'handle'])->name('handle')->middleware('auth:sanctum');
 
 Route::get('/ai-assistant-messages-history', [AiAssistantController::class, 'getMessagesHistory'])->middleware('auth:sanctum')->name('get.messages.history');
+
+Route::get('/comments', [RatingController::class, 'getComments'])->name('get.comments')->middleware('auth:sanctum');
+
+Route::post('/comments/{commentId}/{action}', [RatingController::class, 'toggleAction'])->name('toggle.action')->middleware('auth:sanctum');
+
+Route::post('/biens/conversations', [BienController::class, 'getBiensConversations'])->name('getBiensConversations')->middleware('auth:sanctum');
+
+Route::get('/bien/conversation/{BienId}', [BienController::class, 'getBienConversation'])->name('getBienConversation')->middleware('auth:sanctum');
+
+Route::get('/transaction/{transactionSlag}', [TransactionController::class, 'getTransactionDetails'])->name('get.transaction.details')->middleware('auth:sanctum');

@@ -70,9 +70,9 @@ function MesProcessAccord({ isAssistant = false }) {
                     <td
                       className={`py-2 px-4 flex items-center justify-center space-x-2
                       ${
-                        accord?.status === "accepted"
+                        accord?.status === "accepted" || accord?.status === "validé"
                           ? "text-green-500"
-                          : accord?.status === "rejected"
+                          : accord?.status === "rejected" || accord?.status === "rejeté"
                           ? "text-red-500"
                           : "text-yellow-500"
                       }
@@ -95,7 +95,11 @@ function MesProcessAccord({ isAssistant = false }) {
                         to={`/bien/${accord?.bien?.ville}/${accord?.bien?.slag}`}
                       >
                         <Telescope className="h-4 w-4 lg:block hidden" />
-                        <span>{accord?.bien?.title}</span>
+                        <span>
+                          {accord?.bien?.title?.length > 30
+                            ? accord.bien.title.slice(0, 30) + "..."
+                            : accord?.bien?.title}
+                        </span>
                       </Link>
                     </td>
                     <td className="py-2 px-4">

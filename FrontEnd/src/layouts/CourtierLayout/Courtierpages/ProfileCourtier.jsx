@@ -157,7 +157,6 @@ function ProfileCourtier() {
             />
           </div>
 
-          {/* Form Fields */}
           <div className="w-full">
             <table className="w-full table-auto">
               <tbody>
@@ -181,7 +180,6 @@ function ProfileCourtier() {
                   </tr>
                 ))}
 
-                {/* Licence */}
                 <tr className="block md:table-row">
                   <td className="pr-4 py-2 font-medium block md:table-cell">
                     Licence professionnelle

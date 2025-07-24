@@ -49,7 +49,6 @@ const Navbar = () => {
 
   
   const location = useLocation();
-  const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const FavorisReducer = useSelector((state) => state.FavorisReducer);
 
@@ -187,7 +186,7 @@ const Navbar = () => {
           <Link
             to={
               user?.role === "assistant"
-                ? "/assistant-index"
+                ? "/assistant/assistant-index"
                 : user.role === "courtier"
                 ? "/courtier-index"
                 : user.role === "admin"

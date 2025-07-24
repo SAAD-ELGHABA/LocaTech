@@ -72,4 +72,24 @@ class TransactionController extends Controller
             ]);
         }
     }
+    public function getTransactionDetails($transactionSlag)
+    {
+        try {
+            $transaction = Transaction::where('slag', $transactionSlag)
+            ->with([
+                'affaire',
+                'affaire.accord',
+                'affaire.accord.bien',
+                'affaire.accord.user',
+                'affaire.accord.courtier.user',
+            ])->firstOrFail();
+            return response()->json([
+                'transaction' => $transaction,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 404);
+        }
+    }
 }

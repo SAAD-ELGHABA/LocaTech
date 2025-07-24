@@ -199,16 +199,17 @@ function DetailsBien() {
 
   return !BienDetails ? (
     <div className="min-h-screen flex space-y-4 text-gray-700 flex-col items-center justify-center">
-      <FileLock className="h-20 w-20" />
+      <img src="https://img.icons8.com/?size=100&id=45967&format=png&color=000000" alt="" />
       <p className="w-[80%] text-center">
         Ce bien immobilier n'est pas activé ou parce qu'il a été vendu ou loué
       </p>
       <button
         to={""}
         onClick={() => navigate(-1)}
-        className="bg-red-500 hover:bg-red-600 py-2 w-1/2 lg:w-1/4 rounded-3xl text-white"
+        className="text-red-500  py-2 w-1/2 lg:w-1/4 rounded-3xl hover:bg-red-100 flex items-center justify-center space-x-2 cursor-pointer"
       >
         {" "}
+        <FontAwesomeIcon icon={faChevronLeft} />
         <span>Retour</span>
       </button>
     </div>

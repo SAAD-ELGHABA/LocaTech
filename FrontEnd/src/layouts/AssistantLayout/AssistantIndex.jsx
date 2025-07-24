@@ -17,6 +17,7 @@ import {
   GitGraph,
   FlagTriangleLeft,
   HandshakeIcon,
+  MessageCircleMore,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { socketListener } from "../../functions/socketListener.js";
@@ -33,27 +34,32 @@ function AssistantIndex() {
 
   const links = [
     {
-      to: "/assistant-index",
+      to: "/assistant/assistant-index",
       icon: <LayoutDashboard className="h-4" />,
       label: "Tableau de bord",
     },
     {
-      to: "/control-courtiers",
+      to: "/assistant/control-courtiers",
       icon: <GitGraph className="h-4" />,
       label: "Contrôle les biens",
     },
     {
-      to: "/all-conversations",
+      to: "/assistant/all-conversations",
       icon: <MessagesSquare className="h-4" />,
       label: "Conversations",
     },
     {
-      to: "/signal-control",
+      to: "/assistant/signal-control",
       icon: <FlagTriangleLeft className="h-4" />,
       label: "Signalements",
     },
     {
-      to: "/accord-control",
+      to: "/assistant/commentaires",
+      icon: <MessageCircleMore className="h-4" />,
+      label: "Commentaires",
+    },
+    {
+      to: "/assistant/accord-control",
       icon: <HandshakeIcon className="h-4" />,
       label: "Accords",
     },

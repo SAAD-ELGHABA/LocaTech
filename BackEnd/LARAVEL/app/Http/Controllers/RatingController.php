@@ -16,6 +16,7 @@ class RatingController extends Controller
     {
         $comments = Rating::with('user')
             ->where('bien_id', $bienId)
+            ->where('status', 'active') // Assuming you want to filter by active status
             ->orderByDesc('created_at')
             ->get();
         $bien = Bien::where('id', $bienId)->first();
@@ -51,7 +52,9 @@ class RatingController extends Controller
 
     public function getMostRated($limit)
     {
-        $mostRated = Bien::with(['rating', 'courtier'])->get();
+        $mostRated = Bien::with(['rating', 'courtier'])
+            ->whereIn('status_id', [1, 5, 7])
+            ->get();
 
         $mostRated = $mostRated->map(function ($b) {
             $b->avg_rating = $b->rating->avg('rating') ?? 0;
@@ -85,5 +88,34 @@ class RatingController extends Controller
             'message' => 'Signal created successfully',
             'signal' => $signal
         ], 201);
+    }
+
+
+    public function getComments()
+    {
+        $comments = Rating::with('user', 'bien')
+            ->orderBy('created_at', 'desc')->paginate(30);
+        return response()->json([
+            'comments' => $comments,
+        ]);
+    }
+
+
+    public function toggleAction($commentId, $action)
+    {
+        $rating = Rating::findOrFail($commentId);
+        if ($action === 'active') {
+            $rating->status = 'active';
+            $rating->save();
+        } elseif ($action === 'inactive') {
+            $rating->status = 'inactive';
+            $rating->save();
+        } else {
+            $rating->delete();
+        }
+
+        return response()->json([
+            'message' => 'Action effectuée avec succès',
+        ]);
     }
 }

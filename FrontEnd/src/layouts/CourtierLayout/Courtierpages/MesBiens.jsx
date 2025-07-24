@@ -162,7 +162,7 @@ function MesBiens() {
             .map((bien, index) => (
               <div
                 key={index}
-                className="border rounded border-[#b1a7a6] my-4 p-4 h-96 relative"
+                className="border rounded border-[#b1a7a6] my-4 p-4 h-auto relative"
               >
                 <div className="mx-4 flex justify-between my-2 relative">
                   <h1 className="text-lg font-bold">.{bien.title}</h1>

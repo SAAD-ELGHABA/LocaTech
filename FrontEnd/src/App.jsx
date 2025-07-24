@@ -113,7 +113,7 @@ export default function App() {
   const unsubscribe = socketListener(dispatch, userId, user?.role, null);
 
   return () => {
-    unsubscribe(); // remove listeners on unmount
+    unsubscribe();
   };
 }, [user?.id, user?.role, userId]);
 

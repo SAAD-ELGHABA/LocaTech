@@ -96,30 +96,83 @@ function Conversation({ isAssistant = false }) {
     }
   }, [currentConversation?.messages]);
 
+  const [bienConversation, setBienConversation] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const fetchBiensConversations = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `/api/bien/conversation/${currentConversation?.BienId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setBienConversation(response?.data?.bien || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchBiensConversations();
+  }, [currentConversation?._id]);
+
   if (
     !currentConversation ||
     Object.keys(currentConversation).length === 0 ||
     biens.length === 0 ||
     users.length === 0 ||
-    courtiers.length === 0
+    courtiers.length === 0 ||
+    !bienConversation ||
+    Object.keys(bienConversation).length === 0 ||
+    isLoading
   ) {
     return (
-      <div className="p-4 space-y-4 animate-pulse w-full min-h-screen overflow-y-auto custom-scrollbar">
-        <div className="h-20 bg-gray-300 w-full "></div>
-        {[...Array(12)].map((_, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              index % 2 === 0 ? "justify-start" : "justify-end"
-            }`}
-          >
-            <div
-              className="bg-gray-300 rounded-lg w-2/3 h-16"
-              style={{ width: `${60 + Math.random() * 20}%` }}
-            ></div>
+      <div className="flex flex-col justify-between min-h-screen w-full bg-white animate-pulse">
+        <div className="flex items-center justify-between p-4 bg-[#161a1d] text-white">
+          <div className="flex items-center space-x-2">
+            <div className="w-10 h-10 rounded-full bg-gray-600"></div>
+            <div>
+              <div className="h-4 bg-gray-600 rounded w-24 mb-1"></div>
+              <div className="h-3 bg-gray-500 rounded w-16"></div>
+            </div>
           </div>
-        ))}
-        <div className="h-20 bg-gray-300 w-full "></div>
+          <div className="flex items-center space-x-2">
+            <div className="h-4 bg-gray-600 rounded w-20 mb-1"></div>
+            <div className="w-10 h-10 rounded-full bg-gray-600"></div>
+          </div>
+        </div>
+
+        <div className="flex-1 space-y-6 p-4 overflow-y-auto custom-scrollbar">
+          {[...Array(4)].map((_, index) => {
+            const isLeft = index % 2 === 0;
+            return (
+              <div
+                key={index}
+                className={`w-full flex ${
+                  isLeft ? "justify-start" : "justify-end"
+                }`}
+              >
+                <div
+                  className={`flex w-full items-end space-x-2 ${
+                    isLeft ? "" : "flex-row-reverse"
+                  }`}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gray-300"></div>
+
+                  <div className="bg-gray-200 h-16 rounded-lg p-3 w-1/2"></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <div className="h-12 bg-gray-300 rounded"></div>
+        </div>
       </div>
     );
   }
@@ -197,27 +250,31 @@ function Conversation({ isAssistant = false }) {
             )}
 
           <div className="flex items-center lg:gap-2 ">
-            {biens.map((bien) => {
-              if (bien.id === Number(currentConversation.BienId)) {
-                return (
-                  <div
-                    key={bien.id}
-                    className="flex items-start justify-start space-x-3 text-end"
+            <Link
+              to={`/bien/${bienConversation?.ville}/${bienConversation?.slag}`}
+              key={bienConversation?.id}
+              className="flex items-start justify-start space-x-3 text-end"
+            >
+              <div className="text-xs flex flex-col justify-center items-between space-y-1">
+                <p>{bienConversation?.ville}</p>
+                <p className="text-gray-400">{bienConversation?.type}</p>
+                <h5 className="text-xs">
+                  <span
+                  className="text-[8px] px-2 py-1 rounded-lg font-semibold"
+                    style={{
+                      backgroundColor: `${bienConversation?.status?.["coleur-code"]}`,
+                    }}
                   >
-                    <div className="text-xs">
-                      <p>{bien.ville}</p>
-                      <p className="text-gray-400">{bien.type}</p>
-                    </div>
-                    <img
-                      src={bien.images[0] || ""}
-                      alt={bien.title}
-                      className="w-12 h-12 lg:w-15 lg:h-15 rounded-xl"
-                    />
-                    <h5 className="text-xs">{bien.name}</h5>
-                  </div>
-                );
-              }
-            })}
+                    {"bien "+bienConversation?.status?.nom}
+                  </span>
+                </h5>
+              </div>
+              <img
+                src={bienConversation?.images[0] || ""}
+                alt={bienConversation?.title}
+                className="w-12 h-12 lg:w-15 lg:h-15 rounded-xl"
+              />
+            </Link>
           </div>
         </div>
       )}
